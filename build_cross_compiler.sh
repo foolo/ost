@@ -5,12 +5,17 @@ wget http://ftpmirror.gnu.org/mpfr/mpfr-3.1.2.tar.xz
 wget http://ftpmirror.gnu.org/gmp/gmp-6.0.0a.tar.xz
 wget http://ftpmirror.gnu.org/mpc/mpc-1.0.2.tar.gz
 
+wget ftp://gcc.gnu.org/pub/gcc/infrastructure/isl-0.12.2.tar.bz2
+wget ftp://gcc.gnu.org/pub/gcc/infrastructure/cloog-0.18.1.tar.gz
+
 for f in *.tar*; do tar xf $f; done
 
 cd gcc-4.9.2
 ln -s ../mpfr-3.1.2 mpfr
 ln -s ../gmp-6.0.0 gmp
 ln -s ../mpc-1.0.2 mpc
+ln -s ../isl-0.12.2 isl
+ln -s ../cloog-0.18.1 cloog
 cd ..
 
 
@@ -37,8 +42,10 @@ cd ..
 
 mkdir -p build-gcc
 cd build-gcc
-../gcc-4.9.2/configure --prefix=$MYPREFIX --target=$MYARCH --enable-languages=c,c++ --disable-multilib
+../gcc-4.9.2/configure --target=$MYARCH --prefix=$MYPREFIX --enable-languages=c,c++ --disable-nls --enable-languages=c,c++ --without-headers
 make -j4 all-gcc
+make -j4 all-target-libgcc
 sudo make install-gcc
+sudo make install-target-libgcc
 cd ..
 
