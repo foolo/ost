@@ -19,7 +19,6 @@ CPP_OBJFILES := $(patsubst %.cpp, $(BUILDDIR)/%.o, $(CPPFILES))
 # pull in dependency info for *existing* .o files
 -include $(CPP_OBJFILES:.o=.d)
 
-
 DIRS=$(BUILDDIR) $(dir $(CPP_OBJFILES))
 
 all: post-build
@@ -40,7 +39,7 @@ $(BUILDDIR)/boot.o: src/boot.s
 
 $(BUILDDIR)/%.o: %.cpp
 	$(CC) -c  $*.cpp -o $(BUILDDIR)/$*.o $(CPPFLAGS)
-	$(CC) -MM $(CPPFLAGS) $*.cpp > $*.d
+	$(CC) -MM $(CPPFLAGS) $*.cpp > $(BUILDDIR)/$*.d
 
 
 # Link
