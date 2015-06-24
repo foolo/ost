@@ -10,34 +10,27 @@ BINNAME=myos.bin
 
 BUILDDIR=build
 
+
 # Source files
 
 CPPFILES=src/kernel.cpp
 
 CPP_OBJFILES := $(patsubst %.cpp, $(BUILDDIR)/%.o, $(CPPFILES))
 
-# pull in dependency info for *existing* .o files
+
+default: $(BINNAME)
+
 -include $(CPP_OBJFILES:.o=.d)
 
-DIRS=$(BUILDDIR) $(dir $(CPP_OBJFILES))
-
-all: post-build
-
-pre-build:
-	@mkdir -p $(DIRS)
-
-post-build: main-build
-#	@echo POST
-
-main-build: pre-build
-	@$(MAKE) --no-print-directory $(BINNAME)
 
 # Compile
 
 $(BUILDDIR)/boot.o: src/boot.s
+	mkdir -p $(BUILDDIR)
 	$(AS) src/boot.s -o $(BUILDDIR)/boot.o
 
-$(BUILDDIR)/%.o: %.cpp
+$(BUILDDIR)/%.o: %.cpp $(DIRS)
+	@mkdir -p $(dir $(CPP_OBJFILES))
 	$(CC) -c  $*.cpp -o $(BUILDDIR)/$*.o $(CPPFLAGS)
 	$(CC) -MM $(CPPFLAGS) $*.cpp > $(BUILDDIR)/$*.d
 
