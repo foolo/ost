@@ -40,8 +40,17 @@ $(BUILDDIR)/%.o: %.cpp $(DIRS)
 $(BINNAME): $(CPP_OBJFILES) $(BUILDDIR)/boot.o
 	$(CC) -T src/linker.ld -o $(BINNAME) $^ $(LDFLAGS) $(LIBS)
 
+
+# Create .iso
+
+%.iso: $(BINNAME)
+	@echo Creating $@
+	mkdir -p build/isodir/boot/grub
+	cp $(BINNAME) build/isodir/boot/myos.bin
+	cp grub.cfg   build/isodir/boot/grub/grub.cfg
+	grub-mkrescue -o $@ build/isodir
+
 .PHONY: clean all
 
 clean:
 	rm -rf $(BUILDDIR) $(BINNAME)
-
