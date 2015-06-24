@@ -32,7 +32,7 @@ $(BUILDDIR)/boot.o: src/boot.s
 $(BUILDDIR)/%.o: %.cpp $(DIRS)
 	@mkdir -p $(dir $(CPP_OBJFILES))
 	$(CC) -c  $*.cpp -o $(BUILDDIR)/$*.o $(CPPFLAGS)
-	$(CC) -MM $(CPPFLAGS) $*.cpp > $(BUILDDIR)/$*.d
+	$(CC) -MM -MQ $(BUILDDIR)/$*.o $(CPPFLAGS) $*.cpp > $(BUILDDIR)/$*.d
 
 
 # Link
