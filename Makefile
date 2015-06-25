@@ -14,9 +14,10 @@ BUILDDIR=build
 # Source files
 
 CPPFILES=src/kernel.cpp
+ASMFILES=src/boot.s src/interrupt.s
 
 CPP_OBJFILES := $(patsubst %.cpp, $(BUILDDIR)/%.o, $(CPPFILES))
-
+ASM_OBJFILES := $(patsubst %.s,   $(BUILDDIR)/%.o, $(ASMFILES))
 
 default: $(BINNAME)
 
@@ -25,11 +26,11 @@ default: $(BINNAME)
 
 # Compile
 
-$(BUILDDIR)/boot.o: src/boot.s
+$(BUILDDIR)/%.o: %.s
 	mkdir -p $(BUILDDIR)
-	$(AS) src/boot.s -o $(BUILDDIR)/boot.o
+	$(AS) $*.s -o $(BUILDDIR)/$*.o
 
-$(BUILDDIR)/%.o: %.cpp $(DIRS)
+$(BUILDDIR)/%.o: %.cpp
 	@mkdir -p $(dir $(CPP_OBJFILES))
 	$(CC) -c  $*.cpp -o $(BUILDDIR)/$*.o $(CPPFLAGS)
 	$(CC) -MM -MQ $(BUILDDIR)/$*.o $(CPPFLAGS) $*.cpp > $(BUILDDIR)/$*.d
@@ -37,7 +38,7 @@ $(BUILDDIR)/%.o: %.cpp $(DIRS)
 
 # Link
 
-$(BINNAME): $(CPP_OBJFILES) $(BUILDDIR)/boot.o
+$(BINNAME): $(CPP_OBJFILES) $(ASM_OBJFILES)
 	$(CC) -T src/linker.ld -o $(BINNAME) $^ $(LDFLAGS) $(LIBS)
 
 
