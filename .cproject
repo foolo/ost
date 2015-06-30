@@ -23,10 +23,15 @@
 							<tool id="org.eclipse.cdt.build.core.settings.holder.694134070" name="Assembly" superClass="org.eclipse.cdt.build.core.settings.holder">
 								<option id="org.eclipse.cdt.build.core.settings.holder.incpaths.225257137" name="Include Paths" superClass="org.eclipse.cdt.build.core.settings.holder.incpaths"/>
 								<option id="org.eclipse.cdt.build.core.settings.holder.symbols.2026601086" name="Symbols" superClass="org.eclipse.cdt.build.core.settings.holder.symbols" valueType="definedSymbols">
-									<listOptionValue builtIn="false" value="&quot;__INT16_TYPE__=short int&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;__UINT16_TYPE__=short unsigned int&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;__UINT8_TYPE__=unsigned char&quot;"/>
 									<listOptionValue builtIn="false" value="__i386__"/>
+									<listOptionValue builtIn="false" value="&quot;__INT8_TYPE__=signed char&quot;"/>
+									<listOptionValue builtIn="false" value="__INT16_TYPE__=short"/>
+									<listOptionValue builtIn="false" value="__INT32_TYPE__=long"/>
+									<listOptionValue builtIn="false" value="&quot;__UINT32_TYPE__=unsigned long&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;__UINT64_TYPE__=unsigned long long&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;__INT64_TYPE__=long long&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;__UINT16_TYPE__=unsigned short&quot;"/>
 								</option>
 								<inputType id="org.eclipse.cdt.build.core.settings.holder.inType.1611909301" languageId="org.eclipse.cdt.core.assembly" languageName="Assembly" sourceContentType="org.eclipse.cdt.core.asmSource" superClass="org.eclipse.cdt.build.core.settings.holder.inType"/>
 							</tool>
@@ -35,9 +40,15 @@
 									<listOptionValue builtIn="false" value="/home/olof/Applications/i686cc/lib/gcc/i686-elf/4.9.2/include"/>
 								</option>
 								<option id="org.eclipse.cdt.build.core.settings.holder.symbols.819446201" name="Symbols" superClass="org.eclipse.cdt.build.core.settings.holder.symbols" valueType="definedSymbols">
-									<listOptionValue builtIn="false" value="&quot;__UINT16_TYPE__=short unsigned int&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;__UINT8_TYPE__=unsigned char&quot;"/>
 									<listOptionValue builtIn="false" value="__i386__"/>
+									<listOptionValue builtIn="false" value="&quot;__INT8_TYPE__=signed char&quot;"/>
+									<listOptionValue builtIn="false" value="__INT16_TYPE__=short"/>
+									<listOptionValue builtIn="false" value="__INT32_TYPE__=long"/>
+									<listOptionValue builtIn="false" value="&quot;__UINT32_TYPE__=unsigned long&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;__UINT64_TYPE__=unsigned long long&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;__INT64_TYPE__=long long&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;__UINT16_TYPE__=unsigned short&quot;"/>
 								</option>
 								<inputType id="org.eclipse.cdt.build.core.settings.holder.inType.1828699300" languageId="org.eclipse.cdt.core.g++" languageName="GNU C++" sourceContentType="org.eclipse.cdt.core.cxxSource,org.eclipse.cdt.core.cxxHeader" superClass="org.eclipse.cdt.build.core.settings.holder.inType"/>
 							</tool>
@@ -46,10 +57,15 @@
 									<listOptionValue builtIn="false" value="/home/olof/Applications/i686cc/lib/gcc/i686-elf/4.9.2/include"/>
 								</option>
 								<option id="org.eclipse.cdt.build.core.settings.holder.symbols.877347759" name="Symbols" superClass="org.eclipse.cdt.build.core.settings.holder.symbols" valueType="definedSymbols">
-									<listOptionValue builtIn="false" value="&quot;__INT16_TYPE__=short int&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;__UINT16_TYPE__=short unsigned int&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;__UINT8_TYPE__=unsigned char&quot;"/>
 									<listOptionValue builtIn="false" value="__i386__"/>
+									<listOptionValue builtIn="false" value="&quot;__INT8_TYPE__=signed char&quot;"/>
+									<listOptionValue builtIn="false" value="__INT16_TYPE__=short"/>
+									<listOptionValue builtIn="false" value="__INT32_TYPE__=long"/>
+									<listOptionValue builtIn="false" value="&quot;__UINT32_TYPE__=unsigned long&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;__UINT64_TYPE__=unsigned long long&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;__INT64_TYPE__=long long&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;__UINT16_TYPE__=unsigned short&quot;"/>
 								</option>
 								<inputType id="org.eclipse.cdt.build.core.settings.holder.inType.1186588655" languageId="org.eclipse.cdt.core.gcc" languageName="GNU C" sourceContentType="org.eclipse.cdt.core.cSource,org.eclipse.cdt.core.cHeader" superClass="org.eclipse.cdt.build.core.settings.holder.inType"/>
 							</tool>
