@@ -8,6 +8,8 @@
 #error "ix86-elf compiler required"
 #endif
 
+// TODO move terminal_* functions to terminal.cpp and remove terminal_ prefix
+
 enum vga_color {
 	COLOR_BLACK = 0,
 	COLOR_BLUE = 1,
@@ -52,16 +54,21 @@ size_t terminal_column;
 uint8_t terminal_color;
 uint16_t* terminal_buffer;
 
+void terminal_clear_line(size_t line_number) {
+	for (size_t x = 0; x < VGA_WIDTH; x++)
+	{
+		const size_t index = line_number * VGA_WIDTH + x;
+		terminal_buffer[index] = make_vgaentry(' ', terminal_color);
+	}
+}
+
 void terminal_initialize() {
 	terminal_row = 0;
 	terminal_column = 0;
 	terminal_color = make_color(COLOR_LIGHT_GREY, COLOR_BLACK);
 	terminal_buffer = (uint16_t*) 0xB8000;
 	for (size_t y = 0; y < VGA_HEIGHT; y++) {
-		for (size_t x = 0; x < VGA_WIDTH; x++) {
-			const size_t index = y * VGA_WIDTH + x;
-			terminal_buffer[index] = make_vgaentry(' ', terminal_color);
-		}
+		terminal_clear_line(y);
 	}
 }
 
@@ -74,12 +81,28 @@ void terminal_putentryat(char c, uint8_t color, size_t x, size_t y) {
 	terminal_buffer[index] = make_vgaentry(c, color);
 }
 
+void terminal_scroll() {
+	for(size_t row = 0; row < VGA_HEIGHT-1; row++)
+	{
+		const size_t dst = row * VGA_WIDTH;
+		const size_t src = (row + 1) * VGA_WIDTH;
+		const size_t length = VGA_WIDTH;
+		// todo use memcpy
+		for(size_t i = 0; i < length; i++)
+		{
+			terminal_buffer[dst + i] = terminal_buffer[src + i];
+		}
+	}
+	terminal_clear_line(VGA_HEIGHT - 1);
+}
+
 void terminal_newline()
 {
 	terminal_column = 0;
 	terminal_row++;
 	if (terminal_row == VGA_HEIGHT) {
-		terminal_row = 0;
+		terminal_row = VGA_HEIGHT - 1;
+		terminal_scroll();
 	}
 }
 
