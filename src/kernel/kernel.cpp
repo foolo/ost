@@ -129,12 +129,51 @@ void terminal_writestring(const char* data) {
 		terminal_putchar(data[i]);
 }
 
+
 #if defined(__cplusplus)
 extern "C"
 #endif
-
 void kernel_main() {
 	terminal_initialize();
 	terminal_writestring("Hello, kernel World!\n");
+	terminal_writestring("Hello, kernel World2!\n");
+	terminal_writestring("Hello, kernel World");
+	terminal_writestring("Hello, kernel World");
+	terminal_writestring("Hello, kernel World");
+	terminal_writestring("Hello, kernel World");
+	terminal_writestring("Hello, kernel World");
+
+	terminal_writestring("r1!\n");
+	terminal_writestring("r2!\n");
+	terminal_writestring("r3!\n");
+	terminal_writestring("r4!\n");
+	terminal_writestring("r5!\n");
+	terminal_writestring("r6!\n");
+	terminal_writestring("r7!\n");
+	terminal_writestring("r8!\n");
+	terminal_writestring("r9!\n");
+	terminal_writestring("rq!\n");
+	terminal_writestring("rw!\n");
+	terminal_writestring("rr!\n");
+	terminal_writestring("rt!\n");
+	terminal_writestring("ru!\n");
+	terminal_writestring("ri!\n");
+	terminal_writestring("ro!\n");
+	terminal_writestring("r11!\n");
+	terminal_writestring("r22!\n");
+	terminal_writestring("r33!\n");
+	terminal_writestring("r44!\n");
+	terminal_writestring("r55!\n");
+	terminal_writestring("r66!\n");
+	terminal_writestring("r77!\n");
+	terminal_writestring("r88!\n");
+	terminal_writestring("r99!");
 }
 
+#if defined(__cplusplus)
+extern "C"
+#endif
+void interrupt_handler()
+{
+	terminal_writestring("interrupt_handler\n");
+}
