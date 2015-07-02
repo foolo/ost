@@ -16,6 +16,5 @@ extern "C"
 // todo move to namespace kernel
 void kernel_main() {
 	kernel::Terminal terminal;
-	terminal.initialize();
 	terminal.writestring("Hello, kernel World!\n");
 }

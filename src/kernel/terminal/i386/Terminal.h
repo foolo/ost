@@ -30,6 +30,7 @@ class Terminal {
 private:
 	static const size_t VGA_WIDTH = 80;
 	static const size_t VGA_HEIGHT = 25;
+	static const uint32_t VGA_COLOR_ADDRSPACE = 0xB8000;
 
 	size_t m_row;
 	size_t m_column;

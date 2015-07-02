@@ -2,13 +2,18 @@
 
 namespace kernel {
 
-Terminal::Terminal() {
-	// TODO Auto-generated constructor stub
-
+Terminal::Terminal() :
+m_row(0),
+m_column(0),
+m_color(make_color(COLOR_LIGHT_GREY, COLOR_BLACK)),
+m_buffer((uint16_t*)VGA_COLOR_ADDRSPACE)
+{
+	for (size_t y = 0; y < VGA_HEIGHT; y++) {
+		clear_line(y);
+	}
 }
 
 Terminal::~Terminal() {
-	// TODO Auto-generated destructor stub
 }
 
 void Terminal::operator delete(void * /*p*/) // or delete(void *, size_t)
@@ -71,16 +76,6 @@ void Terminal::putentryat(char c, uint8_t color, size_t x, size_t y) {
 
 void Terminal::setcolor(uint8_t color) {
 	m_color = color;
-}
-
-void Terminal::initialize() {
-	m_row = 0;
-	m_column = 0;
-	m_color = make_color(COLOR_LIGHT_GREY, COLOR_BLACK);
-	m_buffer = (uint16_t*) 0xB8000;
-	for (size_t y = 0; y < VGA_HEIGHT; y++) {
-		clear_line(y);
-	}
 }
 
 void Terminal::clear_line(size_t line_number) {
