@@ -3,177 +3,19 @@
 #endif
 #include <stddef.h>
 #include <stdint.h>
+#include "terminal/i386/Terminal.h"
  
 #if !defined(__i386__)
 #error "ix86-elf compiler required"
 #endif
 
-// TODO move terminal_* functions to terminal.cpp and remove terminal_ prefix
-
-enum vga_color {
-	COLOR_BLACK = 0,
-	COLOR_BLUE = 1,
-	COLOR_GREEN = 2,
-	COLOR_CYAN = 3,
-	COLOR_RED = 4,
-	COLOR_MAGENTA = 5,
-	COLOR_BROWN = 6,
-	COLOR_LIGHT_GREY = 7,
-	COLOR_DARK_GREY = 8,
-	COLOR_LIGHT_BLUE = 9,
-	COLOR_LIGHT_GREEN = 10,
-	COLOR_LIGHT_CYAN = 11,
-	COLOR_LIGHT_RED = 12,
-	COLOR_LIGHT_MAGENTA = 13,
-	COLOR_LIGHT_BROWN = 14,
-	COLOR_WHITE = 15,
-};
-
-uint8_t make_color(enum vga_color fg, enum vga_color bg) {
-	return fg | bg << 4;
-}
-
-uint16_t make_vgaentry(char c, uint8_t color) {
-	uint16_t c16 = c;
-	uint16_t color16 = color;
-	return c16 | color16 << 8;
-}
-
-size_t strlen(const char* str) {
-	size_t ret = 0;
-	while ( str[ret] != 0 )
-		ret++;
-	return ret;
-}
-
-static const size_t VGA_WIDTH = 80;
-static const size_t VGA_HEIGHT = 25;
-
-size_t terminal_row;
-size_t terminal_column;
-uint8_t terminal_color;
-uint16_t* terminal_buffer;
-
-void terminal_clear_line(size_t line_number) {
-	for (size_t x = 0; x < VGA_WIDTH; x++)
-	{
-		const size_t index = line_number * VGA_WIDTH + x;
-		terminal_buffer[index] = make_vgaentry(' ', terminal_color);
-	}
-}
-
-void terminal_initialize() {
-	terminal_row = 0;
-	terminal_column = 0;
-	terminal_color = make_color(COLOR_LIGHT_GREY, COLOR_BLACK);
-	terminal_buffer = (uint16_t*) 0xB8000;
-	for (size_t y = 0; y < VGA_HEIGHT; y++) {
-		terminal_clear_line(y);
-	}
-}
-
-void terminal_setcolor(uint8_t color) {
-	terminal_color = color;
-}
-
-void terminal_putentryat(char c, uint8_t color, size_t x, size_t y) {
-	const size_t index = y * VGA_WIDTH + x;
-	terminal_buffer[index] = make_vgaentry(c, color);
-}
-
-void terminal_scroll() {
-	for(size_t row = 0; row < VGA_HEIGHT-1; row++)
-	{
-		const size_t dst = row * VGA_WIDTH;
-		const size_t src = (row + 1) * VGA_WIDTH;
-		const size_t length = VGA_WIDTH;
-		// todo use memcpy
-		for(size_t i = 0; i < length; i++)
-		{
-			terminal_buffer[dst + i] = terminal_buffer[src + i];
-		}
-	}
-	terminal_clear_line(VGA_HEIGHT - 1);
-}
-
-void terminal_newline()
-{
-	terminal_column = 0;
-	terminal_row++;
-	if (terminal_row == VGA_HEIGHT) {
-		terminal_row = VGA_HEIGHT - 1;
-		terminal_scroll();
-	}
-}
-
-void terminal_putchar(char c) {
-	if (c == '\n')
-	{
-		terminal_newline();
-	}
-	// place to add handling of more control characters
-	else
-	{
-		terminal_putentryat(c, terminal_color, terminal_column, terminal_row);
-		terminal_column++;
-		if (terminal_column == VGA_WIDTH)
-		{
-			terminal_newline();
-		}
-	}
-}
-
-void terminal_writestring(const char* data) {
-	size_t datalen = strlen(data);
-	for (size_t i = 0; i < datalen; i++)
-		terminal_putchar(data[i]);
-}
-
 
 #if defined(__cplusplus)
 extern "C"
 #endif
+// todo move to namespace kernel
 void kernel_main() {
-	terminal_initialize();
-	terminal_writestring("Hello, kernel World!\n");
-	terminal_writestring("Hello, kernel World2!\n");
-	terminal_writestring("Hello, kernel World");
-	terminal_writestring("Hello, kernel World");
-	terminal_writestring("Hello, kernel World");
-	terminal_writestring("Hello, kernel World");
-	terminal_writestring("Hello, kernel World");
-
-	terminal_writestring("r1!\n");
-	terminal_writestring("r2!\n");
-	terminal_writestring("r3!\n");
-	terminal_writestring("r4!\n");
-	terminal_writestring("r5!\n");
-	terminal_writestring("r6!\n");
-	terminal_writestring("r7!\n");
-	terminal_writestring("r8!\n");
-	terminal_writestring("r9!\n");
-	terminal_writestring("rq!\n");
-	terminal_writestring("rw!\n");
-	terminal_writestring("rr!\n");
-	terminal_writestring("rt!\n");
-	terminal_writestring("ru!\n");
-	terminal_writestring("ri!\n");
-	terminal_writestring("ro!\n");
-	terminal_writestring("r11!\n");
-	terminal_writestring("r22!\n");
-	terminal_writestring("r33!\n");
-	terminal_writestring("r44!\n");
-	terminal_writestring("r55!\n");
-	terminal_writestring("r66!\n");
-	terminal_writestring("r77!\n");
-	terminal_writestring("r88!\n");
-	terminal_writestring("r99!");
-}
-
-#if defined(__cplusplus)
-extern "C"
-#endif
-void interrupt_handler()
-{
-	terminal_writestring("interrupt_handler\n");
+	kernel::Terminal terminal;
+	terminal.initialize();
+	terminal.writestring("Hello, kernel World!\n");
 }

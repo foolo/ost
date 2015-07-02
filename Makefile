@@ -13,7 +13,10 @@ BUILDDIR=build
 
 # Source files
 
-CPPFILES=src/kernel/kernel.cpp
+CPPFILES=\
+	src/kernel/terminal/i386/Terminal.cpp \
+	src/kernel/kernel.cpp
+
 ASMFILES=src/boot.s src/interrupt.s
 
 CPP_OBJFILES := $(patsubst %.cpp, $(BUILDDIR)/%.o, $(CPPFILES))
