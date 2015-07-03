@@ -54,7 +54,6 @@ private:
 	void putentryat(char c, uint8_t color, size_t x, size_t y);
 	void setcolor(uint8_t color);
 	void clear_line(size_t line_number);
-	size_t strlen(const char* str); // todo use libc
 	uint16_t make_vgaentry(char c, uint8_t color);
 	uint8_t make_color(enum vga_color fg, enum vga_color bg);
 };

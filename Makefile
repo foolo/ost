@@ -1,7 +1,11 @@
 CC=i686-elf-gcc
 AS=i686-elf-as
 
-CPPFLAGS=-ffreestanding -O2 -Wall -Wextra -fno-exceptions -fno-rtti
+CXXFLAGS=-ffreestanding -O2 -Wall -Wextra
+CXXFLAGS+=-Isrc/libc/include
+CXXFLAGS+=-Isrc/kernel/include
+CPPFLAGS=$(CXXFLAGS) -fno-exceptions -fno-rtti
+CFLAGS=$(CXXFLAGS) -std=gnu99
 
 LDFLAGS=-ffreestanding -O2 -nostdlib
 LIBS=-lgcc
@@ -17,14 +21,19 @@ CPPFILES=\
 	src/kernel/terminal/i386/Terminal.cpp \
 	src/kernel/kernel.cpp
 
+CFILES=\
+	src/libc/string/string.c
+
 ASMFILES=src/boot.s src/interrupt.s
 
 CPP_OBJFILES := $(patsubst %.cpp, $(BUILDDIR)/%.o, $(CPPFILES))
+C_OBJFILES :=   $(patsubst %.c,   $(BUILDDIR)/%.o, $(CFILES))
 ASM_OBJFILES := $(patsubst %.s,   $(BUILDDIR)/%.o, $(ASMFILES))
 
 default: $(BINNAME)
 
 -include $(CPP_OBJFILES:.o=.d)
+-include $(C_OBJFILES:.o=.d)
 
 
 # Compile
@@ -38,10 +47,15 @@ $(BUILDDIR)/%.o: %.cpp
 	$(CC) -c  $*.cpp -o $(BUILDDIR)/$*.o $(CPPFLAGS)
 	$(CC) -MM -MQ $(BUILDDIR)/$*.o $(CPPFLAGS) $*.cpp > $(BUILDDIR)/$*.d
 
+$(BUILDDIR)/%.o: %.c
+	@mkdir -p $(dir $(C_OBJFILES))
+	$(CC) -c  $*.c -o $(BUILDDIR)/$*.o $(CFLAGS)
+	$(CC) -MM -MQ $(BUILDDIR)/$*.o $(CFLAGS) $*.c > $(BUILDDIR)/$*.d
+
 
 # Link
 
-$(BINNAME): $(CPP_OBJFILES) $(ASM_OBJFILES)
+$(BINNAME): $(CPP_OBJFILES) $(C_OBJFILES) $(ASM_OBJFILES)
 	$(CC) -T src/linker.ld -o $(BINNAME) $^ $(LDFLAGS) $(LIBS)
 
 

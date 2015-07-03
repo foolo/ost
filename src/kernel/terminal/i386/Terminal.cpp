@@ -1,4 +1,5 @@
 #include "Terminal.h"
+#include <string.h>
 
 namespace kernel {
 
@@ -84,13 +85,6 @@ void Terminal::clear_line(size_t line_number) {
 		const size_t index = line_number * VGA_WIDTH + x;
 		m_buffer[index] = make_vgaentry(' ', m_color);
 	}
-}
-
-size_t Terminal::strlen(const char* str) {
-	size_t ret = 0;
-	while ( str[ret] != 0 )
-		ret++;
-	return ret;
 }
 
 uint16_t Terminal::make_vgaentry(char c, uint8_t color) {
