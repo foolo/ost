@@ -9,12 +9,12 @@
 #error "ix86-elf compiler required"
 #endif
 
+namespace kernel {
 
-#if defined(__cplusplus)
 extern "C"
-#endif
-// todo move to namespace kernel
 void kernel_main() {
-	kernel::Terminal terminal;
+	Terminal terminal;
 	terminal.writestring("Hello, kernel World!\n");
 }
+
+} /* namespace kernel */
