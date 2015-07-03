@@ -1,4 +1,4 @@
-CC=i686-elf-g++
+CC=i686-elf-gcc
 AS=i686-elf-as
 
 CPPFLAGS=-ffreestanding -O2 -Wall -Wextra -fno-exceptions -fno-rtti
