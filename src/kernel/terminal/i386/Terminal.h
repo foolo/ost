@@ -45,9 +45,6 @@ public:
 	void writestring(const char* data);
 	void putchar(char c);
 
-
-	void operator delete(void * /*p*/); // or delete(void *, size_t)
-
 private:
 	void newline();
 	void scroll();

@@ -17,11 +17,6 @@ m_buffer((uint16_t*)VGA_COLOR_ADDRSPACE)
 Terminal::~Terminal() {
 }
 
-void Terminal::operator delete(void * /*p*/) // or delete(void *, size_t)
-{
-  // todo
-}
-
 void Terminal::writestring(const char* data) {
 	size_t datalen = strlen(data);
 	for (size_t i = 0; i < datalen; i++)

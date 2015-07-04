@@ -19,7 +19,8 @@ BUILDDIR=build
 
 CPPFILES=\
 	src/kernel/terminal/i386/Terminal.cpp \
-	src/kernel/kernel.cpp
+	src/kernel/kernel.cpp \
+	src/kernel/cpp/heap.cpp
 
 CFILES=\
 	src/libc/string/string.c
