@@ -58,14 +58,10 @@ void Terminal::newline()
 void Terminal::scroll() {
 	for(size_t row = 0; row < VGA_HEIGHT-1; row++)
 	{
-		const size_t dst = row * VGA_WIDTH;
-		const size_t src = (row + 1) * VGA_WIDTH;
-		const size_t length = VGA_WIDTH;
-		// todo use memcpy
-		for(size_t i = 0; i < length; i++)
-		{
-			m_buffer[dst + i] = m_buffer[src + i];
-		}
+		void* pdst = (void*)(m_buffer + row * VGA_WIDTH);
+		void* psrc = (void*)(m_buffer + (row + 1) * VGA_WIDTH);
+		const size_t size_in_bytes = VGA_WIDTH * sizeof(*m_buffer);
+		memcpy(pdst, psrc, size_in_bytes);
 	}
 	clear_line(VGA_HEIGHT - 1);
 }
