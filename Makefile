@@ -12,7 +12,7 @@ LIBS=-lgcc
 
 BINNAME=myos.bin
 
-BUILDDIR=build
+BUILDDIR=build_i386
 
 
 # Source files
@@ -40,24 +40,33 @@ default: $(BINNAME)
 # Compile
 
 $(BUILDDIR)/%.o: %.s
-	mkdir -p $(BUILDDIR)
+	@mkdir -p $(dir $@)
 	$(AS) $*.s -o $(BUILDDIR)/$*.o
 
 $(BUILDDIR)/%.o: %.cpp
-	@mkdir -p $(dir $(CPP_OBJFILES))
+	@mkdir -p $(dir $@)
 	$(CC) -c  $*.cpp -o $(BUILDDIR)/$*.o $(CPPFLAGS)
 	$(CC) -MM -MQ $(BUILDDIR)/$*.o $(CPPFLAGS) $*.cpp > $(BUILDDIR)/$*.d
 
 $(BUILDDIR)/%.o: %.c
-	@mkdir -p $(dir $(C_OBJFILES))
+	@mkdir -p $(dir $@)
 	$(CC) -c  $*.c -o $(BUILDDIR)/$*.o $(CFLAGS)
 	$(CC) -MM -MQ $(BUILDDIR)/$*.o $(CFLAGS) $*.c > $(BUILDDIR)/$*.d
 
 
 # Link
 
-$(BINNAME): $(CPP_OBJFILES) $(C_OBJFILES) $(ASM_OBJFILES)
-	$(CC) -T src/linker.ld -o $(BINNAME) $^ $(LDFLAGS) $(LIBS)
+
+CRTI_OBJ=$(BUILDDIR)/src/kernel/cpp/i686-elf/crti.o
+CRTBEGIN_OBJ:=$(shell $(CC) -print-file-name=crtbegin.o)
+CRTEND_OBJ:=  $(shell $(CC) -print-file-name=crtend.o)
+CRTN_OBJ=$(BUILDDIR)/src/kernel/cpp/i686-elf/crtn.o
+
+OBJS:=$(CPP_OBJFILES) $(C_OBJFILES) $(ASM_OBJFILES)
+OBJ_LINK_LIST:=$(CRTI_OBJ) $(CRTBEGIN_OBJ)   $(OBJS)   $(CRTEND_OBJ) $(CRTN_OBJ)
+
+$(BINNAME): $(OBJ_LINK_LIST)
+	$(CC) -T src/linker.ld -o $(BINNAME) $(OBJ_LINK_LIST) $(LDFLAGS) $(LIBS)
 
 
 # Create .iso

@@ -26,12 +26,15 @@ enum vga_color {
 	COLOR_WHITE = 15,
 };
 
+//TODO create architecture independent interface ITerminal and make this class "i386Terminal"
+
 class Terminal {
 private:
 	static const size_t VGA_WIDTH = 80;
 	static const size_t VGA_HEIGHT = 25;
 	static const uint32_t VGA_COLOR_ADDRSPACE = 0xB8000;
 
+	// TODO should be global to prevent two instances of Terminal writing on different screen positions?
 	size_t m_row;
 	size_t m_column;
 	uint8_t m_color;
