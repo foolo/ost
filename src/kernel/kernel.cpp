@@ -11,6 +11,20 @@
 
 namespace kernel {
 
+void print_uint(unsigned int i, Terminal& terminal)
+{
+	unsigned upper = i / 10;
+	unsigned lower = i % 10;
+	if(upper > 0)
+	{
+		print_uint(upper, terminal);
+	}
+	char buf[2];
+	buf[1] = 0;
+	buf[0] = lower + '0';
+	terminal.writestring(buf);
+}
+
 extern "C"
 void kernel_main() {
 	Terminal terminal;
