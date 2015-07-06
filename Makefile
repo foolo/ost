@@ -20,7 +20,8 @@ BUILDDIR=build_i386
 CPPFILES=\
 	src/kernel/terminal/i386/Terminal.cpp \
 	src/kernel/kernel.cpp \
-	src/kernel/cpp/heap.cpp
+	src/kernel/cpp/heap.cpp \
+	src/libc/stdio.cpp
 
 CFILES=\
 	src/libc/string/string.c
