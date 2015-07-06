@@ -3,9 +3,20 @@
 #include <stdio.h>
 #include <string.h>
 
+#define USE_TERMINAL
+
+#ifdef USE_TERMINAL
+#include "../kernel/include/terminal.h"
+#endif
+
 int putchar(int ic)
 {
 	// todo implement a write system call
+
+	#ifdef USE_TERMINAL
+	kernel::terminal_putchar((char)ic);
+	#endif
+
 	return ic;
 }
 
