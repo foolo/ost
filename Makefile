@@ -21,10 +21,10 @@ CPPFILES=\
 	src/kernel/terminal/ia32/terminal.cpp \
 	src/kernel/kernel.cpp \
 	src/kernel/cpp/heap.cpp \
-	src/libc/stdio.cpp
+	src/libc/stdio.cpp \
+	src/libc/string.cpp
 
-CFILES=\
-	src/libc/string/string.c
+CFILES=
 
 ASMFILES=src/boot.s src/interrupt.s
 

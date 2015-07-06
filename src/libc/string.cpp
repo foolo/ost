@@ -19,7 +19,7 @@ int memcmp(const void* aptr, const void* bptr, size_t size)
 	return 0;
 }
 
-void* memcpy(void* restrict dstptr, const void* restrict srcptr, size_t size)
+void* memcpy(void* __restrict dstptr, const void* __restrict srcptr, size_t size)
 {
 	unsigned char* dst = (unsigned char*) dstptr;
 	const unsigned char* src = (const unsigned char*) srcptr;
