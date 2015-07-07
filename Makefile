@@ -26,7 +26,7 @@ CPPFILES=\
 
 CFILES=
 
-ASMFILES=src/boot.s
+ASMFILES=src/kernel/boot.s
 
 CPP_OBJFILES := $(patsubst %.cpp, $(BUILDDIR)/%.o, $(CPPFILES))
 C_OBJFILES :=   $(patsubst %.c,   $(BUILDDIR)/%.o, $(CFILES))
@@ -67,7 +67,7 @@ OBJS:=$(CPP_OBJFILES) $(C_OBJFILES) $(ASM_OBJFILES)
 OBJ_LINK_LIST:=$(CRTI_OBJ) $(CRTBEGIN_OBJ)   $(OBJS)   $(CRTEND_OBJ) $(CRTN_OBJ)
 
 $(BINNAME): $(OBJ_LINK_LIST)
-	$(CC) -T src/linker.ld -o $(BINNAME) $(OBJ_LINK_LIST) $(LDFLAGS) $(LIBS)
+	$(CC) -T src/kernel/linker.ld -o $(BINNAME) $(OBJ_LINK_LIST) $(LDFLAGS) $(LIBS)
 
 
 # Create .iso
