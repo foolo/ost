@@ -26,7 +26,7 @@ CPPFILES=\
 
 CFILES=
 
-ASMFILES=src/boot.s src/interrupt.s
+ASMFILES=src/boot.s
 
 CPP_OBJFILES := $(patsubst %.cpp, $(BUILDDIR)/%.o, $(CPPFILES))
 C_OBJFILES :=   $(patsubst %.c,   $(BUILDDIR)/%.o, $(CFILES))
