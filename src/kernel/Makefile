@@ -1,9 +1,11 @@
 CC=i686-elf-gcc
 AS=i686-elf-as
 
+LIBCDIR=../libc
+
 CXXFLAGS=-ffreestanding -O2 -Wall -Wextra
-CXXFLAGS+=-Isrc/libc/include
-CXXFLAGS+=-Isrc/kernel/include
+CXXFLAGS+=-I$(LIBCDIR)/include
+CXXFLAGS+=-Iinclude
 CPPFLAGS=$(CXXFLAGS) -fno-exceptions -fno-rtti
 CFLAGS=$(CXXFLAGS) -std=gnu99
 
@@ -12,21 +14,21 @@ LIBS=-lgcc
 
 BINNAME=myos.bin
 
-BUILDDIR=build_i386
+BUILDDIR=build_i386/kernel
 
 
 # Source files
 
 CPPFILES=\
-	src/kernel/terminal/ia32/terminal.cpp \
-	src/kernel/kernel.cpp \
-	src/kernel/cpp/heap.cpp \
-	src/libc/stdio.cpp \
-	src/libc/string.cpp
+	terminal/ia32/terminal.cpp \
+	kernel.cpp \
+	cpp/heap.cpp \
+	$(LIBCDIR)/stdio.cpp \
+	$(LIBCDIR)/string.cpp
 
 CFILES=
 
-ASMFILES=src/kernel/boot.s
+ASMFILES=boot.s
 
 CPP_OBJFILES := $(patsubst %.cpp, $(BUILDDIR)/%.o, $(CPPFILES))
 C_OBJFILES :=   $(patsubst %.c,   $(BUILDDIR)/%.o, $(CFILES))
@@ -58,16 +60,16 @@ $(BUILDDIR)/%.o: %.c
 # Link
 
 
-CRTI_OBJ=$(BUILDDIR)/src/kernel/cpp/i686-elf/crti.o
+CRTI_OBJ=$(BUILDDIR)/cpp/i686-elf/crti.o
 CRTBEGIN_OBJ:=$(shell $(CC) -print-file-name=crtbegin.o)
 CRTEND_OBJ:=  $(shell $(CC) -print-file-name=crtend.o)
-CRTN_OBJ=$(BUILDDIR)/src/kernel/cpp/i686-elf/crtn.o
+CRTN_OBJ=$(BUILDDIR)/cpp/i686-elf/crtn.o
 
 OBJS:=$(CPP_OBJFILES) $(C_OBJFILES) $(ASM_OBJFILES)
 OBJ_LINK_LIST:=$(CRTI_OBJ) $(CRTBEGIN_OBJ)   $(OBJS)   $(CRTEND_OBJ) $(CRTN_OBJ)
 
 $(BINNAME): $(OBJ_LINK_LIST)
-	$(CC) -T src/kernel/linker.ld -o $(BINNAME) $(OBJ_LINK_LIST) $(LDFLAGS) $(LIBS)
+	$(CC) -T linker.ld -o $(BINNAME) $(OBJ_LINK_LIST) $(LDFLAGS) $(LIBS)
 
 
 # Create .iso
