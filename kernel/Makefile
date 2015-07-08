@@ -12,10 +12,10 @@ CFLAGS=$(CXXFLAGS) -std=gnu99
 LDFLAGS=-ffreestanding -O2 -nostdlib
 LIBS=-lgcc
 
-BINNAME=myos.bin
 
 BUILDDIR=build_i386/kernel
 
+BINOUT=$(BUILDDIR)/myos.bin
 
 # Source files
 
@@ -34,7 +34,7 @@ CPP_OBJFILES := $(patsubst %.cpp, $(BUILDDIR)/%.o, $(CPPFILES))
 C_OBJFILES :=   $(patsubst %.c,   $(BUILDDIR)/%.o, $(CFILES))
 ASM_OBJFILES := $(patsubst %.s,   $(BUILDDIR)/%.o, $(ASMFILES))
 
-default: $(BINNAME)
+default: $(BINOUT)
 
 -include $(CPP_OBJFILES:.o=.d)
 -include $(C_OBJFILES:.o=.d)
@@ -68,20 +68,21 @@ CRTN_OBJ=$(BUILDDIR)/cpp/i686-elf/crtn.o
 OBJS:=$(CPP_OBJFILES) $(C_OBJFILES) $(ASM_OBJFILES)
 OBJ_LINK_LIST:=$(CRTI_OBJ) $(CRTBEGIN_OBJ)   $(OBJS)   $(CRTEND_OBJ) $(CRTN_OBJ)
 
-$(BINNAME): $(OBJ_LINK_LIST)
-	$(CC) -T linker.ld -o $(BINNAME) $(OBJ_LINK_LIST) $(LDFLAGS) $(LIBS)
+$(BINOUT): $(OBJ_LINK_LIST)
+	@mkdir -p $(dir $@)
+	$(CC) -T linker.ld -o $(BINOUT) $(OBJ_LINK_LIST) $(LDFLAGS) $(LIBS)
 
 
 # Create .iso
 
-%.iso: $(BINNAME)
+%.iso: $(BINOUT)
 	@echo Creating $@
 	mkdir -p build/isodir/boot/grub
-	cp $(BINNAME) build/isodir/boot/myos.bin
+	cp $(BINOUT) build/isodir/boot/myos.bin
 	cp grub.cfg   build/isodir/boot/grub/grub.cfg
 	grub-mkrescue -o $@ build/isodir
 
 .PHONY: clean all
 
 clean:
-	rm -rf $(BUILDDIR) $(BINNAME)
+	rm -rf $(BUILDDIR)
