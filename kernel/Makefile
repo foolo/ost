@@ -9,8 +9,8 @@ CXXFLAGS+=-Iinclude
 CPPFLAGS=$(CXXFLAGS) -fno-exceptions -fno-rtti
 CFLAGS=$(CXXFLAGS) -std=gnu99
 
-LDFLAGS=-ffreestanding -O2 -nostdlib
-LIBS=-lgcc
+LDFLAGS=-ffreestanding -O2 -nostdlib -L$(LIBCDIR)/build-ia32
+LIBS=-lgcc -lk
 
 
 BUILDDIR=build_i386/kernel
@@ -23,8 +23,6 @@ CPPFILES=\
 	terminal/ia32/terminal.cpp \
 	kernel.cpp \
 	cpp/heap.cpp \
-	$(LIBCDIR)/stdio.cpp \
-	$(LIBCDIR)/string.cpp
 
 CFILES=
 
