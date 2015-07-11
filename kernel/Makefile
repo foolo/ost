@@ -3,7 +3,7 @@ AS=i686-elf-as
 
 LIBCDIR=../libc
 
-CXXFLAGS=-ffreestanding -O2 -Wall -Wextra
+CXXFLAGS=-ffreestanding -O2 -g -Wall -Wextra
 CXXFLAGS+=-I$(LIBCDIR)/include
 CXXFLAGS+=-Iinclude
 CPPFLAGS=$(CXXFLAGS) -fno-exceptions -fno-rtti
