@@ -2,5 +2,5 @@ build*/
 *.out
 *.bin
 *.iso
-.settings/
+.settings/org.eclipse.cdt.ui.prefs
 
