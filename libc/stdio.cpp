@@ -40,6 +40,22 @@ void print_unsigned_decimal(unsigned int i)
 	print(&digit, sizeof(digit));
 }
 
+char get_hex_symbol(unsigned value)
+{
+	return "0123456789abcdef"[value & 0xf];
+}
+
+void print_hexadecimal(unsigned int i)
+{
+	unsigned upper_digits = i >> 4;
+	unsigned lower_digit = i & 0xf;
+	if(upper_digits > 0)
+	{
+		print_hexadecimal(upper_digits);
+	}
+	char symbol = get_hex_symbol(lower_digit);
+	print(&symbol, sizeof(symbol));
+}
 
 int printf(const char* __restrict format, ...)
 {
@@ -92,8 +108,15 @@ int printf(const char* __restrict format, ...)
 		else if ( *format == 'u' )
 		{
 			format++;
-			int u = va_arg(parameters, int);
+			unsigned int u = va_arg(parameters, unsigned int);
 			print_unsigned_decimal(u);
+		}
+		else if ( *format == 'x' )
+		{
+
+			format++;
+			unsigned int u = va_arg(parameters, unsigned int);
+			print_hexadecimal(u);
 		}
 		else
 		{
