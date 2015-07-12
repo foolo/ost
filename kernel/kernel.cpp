@@ -17,6 +17,7 @@ void kernel_main() {
 	terminal_initialize();
 	printf("Hello, kernel World!\n");
 	printf("test %c\n", 'x');
+	printf("test %u\n", 7545);
 }
 
 } /* namespace kernel */

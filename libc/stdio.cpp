@@ -27,6 +27,20 @@ static void print(const char* data, size_t data_length)
 		putchar((int) ((const unsigned char*) data)[i]);
 }
 
+
+void print_unsigned_decimal(unsigned int i)
+{
+	unsigned upper = i / 10;
+	unsigned lower = i % 10;
+	if(upper > 0)
+	{
+		print_unsigned_decimal(upper);
+	}
+	char digit = (char)lower + '0';
+	print(&digit, sizeof(digit));
+}
+
+
 int printf(const char* __restrict format, ...)
 {
 	va_list parameters;
@@ -74,6 +88,12 @@ int printf(const char* __restrict format, ...)
 			format++;
 			const char* s = va_arg(parameters, const char*);
 			print(s, strlen(s));
+		}
+		else if ( *format == 'u' )
+		{
+			format++;
+			int u = va_arg(parameters, int);
+			print_unsigned_decimal(u);
 		}
 		else
 		{
