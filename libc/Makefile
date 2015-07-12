@@ -4,7 +4,6 @@ CC=i686-elf-gcc
 AS=i686-elf-as
 AR=i686-elf-ar
 
--include =arch/$(HOSTARCH)/make.config
 
 BUILDDIR=build-$(HOSTARCH)
 
@@ -29,6 +28,9 @@ LIBK_OBJS:=$(FREEOBJS:.o=.libk.o)
 FREE_CPP_OBJFILES :=   $(patsubst %.cpp, $(BUILDDIR)/%.o, $(FREE_CPPFILES))
 HOSTED_CPP_OBJFILES := $(patsubst %.cpp, $(BUILDDIR)/%.o, $(HOSTED_CPPFILES))
 
+BINARIES=$(BUILDDIR)/libc.a $(BUILDDIR)/libg.a $(BUILDDIR)/libk.a
+all: $(BINARIES)
+
 -include $(FREE_CPP_OBJFILES:.o=.d)
 -include $(HOSTED_CPP_OBJFILES:.o=.d)
 
@@ -38,9 +40,7 @@ OBJS:=\
 $(FREE_CPP_OBJFILES) \
 $(HOSTED_CPP_OBJFILES) \
 
-BINARIES=$(BUILDDIR)/libc.a $(BUILDDIR)/libg.a $(BUILDDIR)/libk.a
 
-all: $(BINARIES)
 
 .PHONY: all clean
 
