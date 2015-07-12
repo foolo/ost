@@ -12,6 +12,8 @@ CFLAGS=$(CXXFLAGS) -std=gnu99
 LDFLAGS=-ffreestanding -O2 -nostdlib -L$(LIBCDIR)/build-ia32
 LIBS=-lgcc -lk
 
+LIBK_FILE=$(LIBCDIR)/build-ia32/libk.a
+
 BUILDDIR=build_i386/kernel
 
 BINOUT=$(BUILDDIR)/myos.bin
@@ -31,7 +33,8 @@ CPP_OBJFILES := $(patsubst %.cpp, $(BUILDDIR)/%.o, $(CPPFILES))
 C_OBJFILES :=   $(patsubst %.c,   $(BUILDDIR)/%.o, $(CFILES))
 ASM_OBJFILES := $(patsubst %.s,   $(BUILDDIR)/%.o, $(ASMFILES))
 
-default: $(BINOUT) libc
+# Order is significant. libc makefile shall be run first.
+default: libc $(BINOUT)
 
 .PHONY: libc
 libc:
@@ -69,7 +72,7 @@ CRTN_OBJ=$(BUILDDIR)/cpp/i686-elf/crtn.o
 OBJS:=$(CPP_OBJFILES) $(C_OBJFILES) $(ASM_OBJFILES)
 OBJ_LINK_LIST:=$(CRTI_OBJ) $(CRTBEGIN_OBJ)   $(OBJS)   $(CRTEND_OBJ) $(CRTN_OBJ)
 
-$(BINOUT): $(OBJ_LINK_LIST)
+$(BINOUT): $(OBJ_LINK_LIST) $(LIBK_FILE)
 	@mkdir -p $(dir $@)
 	$(CC) -T linker.ld -o $(BINOUT) $(OBJ_LINK_LIST) $(LDFLAGS) $(LIBS)
 
