@@ -12,7 +12,6 @@ CFLAGS=$(CXXFLAGS) -std=gnu99
 LDFLAGS=-ffreestanding -O2 -nostdlib -L$(LIBCDIR)/build-ia32
 LIBS=-lgcc -lk
 
-
 BUILDDIR=build_i386/kernel
 
 BINOUT=$(BUILDDIR)/myos.bin
@@ -32,7 +31,11 @@ CPP_OBJFILES := $(patsubst %.cpp, $(BUILDDIR)/%.o, $(CPPFILES))
 C_OBJFILES :=   $(patsubst %.c,   $(BUILDDIR)/%.o, $(CFILES))
 ASM_OBJFILES := $(patsubst %.s,   $(BUILDDIR)/%.o, $(ASMFILES))
 
-default: $(BINOUT)
+default: $(BINOUT) libc
+
+.PHONY: libc
+libc:
+	make -C ../libc
 
 -include $(CPP_OBJFILES:.o=.d)
 -include $(C_OBJFILES:.o=.d)
