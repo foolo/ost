@@ -60,6 +60,9 @@ _start:
 	# assembly file, so we'll create a kernel.c file in a moment. In that file,
 	# we'll create a C entry point called kernel_main and call it here.
 
+
+	cli
+
 	# _init and _fini call global constructors/destructors
 	call _init
 	call kernel_main
@@ -71,10 +74,24 @@ _start:
 	# the next interrupt arrives, and jumping to the halt instruction if it ever
 	# continues execution, just to be safe. We will create a local label rather
 	# than real symbol and jump to there endlessly.
-	cli
+	#cli
 	hlt
 .Lhang:
 	jmp .Lhang
+
+
+.global load_idt
+load_idt:
+	movl 4(%esp),%edx
+	lidt (%edx)
+	sti 				#turn on interrupts
+	ret
+
+.global keyboard_handler
+keyboard_handler:
+	call    keyboard_handler_main
+	iretl
+
 
 # Set the size of the _start symbol to the current location '.' minus its start.
 # This is useful when debugging or when you implement call tracing.

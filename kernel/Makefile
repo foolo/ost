@@ -24,6 +24,7 @@ CPPFILES=\
 	terminal/ia32/terminal.cpp \
 	kernel.cpp \
 	cpp/heap.cpp \
+	interrupts/pic.cpp \
 
 CFILES=
 
