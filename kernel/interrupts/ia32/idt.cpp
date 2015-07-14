@@ -64,5 +64,11 @@ extern "C" void keyboard_handler_main(void)
 		printf("keycode %u\n", keycode);
 	}
 }
+extern "C" void keyboard_handler(void);
+
+void initialize_IDT()
+{
+	register_callback((uint32_t)keyboard_handler, 1);
+}
 
 } // namespace

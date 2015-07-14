@@ -8,9 +8,6 @@
 #error "ix86-elf compiler required"
 #endif
 
-extern "C" void keyboard_handler(void);
-extern "C" void load_idt(unsigned long *idt_ptr);
-
 namespace kernel {
 
 extern "C"
@@ -21,8 +18,7 @@ void kernel_main() {
 	printf("test %u\n", 7545);
 
 	initialize_PIC();
-	register_callback((uint32_t)keyboard_handler, 1);
-
+	initialize_IDT();
 }
 
 } /* namespace kernel */

@@ -7,7 +7,7 @@
 namespace kernel {
 
 void initialize_PIC();
-void register_callback(uint32_t callback_function_pointer, uint8_t irq);
+void initialize_IDT();
 
 } // namespace
 
