@@ -5,10 +5,10 @@ load_idt:
 	sti 				#turn on interrupts
 	ret
 
-.global keyboard_handler
-keyboard_handler:
+.global keyboard_handler_wrapper
+keyboard_handler_wrapper:
 	pushal
 	cld
-	call keyboard_handler_main
+	call keyboard_handler
 	popal
 	iret

@@ -49,7 +49,7 @@ void register_callback(uint32_t callback_function_pointer, uint8_t irq)
 	outb(pic_addr, mask);
 }
 
-extern "C" void keyboard_handler_main(void)
+extern "C" void keyboard_handler(void)
 {
 	kernel::PIC_sendEOI(1);
 
@@ -64,11 +64,11 @@ extern "C" void keyboard_handler_main(void)
 		printf("keycode %u\n", keycode);
 	}
 }
-extern "C" void keyboard_handler(void);
+extern "C" void keyboard_handler_wrapper(void);
 
 void initialize_IDT()
 {
-	register_callback((uint32_t)keyboard_handler, 1);
+	register_callback((uint32_t)keyboard_handler_wrapper, 1);
 }
 
 } // namespace
