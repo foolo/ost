@@ -33,6 +33,7 @@ CFILES=
 
 ASMFILES=\
 	boot.s \
+	interrupts/interrupts.s \
 
 CPP_OBJFILES := $(patsubst %, $(BUILDDIR)/%.o, $(CPPFILES))
 C_OBJFILES :=   $(patsubst %, $(BUILDDIR)/%.o, $(CFILES))
