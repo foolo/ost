@@ -1,5 +1,6 @@
 #include "interrupts.h"
 #include "ia32-interrupts.h"
+#include "keyboard.h"
 
 static const int IDT_SIZE = 256;
 
@@ -52,18 +53,16 @@ void register_callback(uint32_t callback_function_pointer, uint8_t irq)
 extern "C" void keyboard_handler(void)
 {
 	kernel::PIC_sendEOI(KEYBOARD_IRQ);
-
 	static const uint8_t KEYBOARD_DATA_PORT = 0x60;
 	static const uint8_t KEYBOARD_STATUS_PORT = 0x64;
-
 	uint8_t status = kernel::inb(KEYBOARD_STATUS_PORT);
-	printf("status %u\n", status);
 	if (status & 0x01)
 	{
-		uint8_t keycode = kernel::inb(KEYBOARD_DATA_PORT);
-		printf("keycode %u\n", keycode);
+		uint8_t scancode = kernel::inb(KEYBOARD_DATA_PORT);
+		keyboard::handle_keyboard_scancode(scancode);
 	}
 }
+
 extern "C" void keyboard_handler_wrapper(void);
 
 void initialize_IDT()

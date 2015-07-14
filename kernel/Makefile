@@ -29,6 +29,7 @@ CPPFILES=\
 	cpp/heap.cpp \
 	interrupts/$(HOSTARCH)/pic.cpp \
 	interrupts/$(HOSTARCH)/idt.cpp \
+	keyboard/keyboard.cpp \
 
 CFILES=
 
