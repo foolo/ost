@@ -5,9 +5,13 @@
 namespace kernel {
 namespace keyboard {
 
-void handle_keyboard_scancode(uint8_t scancode)
+void handle_keyboard_scancode()
 {
-	printf("scancode %x\n", scancode);
+	uint8_t scancode;
+	if (read_scancode(scancode))
+	{
+		printf("scancode %x\n", scancode);
+	}
 }
 
 }} // namespace

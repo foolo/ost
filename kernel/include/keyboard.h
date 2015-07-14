@@ -4,7 +4,8 @@
 namespace kernel {
 namespace keyboard {
 
-void handle_keyboard_scancode(uint8_t scancode);
+void handle_keyboard_scancode();
+bool read_scancode(uint8_t &scancode_out);
 
 }} // namespace
 

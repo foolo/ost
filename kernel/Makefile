@@ -30,6 +30,7 @@ CPPFILES=\
 	interrupts/$(HOSTARCH)/pic.cpp \
 	interrupts/$(HOSTARCH)/idt.cpp \
 	keyboard/keyboard.cpp \
+	keyboard/ia32/keyboard_controller.cpp \
 
 CFILES=
 
