@@ -1,5 +1,10 @@
+# todo arch by parameter
+HOSTARCH=ia32
 CC=i686-elf-gcc
 AS=i686-elf-as
+AR=i686-elf-ar
+BUILDDIR=build-$(HOSTARCH)
+
 
 LIBCDIR=../libc
 
@@ -9,12 +14,10 @@ CXXFLAGS+=-Iinclude
 CPPFLAGS=$(CXXFLAGS) -fno-exceptions -fno-rtti
 CFLAGS=$(CXXFLAGS) -std=gnu99
 
-LDFLAGS=-ffreestanding -O2 -nostdlib -L$(LIBCDIR)/build-ia32
+LDFLAGS=-ffreestanding -O2 -nostdlib -L$(LIBCDIR)/$(BUILDDIR)
 LIBS=-lgcc -lk
 
-LIBK_FILE=$(LIBCDIR)/build-ia32/libk.a
-
-BUILDDIR=build_i386/kernel
+LIBK_FILE=$(LIBCDIR)/$(BUILDDIR)/libk.a
 
 BINOUT=$(BUILDDIR)/myos.bin
 

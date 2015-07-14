@@ -3,9 +3,8 @@ HOSTARCH=ia32
 CC=i686-elf-gcc
 AS=i686-elf-as
 AR=i686-elf-ar
-
-
 BUILDDIR=build-$(HOSTARCH)
+
 
 CFLAGS=-O2 -g -Wall -Wextra $(ARCH_CFLAGS)
 CPPFLAGS=-Iinclude $(ARCH_CPPFLAGS)
