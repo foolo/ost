@@ -30,17 +30,6 @@ static inline void io_wait()
     asm volatile ( "outb %%al, $0x80" : : "a"(0) );
 }
 
-inline void PIC_sendEOI(unsigned char irq)
-{
-	// End-of-interrupt command code
-	const uint8_t PIC_EOI = 0x20;
-	if (irq >= 8)
-	{
-		outb(PIC2_COMMAND, PIC_EOI);
-	}
-	outb(PIC1_COMMAND, PIC_EOI);
-}
-
 void initialize_PIC();
 void register_callback(uint32_t callback_function_pointer, uint8_t irq);
 

@@ -49,4 +49,20 @@ void register_callback(uint32_t callback_function_pointer, uint8_t irq)
 	outb(pic_addr, mask);
 }
 
+extern "C" void keyboard_handler_main(void)
+{
+	kernel::PIC_sendEOI(1);
+
+	static const uint8_t KEYBOARD_DATA_PORT = 0x60;
+	static const uint8_t KEYBOARD_STATUS_PORT = 0x64;
+
+	uint8_t status = kernel::inb(KEYBOARD_STATUS_PORT);
+	printf("status %u\n", status);
+	if (status & 0x01)
+	{
+		uint8_t keycode = kernel::inb(KEYBOARD_DATA_PORT);
+		printf("keycode %u\n", keycode);
+	}
+}
+
 } // namespace
