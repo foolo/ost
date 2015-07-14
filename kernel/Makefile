@@ -24,10 +24,11 @@ BINOUT=$(BUILDDIR)/myos.bin
 # Source files
 
 CPPFILES=\
-	terminal/ia32/terminal.cpp \
+	terminal/$(HOSTARCH)/terminal.cpp \
 	kernel.cpp \
 	cpp/heap.cpp \
 	interrupts/pic.cpp \
+	interrupts/idt.cpp \
 
 CFILES=
 
