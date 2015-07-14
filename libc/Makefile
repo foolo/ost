@@ -25,8 +25,8 @@ $(ARCH_HOSTED_CPPFILES) \
 LIBK_OBJS:=$(FREEOBJS:.o=.libk.o)
 
 
-FREE_CPP_OBJFILES :=   $(patsubst %.cpp, $(BUILDDIR)/%.o, $(FREE_CPPFILES))
-HOSTED_CPP_OBJFILES := $(patsubst %.cpp, $(BUILDDIR)/%.o, $(HOSTED_CPPFILES))
+FREE_CPP_OBJFILES :=   $(patsubst %, $(BUILDDIR)/%.o, $(FREE_CPPFILES))
+HOSTED_CPP_OBJFILES := $(patsubst %, $(BUILDDIR)/%.o, $(HOSTED_CPPFILES))
 
 BINARIES=$(BUILDDIR)/libc.a $(BUILDDIR)/libg.a $(BUILDDIR)/libk.a
 all: $(BINARIES)
@@ -53,15 +53,15 @@ $(BUILDDIR)/libg.a:
 $(BUILDDIR)/libk.a: $(LIBK_OBJS)
 	$(AR) rcs $@ $(LIBK_OBJS)
 
-$(BUILDDIR)/%.o: %.cpp
+$(BUILDDIR)/%.cpp.o: %.cpp
 	@mkdir -p $(dir $@)
 	$(CC) -c $< -o $@ $(CFLAGS) $(CPPFLAGS)
-	$(CC) -MM -MQ $@ $(CFLAGS) $(CPPFLAGS) $< > $(BUILDDIR)/$*.d
+	$(CC) -MM -MQ $@ $(CFLAGS) $(CPPFLAGS) $< > $(BUILDDIR)/$*.cpp.d
 
-$(BUILDDIR)/%.libk.o: %.cpp
+$(BUILDDIR)/%.cpp.libk.o: %.cpp
 	@mkdir -p $(dir $@)
 	$(CC) -c $< -o $@ $(LIBK_CFLAGS) $(LIBK_CPPFLAGS)
-	$(CC) -MM -MQ $@ $(LIBK_CFLAGS) $(LIBK_CPPFLAGS) $< > $(BUILDDIR)/$*.d
+#	$(CC) -MM -MQ $@ $(LIBK_CFLAGS) $(LIBK_CPPFLAGS) $< > $(BUILDDIR)/$*.cpp.d
 
 clean:
 	rm -rf $(BUILDDIR)

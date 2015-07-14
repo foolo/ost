@@ -28,11 +28,12 @@ CPPFILES=\
 
 CFILES=
 
-ASMFILES=boot.s
+ASMFILES=\
+	boot.s \
 
-CPP_OBJFILES := $(patsubst %.cpp, $(BUILDDIR)/%.o, $(CPPFILES))
-C_OBJFILES :=   $(patsubst %.c,   $(BUILDDIR)/%.o, $(CFILES))
-ASM_OBJFILES := $(patsubst %.s,   $(BUILDDIR)/%.o, $(ASMFILES))
+CPP_OBJFILES := $(patsubst %, $(BUILDDIR)/%.o, $(CPPFILES))
+C_OBJFILES :=   $(patsubst %, $(BUILDDIR)/%.o, $(CFILES))
+ASM_OBJFILES := $(patsubst %, $(BUILDDIR)/%.o, $(ASMFILES))
 
 # Order is significant. libc makefile shall be run first.
 default: libc $(BINOUT)
@@ -47,28 +48,28 @@ libc:
 
 # Compile
 
-$(BUILDDIR)/%.o: %.s
+$(BUILDDIR)/%.s.o: %.s
 	@mkdir -p $(dir $@)
-	$(AS) $*.s -o $(BUILDDIR)/$*.o
+	$(AS) $*.s -o $(BUILDDIR)/$*.s.o
 
-$(BUILDDIR)/%.o: %.cpp
+$(BUILDDIR)/%.cpp.o: %.cpp
 	@mkdir -p $(dir $@)
-	$(CC) -c  $*.cpp -o $(BUILDDIR)/$*.o $(CPPFLAGS)
-	$(CC) -MM -MQ $(BUILDDIR)/$*.o $(CPPFLAGS) $*.cpp > $(BUILDDIR)/$*.d
+	$(CC) -c  $*.cpp -o $(BUILDDIR)/$*.cpp.o $(CPPFLAGS)
+	$(CC) -MM -MQ $(BUILDDIR)/$*.cpp.o $(CPPFLAGS) $*.cpp > $(BUILDDIR)/$*.cpp.d
 
-$(BUILDDIR)/%.o: %.c
+$(BUILDDIR)/%.c.o: %.c
 	@mkdir -p $(dir $@)
-	$(CC) -c  $*.c -o $(BUILDDIR)/$*.o $(CFLAGS)
-	$(CC) -MM -MQ $(BUILDDIR)/$*.o $(CFLAGS) $*.c > $(BUILDDIR)/$*.d
+	$(CC) -c  $*.c -o $(BUILDDIR)/$*.c.o $(CFLAGS)
+	$(CC) -MM -MQ $(BUILDDIR)/$*.c.o $(CFLAGS) $*.c > $(BUILDDIR)/$*.c.d
 
 
 # Link
 
 
-CRTI_OBJ=$(BUILDDIR)/cpp/i686-elf/crti.o
+CRTI_OBJ=$(BUILDDIR)/cpp/i686-elf/crti.s.o
 CRTBEGIN_OBJ:=$(shell $(CC) -print-file-name=crtbegin.o)
 CRTEND_OBJ:=  $(shell $(CC) -print-file-name=crtend.o)
-CRTN_OBJ=$(BUILDDIR)/cpp/i686-elf/crtn.o
+CRTN_OBJ=$(BUILDDIR)/cpp/i686-elf/crtn.s.o
 
 OBJS:=$(CPP_OBJFILES) $(C_OBJFILES) $(ASM_OBJFILES)
 OBJ_LINK_LIST:=$(CRTI_OBJ) $(CRTBEGIN_OBJ)   $(OBJS)   $(CRTEND_OBJ) $(CRTN_OBJ)
@@ -91,3 +92,4 @@ $(BINOUT): $(OBJ_LINK_LIST) $(LIBK_FILE)
 
 clean:
 	rm -rf $(BUILDDIR)
+	make -C ../libc clean
