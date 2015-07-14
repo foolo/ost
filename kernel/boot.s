@@ -89,8 +89,12 @@ load_idt:
 
 .global keyboard_handler
 keyboard_handler:
-	call    keyboard_handler_main
-	iretl
+	pushal
+	cld
+	call keyboard_handler_main
+	popal
+	iret
+
 
 
 # Set the size of the _start symbol to the current location '.' minus its start.
