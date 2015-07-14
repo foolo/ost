@@ -27,8 +27,8 @@ CPPFILES=\
 	terminal/$(HOSTARCH)/terminal.cpp \
 	kernel.cpp \
 	cpp/heap.cpp \
-	interrupts/pic.cpp \
-	interrupts/idt.cpp \
+	interrupts/$(HOSTARCH)/pic.cpp \
+	interrupts/$(HOSTARCH)/idt.cpp \
 
 CFILES=
 
