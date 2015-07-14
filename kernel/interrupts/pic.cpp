@@ -1,10 +1,5 @@
 #include "interrupts.h"
 
-static const uint8_t PIC1_COMMAND  = 0x20;   // Master PIC IO base address
-static const uint8_t PIC1_DATA     = 0x21;
-static const uint8_t PIC2_COMMAND  = 0xA0;   // Slave PIC IO base address
-static const uint8_t PIC2_DATA     = 0xA1;
-
 // ICW1 flags
 static const uint8_t ICW1_ICW4      = 0x01;		// ICW4 (not) needed
 static const uint8_t ICW1_SINGLE    = 0x02;		// Single (cascade) mode
@@ -20,8 +15,6 @@ static const uint8_t ICW4_BUF_MASTER = 0x0C;		// Buffered mode/master
 static const uint8_t ICW4_SFNM       = 0x10;		// Special fully nested (not)
 
 static const int IDT_SIZE = 256;
-
-
 static const uint8_t IRQ_0_VECTOR_START = 0x20;
 
 namespace kernel
@@ -58,9 +51,6 @@ void initialize_PIC()
 	outb(PIC2_DATA , 0xff);
 }
 
-static const uint8_t KERNEL_CODE_SEGMENT_OFFSET = 0x08;
-static const uint8_t INTERRUPT_GATE = 0x8e;
-
 struct IDT_entry {
 	uint16_t offset_lowerbits;
 	uint16_t selector;
@@ -75,6 +65,9 @@ extern "C" void load_idt(uint32_t *idt_ptr);
 
 void register_callback(uint32_t callback_function_pointer, uint8_t irq)
 {
+	static const uint8_t KERNEL_CODE_SEGMENT_OFFSET = 0x08;
+	static const uint8_t INTERRUPT_GATE = 0x8e;
+
 	uint8_t vector_index = IRQ_0_VECTOR_START + irq;
 	IDT_entry *entry = IDT + vector_index;
 
