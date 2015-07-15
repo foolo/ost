@@ -58,6 +58,8 @@ void write_configuration(uint8_t configuration)
 
 bool initialize_keyboard_controller()
 {
+	disable_devices();
+
 	// Flush output buffer
 	inb(DATA_PORT);
 
