@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include "terminal.h"
 #include "interrupts.h"
+#include "keyboard.h"
 
 #if !defined(__i386__)
 #error "ix86-elf compiler required"
@@ -19,6 +20,10 @@ void kernel_main() {
 
 	initialize_PIC();
 	initialize_IDT();
+	if (!keyboard::initialize_keyboard_controller())
+	{
+		printf("PS2 controller initialization failed\n");
+	}
 }
 
 } /* namespace kernel */
