@@ -43,26 +43,33 @@ void disable_devices()
 	outb(COMMAND_PORT_WRITE, CMD_DISABLE_SECOND_PS2_PORT);
 }
 
+uint8_t read_configuration()
+{
+	outb(COMMAND_PORT_WRITE, CMD_READ_CONTROLLER_CONFIGURATION);
+	io_wait();
+	uint8_t conf_byte = inb(DATA_PORT);
+	io_wait();
+	return conf_byte;
+}
+
+void write_configuration(uint8_t configuration)
+{
+	outb(COMMAND_PORT_WRITE, CMD_WRITE_CONTROLLER_CONFIGURATION);
+	io_wait();
+	outb(DATA_PORT, configuration);
+	io_wait();
+}
+
 bool initialize_keyboard_controller()
 {
 	// Flush output buffer
 	inb(DATA_PORT);
 	io_wait();
 
-
-	// Read configuration
-	outb(COMMAND_PORT_WRITE, CMD_READ_CONTROLLER_CONFIGURATION);
-	io_wait();
-	uint8_t conf_byte = inb(DATA_PORT);
-	io_wait();
 	// Disable interrupts and translation
+	uint8_t conf_byte = read_configuration();
 	conf_byte &= ~(ENABLE_FIRST_PORT_INTERRUPTS | ENABLE_SECOND_PORT_INTERRUPTS | ENABLE_FIRST_PORT_TRANSLATION);
-
-	// Write back
-	outb(COMMAND_PORT_WRITE, CMD_WRITE_CONTROLLER_CONFIGURATION);
-	io_wait();
-	outb(DATA_PORT, conf_byte);
-	io_wait();
+	write_configuration(conf_byte);
 
 	// Controller self test
 	outb(COMMAND_PORT_WRITE, CMD_SELF_TEST);
@@ -86,20 +93,10 @@ bool initialize_keyboard_controller()
 	outb(COMMAND_PORT_WRITE, CMD_ENABLE_FIRST_PS2_PORT);
 	outb(COMMAND_PORT_WRITE, CMD_ENABLE_SECOND_PS2_PORT);
 
-
 	// Enable interrupts
-	outb(COMMAND_PORT_WRITE, CMD_READ_CONTROLLER_CONFIGURATION);
-	io_wait();
-	conf_byte = inb(DATA_PORT);
-	io_wait();
-	// Enable interrupts
+	conf_byte = read_configuration();
 	conf_byte |= (ENABLE_FIRST_PORT_INTERRUPTS | ENABLE_SECOND_PORT_INTERRUPTS);
-
-	// Write back
-	outb(COMMAND_PORT_WRITE, CMD_WRITE_CONTROLLER_CONFIGURATION);
-	io_wait();
-	outb(DATA_PORT, conf_byte);
-	io_wait();
+	write_configuration(conf_byte);
 
 	return true;
 }
