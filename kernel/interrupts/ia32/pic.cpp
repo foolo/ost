@@ -22,27 +22,19 @@ void initialize_PIC()
 {
 	// ICW1 - Start initialization in cascade mode
 	outb(PIC1_COMMAND, ICW1_INIT | ICW1_ICW4);
-	io_wait();
 	outb(PIC2_COMMAND, ICW1_INIT | ICW1_ICW4);
-	io_wait();
 
 	// ICW2 - Interrupt Vector offset
 	outb(PIC1_DATA, IRQ_0_VECTOR_START); // Map IRQ 0..7 to 0x20
-	io_wait();
 	outb(PIC2_DATA, IRQ_0_VECTOR_START + 8); // Map IRQ 8..15 to 0x28
-	io_wait();
 
 	// ICW3 - PIC Cascading
 	outb(PIC1_DATA, 4); // Tell Master PIC that there is a slave PIC at IRQ2 (0000_0100)
-	io_wait();
 	outb(PIC2_DATA, 2); // Tell Slave PIC its cascade identity (0000_0010)
-	io_wait();
 
 	// ICW4 - Environment information
 	outb(PIC1_DATA, ICW4_8086);
-	io_wait();
 	outb(PIC2_DATA, ICW4_8086);
-	io_wait();
 
 	// Disable all interrupts
 	outb(PIC1_DATA , 0xff);

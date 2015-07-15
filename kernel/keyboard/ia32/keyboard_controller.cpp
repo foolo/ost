@@ -46,25 +46,20 @@ void disable_devices()
 uint8_t read_configuration()
 {
 	outb(COMMAND_PORT_WRITE, CMD_READ_CONTROLLER_CONFIGURATION);
-	io_wait();
 	uint8_t conf_byte = inb(DATA_PORT);
-	io_wait();
 	return conf_byte;
 }
 
 void write_configuration(uint8_t configuration)
 {
 	outb(COMMAND_PORT_WRITE, CMD_WRITE_CONTROLLER_CONFIGURATION);
-	io_wait();
 	outb(DATA_PORT, configuration);
-	io_wait();
 }
 
 bool initialize_keyboard_controller()
 {
 	// Flush output buffer
 	inb(DATA_PORT);
-	io_wait();
 
 	// Disable interrupts and translation
 	uint8_t conf_byte = read_configuration();
