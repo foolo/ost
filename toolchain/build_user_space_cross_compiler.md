@@ -33,7 +33,7 @@ git commit -m initial
 
 ## Apply patch
 
-	git apply ../modify-gcc-and-binutils.patch
+	git apply ../modify-gcc-and-binutils-32-64.patch
 
 Now check the local modifications that the patch created
 Optional, commit changes to keep track of later modifications
