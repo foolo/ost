@@ -1,0 +1,226 @@
+From 91aa97e8b15d62c20a6136fb432651bed01ab7c7 Mon Sep 17 00:00:00 2001
+From: Olof Andersson <olof.andersson@gmail.com>
+Date: Tue, 21 Jul 2015 16:22:14 +0200
+Subject: [PATCH] modified gcc and binutils
+
+---
+ binutils-2.24/bfd/config.bfd                |  5 +++++
+ binutils-2.24/config.sub                    |  2 +-
+ binutils-2.24/gas/configure.tgt             |  1 +
+ binutils-2.24/ld/Makefile.am                |  4 ++++
+ binutils-2.24/ld/configure.tgt              |  5 +++++
+ binutils-2.24/ld/emulparams/elf_i386_ost.sh |  4 ++++
+ gcc-4.9.2/config.sub                        |  2 +-
+ gcc-4.9.2/config/ost.h                      | 24 ++++++++++++++++++++++++
+ gcc-4.9.2/fixincludes/mkfixinc.sh           |  1 +
+ gcc-4.9.2/gcc/config.gcc                    |  8 ++++++++
+ gcc-4.9.2/libgcc/config.host                |  3 +++
+ gcc-4.9.2/libstdc++-v3/crossconfig.m4       |  6 ++++++
+ 12 files changed, 63 insertions(+), 2 deletions(-)
+ create mode 100644 binutils-2.24/ld/emulparams/elf_i386_ost.sh
+ create mode 100644 gcc-4.9.2/config/ost.h
+
+diff --git a/binutils-2.24/bfd/config.bfd b/binutils-2.24/bfd/config.bfd
+index 5324d39..9bfdb8a 100644
+--- a/binutils-2.24/bfd/config.bfd
++++ b/binutils-2.24/bfd/config.bfd
+@@ -1686,6 +1686,11 @@ case "${targ}" in
+     targ_defvec=m68kcoff_vec
+     targ_selvecs=ieee_vec
+     ;;
++  i[3-7]86-*-ost*)
++    targ_defvec=bfd_elf32_i386_vec
++    targ_selvecs=
++    targ64_selvecs=bfd_elf64_x86_64_vec
++    ;;
+ # END OF targmatch.h
+   *)
+     echo 1>&2 "*** BFD does not support target ${targ}."
+diff --git a/binutils-2.24/config.sub b/binutils-2.24/config.sub
+index 61cb4bc..848e726 100755
+--- a/binutils-2.24/config.sub
++++ b/binutils-2.24/config.sub
+@@ -1356,7 +1356,7 @@ case $os in
+ 	      | -hpux* | -unos* | -osf* | -luna* | -dgux* | -auroraux* | -solaris* \
+ 	      | -sym* | -kopensolaris* | -plan9* \
+ 	      | -amigaos* | -amigados* | -msdos* | -newsos* | -unicos* | -aof* \
+-	      | -aos* | -aros* \
++	      | -aos* | -aros* | -ost* \
+ 	      | -nindy* | -vxsim* | -vxworks* | -ebmon* | -hms* | -mvs* \
+ 	      | -clix* | -riscos* | -uniplus* | -iris* | -rtu* | -xenix* \
+ 	      | -hiux* | -386bsd* | -knetbsd* | -mirbsd* | -netbsd* \
+diff --git a/binutils-2.24/gas/configure.tgt b/binutils-2.24/gas/configure.tgt
+index 77c1d9b..2254bca 100644
+--- a/binutils-2.24/gas/configure.tgt
++++ b/binutils-2.24/gas/configure.tgt
+@@ -116,6 +116,7 @@ esac
+ generic_target=${cpu_type}-$vendor-$os
+ # Note: This table is alpha-sorted, please try to keep it that way.
+ case ${generic_target} in
++  i386-*-ost*)    fmt=elf ;;
+   aarch64*-*-elf)			fmt=elf;;
+   aarch64*-*-linux*)			fmt=elf em=linux ;;
+ 
+diff --git a/binutils-2.24/ld/Makefile.am b/binutils-2.24/ld/Makefile.am
+index b2b2a6e..daaf147 100644
+--- a/binutils-2.24/ld/Makefile.am
++++ b/binutils-2.24/ld/Makefile.am
+@@ -263,6 +263,7 @@ ALL_EMULATION_SOURCES = \
+ 	eelf32xstormy16.c \
+ 	eelf32xtensa.c \
+ 	eelf_i386.c \
++	eelf_i386_ost.c \
+ 	eelf_i386_be.c \
+ 	eelf_i386_chaos.c \
+ 	eelf_i386_fbsd.c \
+@@ -1268,6 +1269,9 @@ eelf32xtensa.c: $(srcdir)/emulparams/elf32xtensa.sh $(ELF_DEPS) \
+ eelf_i386.c: $(srcdir)/emulparams/elf_i386.sh \
+   $(ELF_DEPS) $(srcdir)/scripttempl/elf.sc ${GEN_DEPENDS}
+ 	${GENSCRIPTS} elf_i386 "$(tdir_elf_i386)"
++eelf_i386_ost.c: $(srcdir)/emulparams/elf_i386_ost.sh \
++  $(ELF_DEPS) $(srcdir)/scripttempl/elf.sc ${GEN_DEPENDS}
++	${GENSCRIPTS} elf_i386_ost "$(tdir_elf_i386_ost)"
+ eelf_i386_be.c: $(srcdir)/emulparams/elf_i386_be.sh \
+   $(ELF_DEPS) $(srcdir)/scripttempl/elf.sc ${GEN_DEPENDS}
+ 	${GENSCRIPTS} elf_i386_be "$(tdir_elf_i386_be)"
+diff --git a/binutils-2.24/ld/configure.tgt b/binutils-2.24/ld/configure.tgt
+index c50730b..bd4650a 100644
+--- a/binutils-2.24/ld/configure.tgt
++++ b/binutils-2.24/ld/configure.tgt
+@@ -234,6 +234,11 @@ i[3-7]86-*-linux-*)	targ_emul=elf_i386
+ 			targ64_extra_libpath=elf_x86_64
+ 			targ_extra_libpath=elf32_x86_64
+ 			tdir_i386linux=${targ_alias}aout ;;
++i[3-7]86-*-ost*)
++			targ_emul=elf_i386_ost
++			targ_extra_emuls=elf_i386
++			targ64_extra_emuls="elf_x86_64_ost elf_x86_64"
++			;;
+ x86_64-*-linux-gnux32)	targ_emul=elf32_x86_64
+ 			targ_extra_emuls="elf_x86_64 elf_i386 i386linux elf_l1om elf_k1om"
+ 			targ_extra_libpath="elf_i386 elf_x86_64 elf_l1om elf_k1om"
+diff --git a/binutils-2.24/ld/emulparams/elf_i386_ost.sh b/binutils-2.24/ld/emulparams/elf_i386_ost.sh
+new file mode 100644
+index 0000000..114b9c4
+--- /dev/null
++++ b/binutils-2.24/ld/emulparams/elf_i386_ost.sh
+@@ -0,0 +1,4 @@
++. ${srcdir}/emulparams/elf_i386.sh
++GENERATE_SHLIB_SCRIPT=yes
++GENERATE_PIE_SCRIPT=yes
++
+diff --git a/gcc-4.9.2/config.sub b/gcc-4.9.2/config.sub
+index 61cb4bc..848e726 100755
+--- a/gcc-4.9.2/config.sub
++++ b/gcc-4.9.2/config.sub
+@@ -1356,7 +1356,7 @@ case $os in
+ 	      | -hpux* | -unos* | -osf* | -luna* | -dgux* | -auroraux* | -solaris* \
+ 	      | -sym* | -kopensolaris* | -plan9* \
+ 	      | -amigaos* | -amigados* | -msdos* | -newsos* | -unicos* | -aof* \
+-	      | -aos* | -aros* \
++	      | -aos* | -aros* | -ost* \
+ 	      | -nindy* | -vxsim* | -vxworks* | -ebmon* | -hms* | -mvs* \
+ 	      | -clix* | -riscos* | -uniplus* | -iris* | -rtu* | -xenix* \
+ 	      | -hiux* | -386bsd* | -knetbsd* | -mirbsd* | -netbsd* \
+diff --git a/gcc-4.9.2/config/ost.h b/gcc-4.9.2/config/ost.h
+new file mode 100644
+index 0000000..bccd8b6
+--- /dev/null
++++ b/gcc-4.9.2/config/ost.h
+@@ -0,0 +1,24 @@
++/* Useful if you wish to make target-specific gcc changes. */
++#undef TARGET_OST
++#define TARGET_OST 1
++
++/* Default arguments you want when running your
++   i686-ost-gcc/x86_64-ost-gcc toolchain */
++#define LIB_SPEC "-lc -lg -lm" /* link against C standard libraries */
++                               /* modify this based on your needs */
++
++/* Don't automatically add extern "C" { } around header files. */
++#undef  NO_IMPLICIT_EXTERN_C
++#define NO_IMPLICIT_EXTERN_C 1
++
++/* Additional predefined macros. */
++#undef TARGET_OS_CPP_BUILTINS
++#define TARGET_OS_CPP_BUILTINS()      \
++  do {                                \
++    builtin_define ("__ost__");      \
++    builtin_define ("__unix__");      \
++    builtin_assert ("system=ost");   \
++    builtin_assert ("system=unix");   \
++    builtin_assert ("system=posix");   \
++  } while(0);
++
+diff --git a/gcc-4.9.2/fixincludes/mkfixinc.sh b/gcc-4.9.2/fixincludes/mkfixinc.sh
+index 6653fed..00490a5 100755
+--- a/gcc-4.9.2/fixincludes/mkfixinc.sh
++++ b/gcc-4.9.2/fixincludes/mkfixinc.sh
+@@ -11,6 +11,7 @@ target=fixinc.sh
+ 
+ # Check for special fix rules for particular targets
+ case $machine in
++    *-ost* | \
+     i?86-*-cygwin* | \
+     i?86-*-mingw32* | \
+     x86_64-*-mingw32* | \
+diff --git a/gcc-4.9.2/gcc/config.gcc b/gcc-4.9.2/gcc/config.gcc
+index 9d3fa57..e31bf1f 100644
+--- a/gcc-4.9.2/gcc/config.gcc
++++ b/gcc-4.9.2/gcc/config.gcc
+@@ -616,6 +616,11 @@ x86_cpus="generic intel"
+ 
+ # Common parts for widely ported systems.
+ case ${target} in
++*-*-ost*)
++  gas=yes
++  gnu_ld=yes
++  default_use_cxa_atexit=yes
++  ;;
+ *-*-darwin*)
+   tmake_file="t-darwin ${cpu_type}/t-darwin"
+   tm_file="${tm_file} darwin.h"
+@@ -881,6 +886,9 @@ case ${target} in
+ esac
+ 
+ case ${target} in
++i[34567]86-*-ost*)
++    tm_file="${tm_file} i386/unix.h i386/att.h dbxelf.h elfos.h i386/i386elf.h ost.h"
++    ;;
+ aarch64*-*-elf)
+ 	tm_file="${tm_file} dbxelf.h elfos.h newlib-stdint.h"
+ 	tm_file="${tm_file} aarch64/aarch64-elf.h aarch64/aarch64-elf-raw.h"
+diff --git a/gcc-4.9.2/libgcc/config.host b/gcc-4.9.2/libgcc/config.host
+index f4a7428..ea1f457 100644
+--- a/gcc-4.9.2/libgcc/config.host
++++ b/gcc-4.9.2/libgcc/config.host
+@@ -314,6 +314,9 @@ i[34567]86-*-mingw* | x86_64-*-mingw*)
+ esac
+ 
+ case ${host} in
++i[34567]86-*-ost*)
++	extra_parts="$extra_parts crtbegin.o crtend.o"
++	tmake_file="$tmake_file i386/t-crtstuff t-crtstuff-pic t-libgcc-pic"
+ aarch64*-*-elf)
+ 	extra_parts="$extra_parts crtbegin.o crtend.o crti.o crtn.o"
+ 	tmake_file="${tmake_file} ${cpu_type}/t-aarch64"
+diff --git a/gcc-4.9.2/libstdc++-v3/crossconfig.m4 b/gcc-4.9.2/libstdc++-v3/crossconfig.m4
+index 15d876e..ff2e978 100644
+--- a/gcc-4.9.2/libstdc++-v3/crossconfig.m4
++++ b/gcc-4.9.2/libstdc++-v3/crossconfig.m4
+@@ -5,6 +5,12 @@ dnl
+ AC_DEFUN([GLIBCXX_CROSSCONFIG],[
+ # Base decisions on target environment.
+ case "${host}" in
++  *-ost*)
++    GLIBCXX_CHECK_COMPILER_FEATURES
++    GLIBCXX_CHECK_LINKER_FEATURES
++    GLIBCXX_CHECK_MATH_SUPPORT
++    GLIBCXX_CHECK_STDLIB_SUPPORT
++    ;;
+   arm*-*-symbianelf*)
+     # This is a freestanding configuration; there is nothing to do here.
+     ;;
+-- 
+2.1.4
+
