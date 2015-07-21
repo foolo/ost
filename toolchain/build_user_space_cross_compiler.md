@@ -67,6 +67,13 @@ git commit -m modify-gcc-and-binutils
 	    targ_selvecs=
 	    targ64_selvecs=bfd_elf64_x86_64_vec
 	    ;;
+#ifdef BFD64
+  x86_64-*-ost*)
+    targ_defvec=bfd_elf64_x86_64_vec
+    targ_selvecs=bfd_elf32_i386_vec
+    want64=true
+    ;;
+#endif
 
 ## Edit binutils-2.24/gas/configure.tgt
 
@@ -83,6 +90,10 @@ git commit -m modify-gcc-and-binutils
 				targ_extra_emuls=elf_i386
 				targ64_extra_emuls="elf_x86_64_ost elf_x86_64"
 				;;
+	x86_64-*-ost*)
+				targ_emul=elf_x86_64_ost
+				targ_extra_emuls=elf_i386_ost elf_x86_64 elf_i386
+				;;
 	...
 
 
@@ -92,12 +103,24 @@ git commit -m modify-gcc-and-binutils
 	GENERATE_SHLIB_SCRIPT=yes
 	GENERATE_PIE_SCRIPT=yes
 
+
+## Create binutils-2.24/ld/emulparams/elf_x86_64_ost.sh
+
+	. ${srcdir}/emulparams/elf_i386.sh
+
+
 ## Edit binutils-2.24/ld/Makefile.am
 After rule for eelf_i386.c, add
 
 	eelf_i386_ost.c: $(srcdir)/emulparams/elf_i386_ost.sh \
 	  $(ELF_DEPS) $(srcdir)/scripttempl/elf.sc ${GEN_DEPENDS}
 		${GENSCRIPTS} elf_i386_ost "$(tdir_elf_i386_ost)"
+
+After rule eelf_x86_64.c, add
+
+	eelf_x86_64_ost.c: $(srcdir)/emulparams/elf_x86_64_ost.sh \
+	  $(ELF_DEPS) $(srcdir)/scripttempl/elf.sc ${GEN_DEPENDS}
+	       ${GENSCRIPTS} elf_x86_64_ost "$(tdir_elf_x86_64_ost)"
 
 And add eelf_i386_ost.c to ALL_EMULATION_SOURCES
 
