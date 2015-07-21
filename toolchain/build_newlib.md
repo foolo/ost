@@ -164,7 +164,7 @@ Complete the file with implementations of all the functions
 
 	mkdir build-newlib
 	cd build-newlib
-	../newlib-2.2.0-1/configure --prefix=/usr --target=i686-myos
+	../newlib-2.2.0-1/configure --prefix=/usr --target=i686-ost
 	make all
 	make DESTDIR=/myos install
 
