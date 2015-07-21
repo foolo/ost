@@ -41,6 +41,18 @@ Optional, commit changes to keep track of later modifications
 git add *
 git commit -m modify-gcc-and-binutils
 
+## Run automake and autoconf
+
+	pushd binutils-2.24/ld
+	automake
+	popd
+
+	pushd gcc-4.9.2/libstdc++-v3/
+	autoconf
+	popd
+
+
+# Alternative to the patch
 
 ## Edit binutils-2.24/config.sub
 
