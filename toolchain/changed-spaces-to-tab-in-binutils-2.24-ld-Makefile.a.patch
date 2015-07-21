@@ -1,0 +1,25 @@
+From ed89c590050587c37facc627e9108f16bb7413e1 Mon Sep 17 00:00:00 2001
+From: Olof Andersson <olof.andersson@gmail.com>
+Date: Wed, 22 Jul 2015 01:42:52 +0200
+Subject: [PATCH] changed spaces to tab in binutils-2.24/ld/Makefile.am
+
+---
+ binutils-2.24/ld/Makefile.am | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/binutils-2.24/ld/Makefile.am b/binutils-2.24/ld/Makefile.am
+index 1f9e620..3ab288f 100644
+--- a/binutils-2.24/ld/Makefile.am
++++ b/binutils-2.24/ld/Makefile.am
+@@ -2145,7 +2145,7 @@ eelf_x86_64.c: $(srcdir)/emulparams/elf_x86_64.sh \
+ 	${GENSCRIPTS} elf_x86_64 "$(tdir_elf_x86_64)"
+ eelf_x86_64_ost.c: $(srcdir)/emulparams/elf_x86_64_ost.sh \
+   $(ELF_DEPS) $(srcdir)/scripttempl/elf.sc ${GEN_DEPENDS}
+-       ${GENSCRIPTS} elf_x86_64_ost "$(tdir_elf_x86_64_ost)"
++	${GENSCRIPTS} elf_x86_64_ost "$(tdir_elf_x86_64_ost)"
+ eelf_x86_64_fbsd.c: $(srcdir)/emulparams/elf_x86_64_fbsd.sh \
+   $(srcdir)/emulparams/elf_x86_64.sh \
+   $(ELF_DEPS) $(srcdir)/scripttempl/elf.sc ${GEN_DEPENDS}
+-- 
+2.1.4
+

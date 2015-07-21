@@ -34,6 +34,7 @@ git commit -m initial
 ## Apply patch
 
 	git apply ../modify-gcc-and-binutils-32-64.patch
+	git apply ../changed-spaces-to-tab-in-binutils-2.24-ld-Makefile.a.patch
 
 Now check the local modifications that the patch created
 Optional, commit changes to keep track of later modifications
@@ -120,7 +121,7 @@ After rule eelf_x86_64.c, add
 
 	eelf_x86_64_ost.c: $(srcdir)/emulparams/elf_x86_64_ost.sh \
 	  $(ELF_DEPS) $(srcdir)/scripttempl/elf.sc ${GEN_DEPENDS}
-	       ${GENSCRIPTS} elf_x86_64_ost "$(tdir_elf_x86_64_ost)"
+		${GENSCRIPTS} elf_x86_64_ost "$(tdir_elf_x86_64_ost)"
 
 And add eelf_i386_ost.c to ALL_EMULATION_SOURCES
 
