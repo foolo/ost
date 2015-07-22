@@ -169,10 +169,8 @@ Complete the file with implementations of all the functions
 	make DESTDIR=/myos install
 
 Note: If `make all` fails because it cannot find libc/sys/ost/lib.a and
-libc/sys/ost/crt0.o, go to the source dir toolchain/newlib-2.2.0-1/newlib/libc/sys/ost
-and run ./configure and make. It will create lib.a and crt0.o. Copy them manually to
-toolchain/build-newlib/i686-ost/newlib/libc/sys/ost, and run `make all` again.
-
+libc/sys/ost/crt0.o, go to build-newlib/i686-ost/newlib/libc/sys
+and run make. It will create lib.a and crt0.o.
 According to tutorial:
 "For some reason, the newer versions of newlib (at least for me) didn't put the libraries in a location where other utilities like binutils could find. So here's another hack to fix this:"
 
