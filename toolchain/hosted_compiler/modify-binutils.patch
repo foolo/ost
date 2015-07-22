@@ -1,0 +1,124 @@
+From fc88b338ce3dc0d880a5cf7292be94ceab2dd74b Mon Sep 17 00:00:00 2001
+From: Olof Andersson <olof.andersson@gmail.com>
+Date: Wed, 22 Jul 2015 23:03:49 +0200
+Subject: [PATCH] modified binutils
+
+---
+ bfd/config.bfd    | 12 ++++++++++++
+ config.sub        |  2 +-
+ gas/configure.tgt |  1 +
+ ld/Makefile.am    |  8 ++++++++
+ ld/configure.tgt  |  9 +++++++++
+ 5 files changed, 31 insertions(+), 1 deletion(-)
+
+diff --git a/bfd/config.bfd b/bfd/config.bfd
+index 5324d39..b3628c9 100644
+--- a/bfd/config.bfd
++++ b/bfd/config.bfd
+@@ -1686,6 +1686,18 @@ case "${targ}" in
+     targ_defvec=m68kcoff_vec
+     targ_selvecs=ieee_vec
+     ;;
++  i[3-7]86-*-ost*)
++    targ_defvec=bfd_elf32_i386_vec
++    targ_selvecs=
++    targ64_selvecs=bfd_elf64_x86_64_vec
++    ;;
++#ifdef BFD64
++  x86_64-*-ost*)
++    targ_defvec=bfd_elf64_x86_64_vec
++    targ_selvecs=bfd_elf32_i386_vec
++    want64=true
++    ;;
++#endif
+ # END OF targmatch.h
+   *)
+     echo 1>&2 "*** BFD does not support target ${targ}."
+diff --git a/config.sub b/config.sub
+index 61cb4bc..848e726 100755
+--- a/config.sub
++++ b/config.sub
+@@ -1356,7 +1356,7 @@ case $os in
+ 	      | -hpux* | -unos* | -osf* | -luna* | -dgux* | -auroraux* | -solaris* \
+ 	      | -sym* | -kopensolaris* | -plan9* \
+ 	      | -amigaos* | -amigados* | -msdos* | -newsos* | -unicos* | -aof* \
+-	      | -aos* | -aros* \
++	      | -aos* | -aros* | -ost* \
+ 	      | -nindy* | -vxsim* | -vxworks* | -ebmon* | -hms* | -mvs* \
+ 	      | -clix* | -riscos* | -uniplus* | -iris* | -rtu* | -xenix* \
+ 	      | -hiux* | -386bsd* | -knetbsd* | -mirbsd* | -netbsd* \
+diff --git a/gas/configure.tgt b/gas/configure.tgt
+index 77c1d9b..2254bca 100644
+--- a/gas/configure.tgt
++++ b/gas/configure.tgt
+@@ -116,6 +116,7 @@ esac
+ generic_target=${cpu_type}-$vendor-$os
+ # Note: This table is alpha-sorted, please try to keep it that way.
+ case ${generic_target} in
++  i386-*-ost*)    fmt=elf ;;
+   aarch64*-*-elf)			fmt=elf;;
+   aarch64*-*-linux*)			fmt=elf em=linux ;;
+ 
+diff --git a/ld/Makefile.am b/ld/Makefile.am
+index b2b2a6e..3ab288f 100644
+--- a/ld/Makefile.am
++++ b/ld/Makefile.am
+@@ -263,6 +263,7 @@ ALL_EMULATION_SOURCES = \
+ 	eelf32xstormy16.c \
+ 	eelf32xtensa.c \
+ 	eelf_i386.c \
++	eelf_i386_ost.c \
+ 	eelf_i386_be.c \
+ 	eelf_i386_chaos.c \
+ 	eelf_i386_fbsd.c \
+@@ -523,6 +524,7 @@ ALL_64_EMULATION_SOURCES = \
+ 	eelf_k1om.c \
+ 	eelf_k1om_fbsd.c \
+ 	eelf_x86_64.c \
++	eelf_x86_64_ost.c \
+ 	eelf_x86_64_fbsd.c \
+ 	eelf_x86_64_nacl.c \
+ 	eelf_x86_64_sol2.c \
+@@ -1268,6 +1270,9 @@ eelf32xtensa.c: $(srcdir)/emulparams/elf32xtensa.sh $(ELF_DEPS) \
+ eelf_i386.c: $(srcdir)/emulparams/elf_i386.sh \
+   $(ELF_DEPS) $(srcdir)/scripttempl/elf.sc ${GEN_DEPENDS}
+ 	${GENSCRIPTS} elf_i386 "$(tdir_elf_i386)"
++eelf_i386_ost.c: $(srcdir)/emulparams/elf_i386_ost.sh \
++  $(ELF_DEPS) $(srcdir)/scripttempl/elf.sc ${GEN_DEPENDS}
++	${GENSCRIPTS} elf_i386_ost "$(tdir_elf_i386_ost)"
+ eelf_i386_be.c: $(srcdir)/emulparams/elf_i386_be.sh \
+   $(ELF_DEPS) $(srcdir)/scripttempl/elf.sc ${GEN_DEPENDS}
+ 	${GENSCRIPTS} elf_i386_be "$(tdir_elf_i386_be)"
+@@ -2138,6 +2143,9 @@ eelf_k1om_fbsd.c: $(srcdir)/emulparams/elf_k1om_fbsd.sh \
+ eelf_x86_64.c: $(srcdir)/emulparams/elf_x86_64.sh \
+   $(ELF_DEPS) $(srcdir)/scripttempl/elf.sc ${GEN_DEPENDS}
+ 	${GENSCRIPTS} elf_x86_64 "$(tdir_elf_x86_64)"
++eelf_x86_64_ost.c: $(srcdir)/emulparams/elf_x86_64_ost.sh \
++  $(ELF_DEPS) $(srcdir)/scripttempl/elf.sc ${GEN_DEPENDS}
++	${GENSCRIPTS} elf_x86_64_ost "$(tdir_elf_x86_64_ost)"
+ eelf_x86_64_fbsd.c: $(srcdir)/emulparams/elf_x86_64_fbsd.sh \
+   $(srcdir)/emulparams/elf_x86_64.sh \
+   $(ELF_DEPS) $(srcdir)/scripttempl/elf.sc ${GEN_DEPENDS}
+diff --git a/ld/configure.tgt b/ld/configure.tgt
+index c50730b..4d13b2f 100644
+--- a/ld/configure.tgt
++++ b/ld/configure.tgt
+@@ -234,6 +234,15 @@ i[3-7]86-*-linux-*)	targ_emul=elf_i386
+ 			targ64_extra_libpath=elf_x86_64
+ 			targ_extra_libpath=elf32_x86_64
+ 			tdir_i386linux=${targ_alias}aout ;;
++i[3-7]86-*-ost*)
++			targ_emul=elf_i386_ost
++			targ_extra_emuls=elf_i386
++			targ64_extra_emuls="elf_x86_64_ost elf_x86_64"
++			;;
++x86_64-*-ost*)
++			targ_emul=elf_x86_64_ost
++			targ_extra_emuls=elf_i386_ost elf_x86_64 elf_i386
++			;;
+ x86_64-*-linux-gnux32)	targ_emul=elf32_x86_64
+ 			targ_extra_emuls="elf_x86_64 elf_i386 i386linux elf_l1om elf_k1om"
+ 			targ_extra_libpath="elf_i386 elf_x86_64 elf_l1om elf_k1om"
+-- 
+2.1.4
+

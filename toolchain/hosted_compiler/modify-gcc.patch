@@ -1,0 +1,106 @@
+From ba52180d32a3fc2d297e4d508ad139d3ac58f458 Mon Sep 17 00:00:00 2001
+From: Olof Andersson <olof.andersson@gmail.com>
+Date: Wed, 22 Jul 2015 23:36:25 +0200
+Subject: [PATCH] modified gcc
+
+---
+ config.sub                  |  2 +-
+ fixincludes/mkfixinc.sh     |  1 +
+ gcc/config.gcc              | 11 +++++++++++
+ libgcc/config.host          |  8 ++++++++
+ libstdc++-v3/crossconfig.m4 |  6 ++++++
+ 5 files changed, 27 insertions(+), 1 deletion(-)
+
+diff --git a/config.sub b/config.sub
+index 61cb4bc..848e726 100755
+--- a/config.sub
++++ b/config.sub
+@@ -1356,7 +1356,7 @@ case $os in
+ 	      | -hpux* | -unos* | -osf* | -luna* | -dgux* | -auroraux* | -solaris* \
+ 	      | -sym* | -kopensolaris* | -plan9* \
+ 	      | -amigaos* | -amigados* | -msdos* | -newsos* | -unicos* | -aof* \
+-	      | -aos* | -aros* \
++	      | -aos* | -aros* | -ost* \
+ 	      | -nindy* | -vxsim* | -vxworks* | -ebmon* | -hms* | -mvs* \
+ 	      | -clix* | -riscos* | -uniplus* | -iris* | -rtu* | -xenix* \
+ 	      | -hiux* | -386bsd* | -knetbsd* | -mirbsd* | -netbsd* \
+diff --git a/fixincludes/mkfixinc.sh b/fixincludes/mkfixinc.sh
+index 6653fed..00490a5 100755
+--- a/fixincludes/mkfixinc.sh
++++ b/fixincludes/mkfixinc.sh
+@@ -11,6 +11,7 @@ target=fixinc.sh
+ 
+ # Check for special fix rules for particular targets
+ case $machine in
++    *-ost* | \
+     i?86-*-cygwin* | \
+     i?86-*-mingw32* | \
+     x86_64-*-mingw32* | \
+diff --git a/gcc/config.gcc b/gcc/config.gcc
+index 9d3fa57..6d6de04 100644
+--- a/gcc/config.gcc
++++ b/gcc/config.gcc
+@@ -616,6 +616,11 @@ x86_cpus="generic intel"
+ 
+ # Common parts for widely ported systems.
+ case ${target} in
++*-*-ost*)
++  gas=yes
++  gnu_ld=yes
++  default_use_cxa_atexit=yes
++  ;;
+ *-*-darwin*)
+   tmake_file="t-darwin ${cpu_type}/t-darwin"
+   tm_file="${tm_file} darwin.h"
+@@ -881,6 +886,12 @@ case ${target} in
+ esac
+ 
+ case ${target} in
++i[34567]86-*-ost*)
++    tm_file="${tm_file} i386/unix.h i386/att.h dbxelf.h elfos.h i386/i386elf.h ost.h"
++    ;;
++x86_64-*-ost*)
++    tm_file="${tm_file} i386/unix.h i386/att.h dbxelf.h elfos.h i386/i386elf.h i386/x86-64.h ost.h"
++    ;;
+ aarch64*-*-elf)
+ 	tm_file="${tm_file} dbxelf.h elfos.h newlib-stdint.h"
+ 	tm_file="${tm_file} aarch64/aarch64-elf.h aarch64/aarch64-elf-raw.h"
+diff --git a/libgcc/config.host b/libgcc/config.host
+index f4a7428..d83255f 100644
+--- a/libgcc/config.host
++++ b/libgcc/config.host
+@@ -314,6 +314,14 @@ i[34567]86-*-mingw* | x86_64-*-mingw*)
+ esac
+ 
+ case ${host} in
++i[34567]86-*-ost*)
++	extra_parts="$extra_parts crtbegin.o crtend.o"
++	tmake_file="$tmake_file i386/t-crtstuff t-crtstuff-pic t-libgcc-pic"
++	;;
++x86_64-*-ost*)
++	extra_parts="$extra_parts crtbegin.o crtend.o"
++	tmake_file="$tmake_file i386/t-crtstuff t-crtstuff-pic t-libgcc-pic"
++	;;
+ aarch64*-*-elf)
+ 	extra_parts="$extra_parts crtbegin.o crtend.o crti.o crtn.o"
+ 	tmake_file="${tmake_file} ${cpu_type}/t-aarch64"
+diff --git a/libstdc++-v3/crossconfig.m4 b/libstdc++-v3/crossconfig.m4
+index 15d876e..ff2e978 100644
+--- a/libstdc++-v3/crossconfig.m4
++++ b/libstdc++-v3/crossconfig.m4
+@@ -5,6 +5,12 @@ dnl
+ AC_DEFUN([GLIBCXX_CROSSCONFIG],[
+ # Base decisions on target environment.
+ case "${host}" in
++  *-ost*)
++    GLIBCXX_CHECK_COMPILER_FEATURES
++    GLIBCXX_CHECK_LINKER_FEATURES
++    GLIBCXX_CHECK_MATH_SUPPORT
++    GLIBCXX_CHECK_STDLIB_SUPPORT
++    ;;
+   arm*-*-symbianelf*)
+     # This is a freestanding configuration; there is nothing to do here.
+     ;;
+-- 
+2.1.4
+
