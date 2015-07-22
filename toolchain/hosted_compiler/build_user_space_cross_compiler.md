@@ -34,7 +34,6 @@ git commit -m initial
 ## Apply patch
 
 	git apply ../modify-gcc-and-binutils-32-64.patch
-	git apply ../changed-spaces-to-tab-in-binutils-2.24-ld-Makefile.a.patch
 
 Now check the local modifications that the patch created
 Optional, commit changes to keep track of later modifications
