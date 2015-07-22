@@ -1,6 +1,6 @@
-From 7fcd5ea08a343ee061d2fbb7c9a9aacb2ca13039 Mon Sep 17 00:00:00 2001
+From 878e063c09a6bb89871e64764adbd2b40d18ec18 Mon Sep 17 00:00:00 2001
 From: Olof Andersson <olof.andersson@gmail.com>
-Date: Wed, 22 Jul 2015 01:11:54 +0200
+Date: Wed, 22 Jul 2015 15:21:33 +0200
 Subject: [PATCH] modified binutils and gcc
 
 ---
@@ -12,15 +12,15 @@ Subject: [PATCH] modified binutils and gcc
  binutils-2.24/ld/emulparams/elf_i386_ost.sh   |  1 +
  binutils-2.24/ld/emulparams/elf_x86_64_ost.sh |  4 ++++
  gcc-4.9.2/config.sub                          |  2 +-
- gcc-4.9.2/config/ost.h                        | 24 ++++++++++++++++++++++++
  gcc-4.9.2/fixincludes/mkfixinc.sh             |  1 +
  gcc-4.9.2/gcc/config.gcc                      | 11 +++++++++++
- gcc-4.9.2/libgcc/config.host                  |  7 +++++++
+ gcc-4.9.2/gcc/config/ost.h                    | 24 ++++++++++++++++++++++++
+ gcc-4.9.2/libgcc/config.host                  |  8 ++++++++
  gcc-4.9.2/libstdc++-v3/crossconfig.m4         |  6 ++++++
- 13 files changed, 86 insertions(+), 2 deletions(-)
+ 13 files changed, 87 insertions(+), 2 deletions(-)
  create mode 100644 binutils-2.24/ld/emulparams/elf_i386_ost.sh
  create mode 100644 binutils-2.24/ld/emulparams/elf_x86_64_ost.sh
- create mode 100644 gcc-4.9.2/config/ost.h
+ create mode 100644 gcc-4.9.2/gcc/config/ost.h
 
 diff --git a/binutils-2.24/bfd/config.bfd b/binutils-2.24/bfd/config.bfd
 index 5324d39..b3628c9 100644
@@ -71,7 +71,7 @@ index 77c1d9b..2254bca 100644
    aarch64*-*-linux*)			fmt=elf em=linux ;;
  
 diff --git a/binutils-2.24/ld/Makefile.am b/binutils-2.24/ld/Makefile.am
-index b2b2a6e..1f9e620 100644
+index b2b2a6e..3ab288f 100644
 --- a/binutils-2.24/ld/Makefile.am
 +++ b/binutils-2.24/ld/Makefile.am
 @@ -263,6 +263,7 @@ ALL_EMULATION_SOURCES = \
@@ -106,7 +106,7 @@ index b2b2a6e..1f9e620 100644
  	${GENSCRIPTS} elf_x86_64 "$(tdir_elf_x86_64)"
 +eelf_x86_64_ost.c: $(srcdir)/emulparams/elf_x86_64_ost.sh \
 +  $(ELF_DEPS) $(srcdir)/scripttempl/elf.sc ${GEN_DEPENDS}
-+       ${GENSCRIPTS} elf_x86_64_ost "$(tdir_elf_x86_64_ost)"
++	${GENSCRIPTS} elf_x86_64_ost "$(tdir_elf_x86_64_ost)"
  eelf_x86_64_fbsd.c: $(srcdir)/emulparams/elf_x86_64_fbsd.sh \
    $(srcdir)/emulparams/elf_x86_64.sh \
    $(ELF_DEPS) $(srcdir)/scripttempl/elf.sc ${GEN_DEPENDS}
@@ -160,36 +160,6 @@ index 61cb4bc..848e726 100755
  	      | -nindy* | -vxsim* | -vxworks* | -ebmon* | -hms* | -mvs* \
  	      | -clix* | -riscos* | -uniplus* | -iris* | -rtu* | -xenix* \
  	      | -hiux* | -386bsd* | -knetbsd* | -mirbsd* | -netbsd* \
-diff --git a/gcc-4.9.2/config/ost.h b/gcc-4.9.2/config/ost.h
-new file mode 100644
-index 0000000..bccd8b6
---- /dev/null
-+++ b/gcc-4.9.2/config/ost.h
-@@ -0,0 +1,24 @@
-+/* Useful if you wish to make target-specific gcc changes. */
-+#undef TARGET_OST
-+#define TARGET_OST 1
-+
-+/* Default arguments you want when running your
-+   i686-ost-gcc/x86_64-ost-gcc toolchain */
-+#define LIB_SPEC "-lc -lg -lm" /* link against C standard libraries */
-+                               /* modify this based on your needs */
-+
-+/* Don't automatically add extern "C" { } around header files. */
-+#undef  NO_IMPLICIT_EXTERN_C
-+#define NO_IMPLICIT_EXTERN_C 1
-+
-+/* Additional predefined macros. */
-+#undef TARGET_OS_CPP_BUILTINS
-+#define TARGET_OS_CPP_BUILTINS()      \
-+  do {                                \
-+    builtin_define ("__ost__");      \
-+    builtin_define ("__unix__");      \
-+    builtin_assert ("system=ost");   \
-+    builtin_assert ("system=unix");   \
-+    builtin_assert ("system=posix");   \
-+  } while(0);
-+
 diff --git a/gcc-4.9.2/fixincludes/mkfixinc.sh b/gcc-4.9.2/fixincludes/mkfixinc.sh
 index 6653fed..00490a5 100755
 --- a/gcc-4.9.2/fixincludes/mkfixinc.sh
@@ -231,17 +201,48 @@ index 9d3fa57..6d6de04 100644
  aarch64*-*-elf)
  	tm_file="${tm_file} dbxelf.h elfos.h newlib-stdint.h"
  	tm_file="${tm_file} aarch64/aarch64-elf.h aarch64/aarch64-elf-raw.h"
+diff --git a/gcc-4.9.2/gcc/config/ost.h b/gcc-4.9.2/gcc/config/ost.h
+new file mode 100644
+index 0000000..bccd8b6
+--- /dev/null
++++ b/gcc-4.9.2/gcc/config/ost.h
+@@ -0,0 +1,24 @@
++/* Useful if you wish to make target-specific gcc changes. */
++#undef TARGET_OST
++#define TARGET_OST 1
++
++/* Default arguments you want when running your
++   i686-ost-gcc/x86_64-ost-gcc toolchain */
++#define LIB_SPEC "-lc -lg -lm" /* link against C standard libraries */
++                               /* modify this based on your needs */
++
++/* Don't automatically add extern "C" { } around header files. */
++#undef  NO_IMPLICIT_EXTERN_C
++#define NO_IMPLICIT_EXTERN_C 1
++
++/* Additional predefined macros. */
++#undef TARGET_OS_CPP_BUILTINS
++#define TARGET_OS_CPP_BUILTINS()      \
++  do {                                \
++    builtin_define ("__ost__");      \
++    builtin_define ("__unix__");      \
++    builtin_assert ("system=ost");   \
++    builtin_assert ("system=unix");   \
++    builtin_assert ("system=posix");   \
++  } while(0);
++
 diff --git a/gcc-4.9.2/libgcc/config.host b/gcc-4.9.2/libgcc/config.host
-index f4a7428..6cd3ed3 100644
+index f4a7428..d83255f 100644
 --- a/gcc-4.9.2/libgcc/config.host
 +++ b/gcc-4.9.2/libgcc/config.host
-@@ -314,6 +314,13 @@ i[34567]86-*-mingw* | x86_64-*-mingw*)
+@@ -314,6 +314,14 @@ i[34567]86-*-mingw* | x86_64-*-mingw*)
  esac
  
  case ${host} in
 +i[34567]86-*-ost*)
 +	extra_parts="$extra_parts crtbegin.o crtend.o"
 +	tmake_file="$tmake_file i386/t-crtstuff t-crtstuff-pic t-libgcc-pic"
++	;;
 +x86_64-*-ost*)
 +	extra_parts="$extra_parts crtbegin.o crtend.o"
 +	tmake_file="$tmake_file i386/t-crtstuff t-crtstuff-pic t-libgcc-pic"
