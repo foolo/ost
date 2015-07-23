@@ -17,6 +17,14 @@ keyboard_handler_wrapper:
 syscall_handler_wrapper:
 	pushal
 	cld
+	pushl %edx
+	pushl %ecx
+	pushl %ebx
+	pushl %eax
 	call syscall_handler
+	popl %eax
+	popl %eax
+	popl %eax
+	popl %eax
 	popal
 	iret

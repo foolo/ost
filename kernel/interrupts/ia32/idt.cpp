@@ -66,9 +66,13 @@ extern "C" void keyboard_handler(void)
 
 extern "C" void syscall_handler_wrapper(void);
 
-extern "C" void syscall_handler(void)
+extern "C" void syscall_handler(uint32_t syscall_id, uint32_t param1, uint32_t param2, uint32_t param3)
 {
-	printf("Syscall!\n");
+	printf("Syscall %u!\n", syscall_id);
+	if (syscall_id == SYSCALL_TEST)
+	{
+		printf("TEST %u %u %u\n", param1, param2, param3);
+	}
 }
 
 void initialize_IDT()

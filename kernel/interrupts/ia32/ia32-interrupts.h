@@ -14,6 +14,12 @@ static const uint8_t KEYBOARD_IRQ = 1;
 
 static const uint8_t SYSCALL_INTERRUPT_VECTOR = 0x80;
 
+
+enum syscall_t
+{
+	SYSCALL_TEST
+};
+
 namespace kernel
 {
 
