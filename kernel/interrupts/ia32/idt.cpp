@@ -20,12 +20,11 @@ extern "C" void load_idt(uint32_t *idt_ptr);
 namespace kernel
 {
 
-void register_callback(uint32_t callback_function_pointer, uint8_t irq)
+void create_idt_entry(uint32_t callback_function_pointer, uint8_t vector_index)
 {
 	static const uint8_t KERNEL_CODE_SEGMENT_OFFSET = 0x08;
 	static const uint8_t INTERRUPT_GATE = 0x8e;
 
-	uint8_t vector_index = IRQ_0_VECTOR_START + irq;
 	IDT_entry *entry = IDT + vector_index;
 
 	/* populate IDT entry of keyboard's interrupt */
@@ -43,6 +42,12 @@ void register_callback(uint32_t callback_function_pointer, uint8_t irq)
 
 	// fill the IDT descriptor
 	load_idt(idt_ptr);
+}
+
+void register_callback(uint32_t callback_function_pointer, uint8_t irq)
+{
+	uint8_t vector_index = IRQ_0_VECTOR_START + irq;
+	create_idt_entry(callback_function_pointer, vector_index);
 
 	// enable the irq
 	uint8_t pic_addr = (irq < 8) ? PIC1_DATA : PIC2_DATA;
@@ -51,17 +56,30 @@ void register_callback(uint32_t callback_function_pointer, uint8_t irq)
 	outb(pic_addr, mask);
 }
 
+extern "C" void keyboard_handler_wrapper(void);
+
 extern "C" void keyboard_handler(void)
 {
 	kernel::PIC_sendEOI(KEYBOARD_IRQ);
 	keyboard::handle_keyboard_scancode();
 }
 
-extern "C" void keyboard_handler_wrapper(void);
+extern "C" void syscall_handler_wrapper(void);
+
+extern "C" void syscall_handler(void)
+{
+	printf("Syscall!\n");
+}
 
 void initialize_IDT()
 {
 	register_callback((uint32_t)keyboard_handler_wrapper, KEYBOARD_IRQ);
 }
+
+void initialize_software_interrupts()
+{
+	create_idt_entry((uint32_t)syscall_handler_wrapper, SYSCALL_INTERRUPT_VECTOR);
+}
+
 
 } // namespace

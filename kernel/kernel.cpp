@@ -11,6 +11,14 @@
 
 namespace kernel {
 
+void test_syscall()
+{
+    asm volatile
+    (
+        "int $0x80"
+    );
+}
+
 extern "C"
 void kernel_main() {
 	terminal_initialize();
@@ -24,6 +32,9 @@ void kernel_main() {
 	{
 		printf("PS2 controller initialization failed\n");
 	}
+	initialize_software_interrupts();
+	test_syscall();
+	test_syscall();
 }
 
 } /* namespace kernel */

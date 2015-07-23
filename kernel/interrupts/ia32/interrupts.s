@@ -12,3 +12,11 @@ keyboard_handler_wrapper:
 	call keyboard_handler
 	popal
 	iret
+
+.global syscall_handler_wrapper
+syscall_handler_wrapper:
+	pushal
+	cld
+	call syscall_handler
+	popal
+	iret
