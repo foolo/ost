@@ -60,3 +60,14 @@ echo make -j5 all-target-libgcc
 echo sudo make install-gcc
 echo sudo make install-target-libgcc
 echo popd
+
+echo sudo chown olof /tmp/i686-elf
+echo cd /tmp/i686-elf/bin
+echo ln i686-elf-gcc i686-ost-cc
+echo ln -s i686-elf-gcc-ar i686-ost-ar
+
+sudo ln i686-elf-ar i686-ost-ar
+sudo ln i686-elf-as i686-ost-as
+sudo ln i686-elf-gcc i686-ost-gcc
+sudo ln i686-elf-gcc i686-ost-cc
+sudo ln i686-elf-ranlib i686-ost-ranlib

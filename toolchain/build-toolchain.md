@@ -1,3 +1,5 @@
+# Prerequisites
+
 ## Install autoconf 2.64
 
 	sudo apt-get install m4
@@ -12,11 +14,27 @@ Extract, configure, make, make install
 Extract, configure, make, make install
 
 ## Install libtool
-sudo apt-get install libtool-bin
 
-### Build Newlib
+	sudo apt-get install libtool-bin
 
-Go to newlib directory and run prepare_build_newlib.sh
+## Install texinfo
+
+	sudo apt-get install texinfo
+
+
+# Build
+
+## Build i686-elf cross compiler
+
+run build_cross_compiler.sh and follow instructions for make
+it will place executables in /tmp/i686-elf/bin
+
+### Build Newlib 1
+
+Go to newlib directory and run
+
+	prepare_build_newlib.sh
+before running make all, do PATH=$PATH:/tmp/i686-elf/bin
 
 ## Download GNU libraries
 
