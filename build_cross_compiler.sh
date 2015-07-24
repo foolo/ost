@@ -48,7 +48,7 @@ popd
 
 
 echo pushd external/build-binutils
-echo make -j5
+echo make
 echo sudo make install
 echo popd
 
@@ -66,8 +66,9 @@ echo cd /tmp/i686-elf/bin
 echo ln i686-elf-gcc i686-ost-cc
 echo ln -s i686-elf-gcc-ar i686-ost-ar
 
-sudo ln i686-elf-ar i686-ost-ar
-sudo ln i686-elf-as i686-ost-as
-sudo ln i686-elf-gcc i686-ost-gcc
-sudo ln i686-elf-gcc i686-ost-cc
-sudo ln i686-elf-ranlib i686-ost-ranlib
+echo sudo ln i686-elf-ar i686-ost-ar
+echo sudo ln i686-elf-as i686-ost-as
+echo sudo ln i686-elf-gcc i686-ost-gcc
+echo sudo ln i686-elf-gcc i686-ost-cc
+echo sudo ln i686-elf-ranlib i686-ost-ranlib
+

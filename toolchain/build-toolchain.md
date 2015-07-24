@@ -24,6 +24,10 @@ Extract, configure, make, make install
 
 # Build
 
+## Download GNU libraries
+
+./download_libs.sh
+
 ## Build i686-elf cross compiler
 
 run build_cross_compiler.sh and follow instructions for make
@@ -35,10 +39,6 @@ Go to newlib directory and run
 
 	prepare_build_newlib.sh
 before running make all, do PATH=$PATH:/tmp/i686-elf/bin
-
-## Download GNU libraries
-
-./download_libs.sh
 
 ### Step 2: Build Binutils
 
