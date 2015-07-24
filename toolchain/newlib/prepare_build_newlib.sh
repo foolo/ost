@@ -42,5 +42,9 @@ cd build-newlib
 
 echo Configuration done, now run make
 echo cd external/build-newlib
-echo make all
-echo make DESTDIR=/myos install
+echo make all -j5
+echo make DESTDIR=/tmp/myos install
+
+# "For some reason, the newer versions of newlib (at least for me) didn't put the libraries in a location where other utilities like binutils could find. So here's another hack to fix this:"
+echo cp -ar /tmp/myos/usr/i686-ost/* /tmp/myos/usr/
+

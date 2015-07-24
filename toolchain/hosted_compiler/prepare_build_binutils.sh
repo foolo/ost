@@ -24,7 +24,7 @@ popd
 rm -rf build-binutils
 mkdir build-binutils
 pushd build-binutils
-../binutils-2.24/configure --target=i686-ost --prefix=/myos/usr --with-sysroot=/myos/sysroot --disable-werror
+../binutils-2.24/configure --target=i686-ost --prefix=/myos --with-sysroot=/myos --disable-werror
 popd
 
 echo Configuration done, now make binutils and gcc
