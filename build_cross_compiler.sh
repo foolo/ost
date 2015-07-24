@@ -1,14 +1,20 @@
-wget http://ftpmirror.gnu.org/binutils/binutils-2.24.tar.gz
-wget http://ftpmirror.gnu.org/gcc/gcc-4.9.2/gcc-4.9.2.tar.gz
+#!/bin/bash
 
-wget http://ftpmirror.gnu.org/mpfr/mpfr-3.1.2.tar.xz
-wget http://ftpmirror.gnu.org/gmp/gmp-6.0.0a.tar.xz
-wget http://ftpmirror.gnu.org/mpc/mpc-1.0.2.tar.gz
+set -o errexit
+set -o xtrace
 
-wget ftp://gcc.gnu.org/pub/gcc/infrastructure/isl-0.12.2.tar.bz2
-wget ftp://gcc.gnu.org/pub/gcc/infrastructure/cloog-0.18.1.tar.gz
+mkdir -p external
+cd external
 
-for f in *.tar*; do tar xf $f; done
+rm -rf *
+
+tar xf /tmp/binutils-2.24.tar.gz
+tar xf /tmp/gcc-4.9.2.tar.gz
+tar xf /tmp/mpfr-3.1.2.tar.xz
+tar xf /tmp/gmp-6.0.0a.tar.xz
+tar xf /tmp/mpc-1.0.2.tar.gz
+tar xf /tmp/isl-0.12.2.tar.bz2
+tar xf /tmp/cloog-0.18.1.tar.gz
 
 cd gcc-4.9.2
 ln -s ../mpfr-3.1.2 mpfr
@@ -21,31 +27,36 @@ cd ..
 
 ## Setup
 
-mkdir -p /home/olof/Applications/i686cc
-export PATH=/home/olof/Applications/i686cc/bin:$PATH
-MYARCH=i686-elf
-MYPREFIX=/home/olof/Applications/i686cc
+#mkdir -p /tmp/i686-elf
+#export PATH=/tmp/i686-elf/bin:$PATH
 
 
 
 ## Binutils
 
 mkdir build-binutils
-cd build-binutils
-../binutils-2.24/configure --prefix=$MYPREFIX --target=$MYARCH --disable-multilib --disable-werror
-make -j4
-sudo make install
-cd ..
-
+pushd build-binutils
+../binutils-2.24/configure --prefix=/tmp/i686-elf --target=i686-elf --with-sysroot --disable-multilib --disable-werror --disable-nls
+popd
 
 ## Gcc
 
 mkdir -p build-gcc
-cd build-gcc
-../gcc-4.9.2/configure --target=$MYARCH --prefix=$MYPREFIX --enable-languages=c,c++ --disable-nls --enable-languages=c,c++ --without-headers
-make -j4 all-gcc
-make -j4 all-target-libgcc
-sudo make install-gcc
-sudo make install-target-libgcc
-cd ..
+pushd build-gcc
+../gcc-4.9.2/configure --target=i686-elf --prefix=/tmp/i686-elf --enable-languages=c,c++ --disable-nls --enable-languages=c,c++ --without-headers
+popd
 
+
+echo pushd external/build-binutils
+echo make -j5
+echo sudo make install
+echo popd
+
+
+
+echo pushd external/build-gcc
+echo make -j5 all-gcc
+echo make -j5 all-target-libgcc
+echo sudo make install-gcc
+echo sudo make install-target-libgcc
+echo popd
