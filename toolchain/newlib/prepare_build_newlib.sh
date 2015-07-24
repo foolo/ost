@@ -5,9 +5,8 @@ set -o xtrace
 mkdir -p external
 cd external
 
-wget --no-clobber ftp://sourceware.org/pub/newlib/newlib-2.2.0-1.tar.gz
 rm -rf newlib-2.2.0-1
-tar xf newlib-2.2.0-1.tar.gz
+tar xf /tmp/newlib-2.2.0-1.tar.gz
 
 pushd newlib-2.2.0-1
 
