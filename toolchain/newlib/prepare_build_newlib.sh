@@ -21,7 +21,7 @@ popd
 # Step 2
 
 mkdir newlib/libc/sys/ost
-cp ../../custom-src/* newlib/libc/sys/ost
+ln  ../../custom-src/* newlib/libc/sys/ost/
 
 pushd newlib/libc/sys
 autoconf
