@@ -5,19 +5,21 @@ AS=i686-elf-as
 AR=i686-elf-ar
 BUILDDIR=build-$(HOSTARCH)
 
+ARCHDIR=/tmp/myos/usr/i686-ost
 
-LIBCDIR=../libc
+LIBCDIR=$(ARCHDIR)/lib
 
 CXXFLAGS=-ffreestanding -O2 -g -Wall -Wextra
-CXXFLAGS+=-I$(LIBCDIR)/include
+CXXFLAGS+=-I$(ARCHDIR)/include
 CXXFLAGS+=-Iinclude
+CXXFLAGS+=-I../toolchain
 CPPFLAGS=$(CXXFLAGS) -fno-exceptions -fno-rtti
 CFLAGS=$(CXXFLAGS) -std=gnu99
 
-LDFLAGS=-ffreestanding -O2 -nostdlib -L$(LIBCDIR)/$(BUILDDIR)
-LIBS=-lgcc -lk
+LDFLAGS=-ffreestanding -O2 -nostdlib -L$(LIBCDIR)
+LIBS=-lgcc -lg
 
-LIBK_FILE=$(LIBCDIR)/$(BUILDDIR)/libk.a
+LIBK_FILE=$(LIBCDIR)/libg.a
 
 BINOUT=$(BUILDDIR)/myos.bin
 
@@ -47,7 +49,7 @@ default: libc $(BINOUT)
 
 .PHONY: libc
 libc:
-	make -C ../libc
+	#make -C ../libc
 
 -include $(CPP_OBJFILES:.o=.d)
 -include $(C_OBJFILES:.o=.d)

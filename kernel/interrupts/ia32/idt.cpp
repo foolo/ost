@@ -2,6 +2,8 @@
 #include "ia32-interrupts.h"
 #include "keyboard.h"
 #include "ia32/ia32-io.h"
+#include "terminal.h" // todo move syscall handling to separate file
+#include "newlib/i686-ost/syscalls.h"
 
 static const int IDT_SIZE = 256;
 
@@ -66,12 +68,16 @@ extern "C" void keyboard_handler(void)
 
 extern "C" void syscall_handler_wrapper(void);
 
-extern "C" void syscall_handler(uint32_t syscall_id, uint32_t param1, uint32_t param2, uint32_t param3)
+extern "C" void syscall_handler(uint32_t syscall_id, uint32_t /*param1*/, uint32_t param2, uint32_t param3)
 {
-	printf("Syscall %u!\n", syscall_id);
-	if (syscall_id == SYSCALL_TEST)
+	if (syscall_id == SYSCALL_WRITE)
 	{
-		printf("TEST %u %u %u\n", param1, param2, param3);
+		char* buffer = (char*)param2;
+		int length = (int)param3;
+		for (int i = 0; i < length; i++)
+		{
+			terminal_putchar(buffer[i]);
+		}
 	}
 }
 
