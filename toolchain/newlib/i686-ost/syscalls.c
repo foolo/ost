@@ -13,6 +13,7 @@ void _exit()
 
 int close(int file)
 {
+	return 0;
 }
 
 // pointer to array of char * strings that define the current environment variables
@@ -20,10 +21,12 @@ char **environ;
 
 int execve(char *name, char **argv, char **env)
 {
+	return 0;
 }
 
 int fork()
 {
+	return 0;
 }
 
 int fstat(int file, struct stat *st)
