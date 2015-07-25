@@ -37,7 +37,7 @@
 							</tool>
 							<tool id="org.eclipse.cdt.build.core.settings.holder.1606640987" name="GNU C++" superClass="org.eclipse.cdt.build.core.settings.holder">
 								<option id="org.eclipse.cdt.build.core.settings.holder.incpaths.1604222074" name="Include Paths" superClass="org.eclipse.cdt.build.core.settings.holder.incpaths" valueType="includePath">
-									<listOptionValue builtIn="false" value="/home/olof/Applications/i686cc/lib/gcc/i686-elf/4.9.2/include"/>
+									<listOptionValue builtIn="false" value="/tmp/myos/usr/i686-ost/include"/>
 								</option>
 								<option id="org.eclipse.cdt.build.core.settings.holder.symbols.819446201" name="Symbols" superClass="org.eclipse.cdt.build.core.settings.holder.symbols" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="&quot;__UINT8_TYPE__=unsigned char&quot;"/>
@@ -54,7 +54,7 @@
 							</tool>
 							<tool id="org.eclipse.cdt.build.core.settings.holder.969090966" name="GNU C" superClass="org.eclipse.cdt.build.core.settings.holder">
 								<option id="org.eclipse.cdt.build.core.settings.holder.incpaths.1506878229" name="Include Paths" superClass="org.eclipse.cdt.build.core.settings.holder.incpaths" valueType="includePath">
-									<listOptionValue builtIn="false" value="/home/olof/Applications/i686cc/lib/gcc/i686-elf/4.9.2/include"/>
+									<listOptionValue builtIn="false" value="/tmp/myos/usr/i686-ost/include"/>
 								</option>
 								<option id="org.eclipse.cdt.build.core.settings.holder.symbols.877347759" name="Symbols" superClass="org.eclipse.cdt.build.core.settings.holder.symbols" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="&quot;__UINT8_TYPE__=unsigned char&quot;"/>
