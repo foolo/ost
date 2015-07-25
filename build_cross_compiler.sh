@@ -44,29 +44,17 @@ pushd build-gcc
 popd
 
 
-echo pushd external/build-binutils
-echo make
-echo sudo make install
-echo popd
+pushd external/build-binutils
+make
+sudo make install
+popd
 
+pushd external/build-gcc
+make -j5 all-gcc
+make all-gcc
+make -j5 all-target-libgcc
+sudo make install-gcc
+sudo make install-target-libgcc
+popd
 
-
-echo pushd external/build-gcc
-echo make -j5 all-gcc
-echo make all-gcc
-echo make -j5 all-target-libgcc
-echo sudo make install-gcc
-echo sudo make install-target-libgcc
-echo popd
-
-echo sudo chown olof /tmp/i686-elf
-echo cd /tmp/i686-elf/bin
-echo ln i686-elf-gcc i686-ost-cc
-echo ln -s i686-elf-gcc-ar i686-ost-ar
-
-echo sudo ln i686-elf-ar i686-ost-ar
-echo sudo ln i686-elf-as i686-ost-as
-echo sudo ln i686-elf-gcc i686-ost-gcc
-echo sudo ln i686-elf-gcc i686-ost-cc
-echo sudo ln i686-elf-ranlib i686-ost-ranlib
 
