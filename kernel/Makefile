@@ -44,12 +44,7 @@ CPP_OBJFILES := $(patsubst %, $(BUILDDIR)/%.o, $(CPPFILES))
 C_OBJFILES :=   $(patsubst %, $(BUILDDIR)/%.o, $(CFILES))
 ASM_OBJFILES := $(patsubst %, $(BUILDDIR)/%.o, $(ASMFILES))
 
-# Order is significant. libc makefile shall be run first.
-default: libc $(BINOUT)
-
-.PHONY: libc
-libc:
-	#make -C ../libc
+default: $(BINOUT)
 
 -include $(CPP_OBJFILES:.o=.d)
 -include $(C_OBJFILES:.o=.d)
@@ -101,4 +96,3 @@ $(BINOUT): $(OBJ_LINK_LIST) $(LIBK_FILE)
 
 clean:
 	rm -rf $(BUILDDIR)
-	make -C ../libc clean
