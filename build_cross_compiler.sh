@@ -44,15 +44,15 @@ pushd build-gcc
 popd
 
 
-pushd external/build-binutils
+pushd build-binutils
 make
 sudo make install
 popd
 
-pushd external/build-gcc
-make -j5 all-gcc
+pushd build-gcc
 make all-gcc
-make -j5 all-target-libgcc
+make all-target-libgcc
+sudo ln -s /tmp/i686-elf/bin/i686-elf-ranlib /usr/local/bin/i686-elf-ranlib # Needed for install-target-libgcc, as sudo does not use PATH
 sudo make install-gcc
 sudo make install-target-libgcc
 popd
