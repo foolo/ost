@@ -26,10 +26,7 @@ cd ..
 
 
 ## Setup
-
-#mkdir -p /tmp/i686-elf
-#export PATH=/tmp/i686-elf/bin:$PATH
-
+export PATH=/tmp/i686-elf/bin:$PATH
 
 
 ## Binutils
@@ -56,6 +53,7 @@ echo popd
 
 echo pushd external/build-gcc
 echo make -j5 all-gcc
+echo make all-gcc
 echo make -j5 all-target-libgcc
 echo sudo make install-gcc
 echo sudo make install-target-libgcc
