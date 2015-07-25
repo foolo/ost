@@ -21,7 +21,7 @@ popd
 # Step 2
 
 mkdir newlib/libc/sys/ost
-ln  ../../custom-src/* newlib/libc/sys/ost/
+ln  ../../i686-ost/* newlib/libc/sys/ost/
 
 pushd newlib/libc/sys
 autoconf

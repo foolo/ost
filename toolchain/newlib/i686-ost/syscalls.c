@@ -5,6 +5,7 @@
 #include <sys/errno.h>
 #include <sys/time.h>
 #include <stdio.h>
+#include "syscalls.h"
 
 void _exit()
 {
@@ -92,6 +93,14 @@ int wait(int *status)
 
 int write(int file, char *ptr, int len)
 {
+	int ret;
+	asm volatile
+    (
+        "int $0x80"
+        : "=a" (ret)
+        : "0"(SYSCALL_WRITE), "b"(file), "c"(ptr), "d"(len)
+        : "cc", "edi", "esi", "memory"
+    );
 	return 0;
 }
 
