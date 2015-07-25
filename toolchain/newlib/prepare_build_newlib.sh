@@ -35,13 +35,28 @@ popd
 
 # Build
 
-mkdir build-newlib
-cd build-newlib
-../newlib-2.2.0-1/configure --prefix=/usr --target=i686-elf "$@"
+PATH=$PATH:/tmp/i686-elf/bin
 
-echo Configuration done, now run make
-echo cd external/build-newlib
-echo make all -j5
+
+# Newlib expects "i686-ost" compiler, fix with some links
+TMPLINKDIR=/tmp/i686-elf-ost-links
+rm -rf $TMPLINKDIR
+mkdir -p $TMPLINKDIR
+pushd $TMPLINKDIR
+ln -s /tmp/i686-elf/bin/i686-elf-ar   i686-ost-ar
+ln -s /tmp/i686-elf/bin/i686-elf-as   i686-ost-as
+ln -s /tmp/i686-elf/bin/i686-elf-gcc  i686-ost-gcc
+ln -s /tmp/i686-elf/bin/i686-elf-gcc  i686-ost-cc # Newlib uses cc instead of gcc
+ln -s /tmp/i686-elf/bin/i686-elf-ranlib i686-ost-ranlib
+popd
+PATH=$PATH:$TMPLINKDIR
+
+
+mkdir build-newlib
+pushd build-newlib
+../newlib-2.2.0-1/configure --prefix=/usr --target=i686-ost
+make all
+
 echo if building for i686-elf, run PATH=$PATH:/tmp/i686-elf/bin
 echo either: make DESTDIR=/tmp/myos install  # for initial i686-elf
 echo or    : make install                    # for i686-ost
