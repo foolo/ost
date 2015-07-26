@@ -27,11 +27,12 @@ popd
 rm -rf build-gcc
 mkdir build-gcc
 pushd build-gcc
-../gcc-4.9.2/configure --target=i686-ost --prefix=/myos/usr --with-sysroot=/myos --disable-werror  --with-build-sysroot=/tmp/myos
+../gcc-4.9.2/configure --enable-option-checking --target=i686-ost --prefix=/usr/local/ost --with-sysroot=/usr/local/ost/sysroot --disable-multilib --disable-werror
 popd
 
-echo pushd external/build-gcc
-echo make all-gcc all-target-libgcc -j5
+pushd build-gcc
+make all-gcc all-target-libgcc
+
 #needed for sudo to access i686-ost-ranlib
 echo sudo ln -s /home/olof/Applications/i686cc/bin/i686-elf-ranlib /usr/local/bin/i686-ost-ranlib
 echo sudo make install-gcc install-target-libgcc
