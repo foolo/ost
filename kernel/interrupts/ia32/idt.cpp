@@ -70,12 +70,63 @@ extern "C" void syscall_handler_wrapper(void);
 
 extern "C" void syscall_handler(uint32_t syscall_id, uint32_t param1, uint32_t param2, uint32_t param3)
 {
-	if (syscall_id == SYSCALL_WRITE)
+	if (syscall_id == SYSCALL_EXIT)
+	{
+	}
+	else if (syscall_id == SYSCALL_CLOSE)
+	{
+	}
+	else if (syscall_id == SYSCALL_EXECVE)
+	{
+	}
+	else if (syscall_id == SYSCALL_FORK)
+	{
+	}
+	else if (syscall_id == SYSCALL_FSTAT)
+	{
+	}
+	else if (syscall_id == SYSCALL_GETPID)
+	{
+	}
+	else if (syscall_id == SYSCALL_ISATTY)
+	{
+	}
+	else if (syscall_id == SYSCALL_KILL)
+	{
+	}
+	else if (syscall_id == SYSCALL_LINK)
+	{
+	}
+	else if (syscall_id == SYSCALL_LSEEK)
+	{
+	}
+	else if (syscall_id == SYSCALL_OPEN)
+	{
+	}
+	else if (syscall_id == SYSCALL_READ)
+	{
+	}
+	else if (syscall_id == SYSCALL_SBRK)
+	{
+	}
+	else if (syscall_id == SYSCALL_STAT)
+	{
+	}
+	else if (syscall_id == SYSCALL_TIMES)
+	{
+	}
+	else if (syscall_id == SYSCALL_UNLINK)
+	{
+	}
+	else if (syscall_id == SYSCALL_WRITE)
 	{
 		int file = (int)param1;
 		char* buffer = (char*)param2;
 		int length = (int)param3;
 		handle_syscall_write(file, buffer, length);
+	}
+	else if (syscall_id == SYSCALL_GETTIMEOFDAY)
+	{
 	}
 }
 
