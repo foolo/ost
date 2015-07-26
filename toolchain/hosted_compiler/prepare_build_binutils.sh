@@ -24,7 +24,7 @@ popd
 rm -rf build-binutils
 mkdir build-binutils
 pushd build-binutils
-../binutils-2.24/configure --enable-option-checking --target=i686-ost --prefix=/usr/local/ost --with-sysroot=/usr/local/ost/sysroot --disable-werror
+../binutils-2.24/configure --enable-option-checking --target=i686-ost --prefix=/usr/local/ost --disable-werror
 make -j5
 sudo make install
 popd
