@@ -56,11 +56,8 @@ mkdir build-newlib
 pushd build-newlib
 ../newlib-2.2.0-1/configure --prefix=/usr --target=i686-ost
 make all
-make DESTDIR=/tmp/myos install  #for initial i686-elf version
+sudo make DESTDIR=/usr/local/ost/sysroot install
 
-# for i686-ost version
-# make install
-
-# "For some reason, the newer versions of newlib (at least for me) didn't put the libraries in a location where other utilities like binutils could find. So here's another hack to fix this:"
-#echo cp -ar /tmp/myos/usr/i686-ost/* /tmp/myos/usr/
-
+pushd /usr/local/ost/sysroot/usr
+sudo cp -ar i686-ost/* .
+popd
