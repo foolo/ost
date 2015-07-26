@@ -38,7 +38,7 @@ it will place executables in /tmp/i686-elf/bin
 Go to newlib directory and run
 
 	bash
-	BINPATH=/tmp/i686-elf-ost-links prepare_build_newlib.sh
+	BINPATH=/tmp/i686-elf-ost-links ./prepare_build_newlib.sh
 
 ### Step 2: Build Binutils
 
@@ -53,7 +53,8 @@ and then run make according to instructions in prepare_build_binutils.sh
 prepare_build_gcc.sh
 
 
+### Build Newlib 2
 
 	bash
-	BINPATH=/tmp/i686-elf-ost-links prepare_build_newlib.sh
+	BINPATH=/usr/local/ost/bin ./prepare_build_newlib.sh
 
