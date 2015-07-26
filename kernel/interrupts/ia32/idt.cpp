@@ -72,51 +72,93 @@ extern "C" void syscall_handler(uint32_t syscall_id, uint32_t param1, uint32_t p
 {
 	if (syscall_id == SYSCALL_EXIT)
 	{
+		int file = (int)param1;
+		handle_syscall_exit(file);
 	}
 	else if (syscall_id == SYSCALL_CLOSE)
 	{
+		int file = (int)param1;
+		handle_syscall_close(file);
 	}
 	else if (syscall_id == SYSCALL_EXECVE)
 	{
+		char *name = (char *)param1;
+		char **argv = (char **)param2;
+		char **env = (char **)param3;
+		handle_syscall_execve(name, argv, env);
 	}
 	else if (syscall_id == SYSCALL_FORK)
 	{
+		handle_syscall_fork();
 	}
 	else if (syscall_id == SYSCALL_FSTAT)
 	{
+		int file = (int)param1;
+		struct stat *st = (struct stat *)param2;
+		handle_syscall_fstat(file, st);
 	}
 	else if (syscall_id == SYSCALL_GETPID)
 	{
+		handle_syscall_getpid();
 	}
 	else if (syscall_id == SYSCALL_ISATTY)
 	{
+		int file = (int)param1;
+		handle_syscall_isatty(file);
 	}
 	else if (syscall_id == SYSCALL_KILL)
 	{
+		int pid = (int)param1;
+		int sig = (int)param2;
+		handle_syscall_kill(pid, sig);
 	}
 	else if (syscall_id == SYSCALL_LINK)
 	{
+		char *oldpath = (char *)param1;
+		char *newpath = (char *)param2;
+		handle_syscall_link(oldpath, newpath);
 	}
 	else if (syscall_id == SYSCALL_LSEEK)
 	{
+		int file = (int)param1;
+		int ptr = (int)param2;
+		int dir = (int)param3;
+		handle_syscall_lseek(file, ptr, dir);
 	}
 	else if (syscall_id == SYSCALL_OPEN)
 	{
+		char *name = (char *)param1;
+		int flags = (int)param2;
+		// TODO pass variable argument list
+		handle_syscall_open(name, flags);
 	}
 	else if (syscall_id == SYSCALL_READ)
 	{
+		int file = (int)param1;
+		char * ptr = (char *)param2;
+		int len = (int)param3;
+		handle_syscall_read(file, ptr, len);
 	}
 	else if (syscall_id == SYSCALL_SBRK)
 	{
+		int incr = (int)param1;
+		handle_syscall_sbrk(incr);
 	}
 	else if (syscall_id == SYSCALL_STAT)
 	{
+		char *file = (char *)param1;
+		struct stat *st = (struct stat *)param2;
+		handle_syscall_stat(file, st);
 	}
 	else if (syscall_id == SYSCALL_TIMES)
 	{
+		struct tms *buf = (struct tms*)param1;
+		handle_syscall_times(buf);
 	}
 	else if (syscall_id == SYSCALL_UNLINK)
 	{
+		char *name = (char *)param1;
+		handle_syscall_unlink(name);
 	}
 	else if (syscall_id == SYSCALL_WRITE)
 	{
@@ -127,6 +169,13 @@ extern "C" void syscall_handler(uint32_t syscall_id, uint32_t param1, uint32_t p
 	}
 	else if (syscall_id == SYSCALL_GETTIMEOFDAY)
 	{
+		struct timeval *p = (struct timeval*)param1;
+		void *z = (void*)param2;
+		handle_syscall_gettimeofday(p, z);
+	}
+	else
+	{
+		handle_unknown_syscall(syscall_id, param1, param2, param3);
 	}
 }
 
