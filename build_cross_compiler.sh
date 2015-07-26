@@ -52,7 +52,7 @@ popd
 pushd build-gcc
 make all-gcc
 make all-target-libgcc
-sudo ln -s /tmp/i686-elf/bin/i686-elf-ranlib /usr/local/bin/i686-elf-ranlib # Needed for install-target-libgcc, as sudo does not use PATH
+sudo ln -fs /tmp/i686-elf/bin/i686-elf-ranlib /usr/local/bin/i686-elf-ranlib # Needed for install-target-libgcc, as sudo does not use PATH
 sudo make install-gcc
 sudo make install-target-libgcc
 popd
