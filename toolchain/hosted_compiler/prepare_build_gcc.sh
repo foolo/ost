@@ -9,6 +9,19 @@ cd external
 rm -rf gcc-4.9.2
 
 tar xf /tmp/gcc-4.9.2.tar.gz
+tar xf /tmp/isl-0.12.2.tar.bz2
+tar xf /tmp/mpfr-3.1.2.tar.xz
+tar xf /tmp/cloog-0.18.1.tar.gz
+tar xf /tmp/gmp-6.0.0a.tar.xz
+tar xf /tmp/mpc-1.0.2.tar.gz
+
+cd gcc-4.9.2
+ln -s ../mpfr-3.1.2 mpfr
+ln -s ../gmp-6.0.0 gmp
+ln -s ../mpc-1.0.2 mpc
+ln -s ../isl-0.12.2 isl
+ln -s ../cloog-0.18.1 cloog
+cd ..
 
 
 # Patch
