@@ -57,4 +57,12 @@ sudo make install-gcc
 sudo make install-target-libgcc
 popd
 
+# Fix for Newlib. Newlib expects "i686-ost" compiler, fix with some links
+mkdir -p /tmp/i686-elf-ost-links
+pushd /tmp/i686-elf-ost-links
+ln -sr /tmp/i686-elf/bin/i686-elf-ar   i686-ost-ar
+ln -sr /tmp/i686-elf/bin/i686-elf-as   i686-ost-as
+ln -sr /tmp/i686-elf/bin/i686-elf-gcc  i686-ost-gcc
+ln -sr /tmp/i686-elf/bin/i686-elf-gcc  i686-ost-cc # Newlib uses cc instead of gcc
+ln -sr /tmp/i686-elf/bin/i686-elf-ranlib i686-ost-ranlib
 

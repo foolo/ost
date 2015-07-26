@@ -37,17 +37,23 @@ it will place executables in /tmp/i686-elf/bin
 
 Go to newlib directory and run
 
-	prepare_build_newlib.sh
-before running make all, do PATH=$PATH:/tmp/i686-elf/bin
+	bash
+	BINPATH=/tmp/i686-elf-ost-links prepare_build_newlib.sh
 
 ### Step 2: Build Binutils
 
 Go to hosted_compiler directory and run
 
-prepare_build_binutils.sh
+	prepare_build_binutils.sh
 
 and then run make according to instructions in prepare_build_binutils.sh
 
 
 
 prepare_build_gcc.sh
+
+
+
+	bash
+	BINPATH=/tmp/i686-elf-ost-links prepare_build_newlib.sh
+

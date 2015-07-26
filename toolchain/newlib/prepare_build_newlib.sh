@@ -2,6 +2,12 @@
 set -o errexit
 set -o xtrace
 
+if [ -z "$BINPATH" ]
+then
+	echo "BINPATH not set"
+	exit
+fi
+
 mkdir -p external
 cd external
 
@@ -35,28 +41,15 @@ popd
 
 # Build
 
-PATH=$PATH:/tmp/i686-elf/bin
-
-
-# Newlib expects "i686-ost" compiler, fix with some links
-TMPLINKDIR=/tmp/i686-elf-ost-links
-rm -rf $TMPLINKDIR
-mkdir -p $TMPLINKDIR
-pushd $TMPLINKDIR
-ln -s /tmp/i686-elf/bin/i686-elf-ar   i686-ost-ar
-ln -s /tmp/i686-elf/bin/i686-elf-as   i686-ost-as
-ln -s /tmp/i686-elf/bin/i686-elf-gcc  i686-ost-gcc
-ln -s /tmp/i686-elf/bin/i686-elf-gcc  i686-ost-cc # Newlib uses cc instead of gcc
-ln -s /tmp/i686-elf/bin/i686-elf-ranlib i686-ost-ranlib
-popd
-PATH=$PATH:$TMPLINKDIR
-
+PATH=$PATH:$BINPATH
 
 mkdir build-newlib
 pushd build-newlib
 ../newlib-2.2.0-1/configure --prefix=/usr --target=i686-ost
 make all
+sudo ln -sf $BINPATH/i686-ost-ranlib /usr/local/bin/i686-ost-ranlib #needed for sudo to access i686-ost-ranlib
 sudo make DESTDIR=/usr/local/ost/sysroot install
+sudo rm -f /usr/local/bin/i686-ost-ranlib
 
 pushd /usr/local/ost/sysroot/usr
 sudo cp -ar i686-ost/* .
