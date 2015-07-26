@@ -41,10 +41,6 @@ rm -rf build-gcc
 mkdir build-gcc
 pushd build-gcc
 ../gcc-4.9.2/configure --enable-option-checking --target=i686-ost --prefix=/usr/local/ost --with-sysroot=/usr/local/ost/sysroot --disable-multilib --disable-werror
-popd
-
-pushd build-gcc
 make all-gcc all-target-libgcc
-
-echo sudo make install-gcc install-target-libgcc
-echo popd
+sudo make install-gcc install-target-libgcc
+popd
