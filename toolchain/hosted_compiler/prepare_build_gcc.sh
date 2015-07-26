@@ -46,8 +46,5 @@ popd
 pushd build-gcc
 make all-gcc all-target-libgcc
 
-#needed for sudo to access i686-ost-ranlib
-echo sudo ln -s /home/olof/Applications/i686cc/bin/i686-elf-ranlib /usr/local/bin/i686-ost-ranlib
 echo sudo make install-gcc install-target-libgcc
-echo sudo rm /usr/local/bin/i686-ost-ranlib
 echo popd
