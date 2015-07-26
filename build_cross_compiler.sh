@@ -33,14 +33,14 @@ export PATH=/tmp/i686-elf/bin:$PATH
 
 mkdir build-binutils
 pushd build-binutils
-../binutils-2.24/configure --prefix=/tmp/i686-elf --target=i686-elf --with-sysroot --disable-multilib --disable-werror --disable-nls
+../binutils-2.24/configure --enable-option-checking --target=i686-elf --prefix=/tmp/i686-elf --disable-multilib --disable-werror --disable-nls
 popd
 
 ## Gcc
 
 mkdir -p build-gcc
 pushd build-gcc
-../gcc-4.9.2/configure --target=i686-elf --prefix=/tmp/i686-elf --enable-languages=c,c++ --disable-nls --enable-languages=c,c++ --without-headers
+../gcc-4.9.2/configure --enable-option-checking --target=i686-elf --prefix=/tmp/i686-elf
 popd
 
 
