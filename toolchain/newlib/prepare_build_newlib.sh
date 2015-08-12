@@ -2,6 +2,9 @@
 set -o errexit
 set -o xtrace
 
+source ../toochain_env.sh
+export PATH=$ELFCC/bin:$PATH
+
 if [ -z "$BINPATH" ]
 then
 	echo "BINPATH not set"
@@ -48,7 +51,7 @@ pushd build-newlib
 ../newlib-2.2.0-1/configure --prefix=/usr --target=i686-ost
 make all
 sudo ln -sf $BINPATH/i686-ost-ranlib /usr/local/bin/i686-ost-ranlib #needed for sudo to access i686-ost-ranlib
-sudo make DESTDIR= $OSTCC/sysroot install
+sudo make DESTDIR=$OSTCC/sysroot install
 sudo rm -f /usr/local/bin/i686-ost-ranlib
 
 pushd $OSTCC/sysroot/usr
