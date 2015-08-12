@@ -1,4 +1,6 @@
 # todo arch by parameter
+include ../toolchain/toochain_env.sh
+export PATH := $(PATH):$(ELFCC)/bin:$(OSTCC)/bin
 HOSTARCH=ia32
 CC=i686-elf-gcc
 AS=i686-elf-as
@@ -8,7 +10,7 @@ BUILDDIR=build-$(HOSTARCH)
 
 CPPFLAGS := -O2 -g -Wall -Wextra -ffreestanding -fbuiltin
 CPPFLAGS += -Iinclude
-CPPFLAGS += -I/usr/local/ost/sysroot/usr/include
+CPPFLAGS += -I$(OSTROOT)/usr/include
 
 
 all: $(BUILDDIR)/libk.a

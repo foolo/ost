@@ -1,18 +1,18 @@
 # todo arch by parameter
+include ../toolchain/toochain_env.sh
+export PATH := $(PATH):$(ELFCC)/bin:$(OSTCC)/bin
 HOSTARCH=ia32
 CC=i686-elf-gcc
 AS=i686-elf-as
 AR=i686-elf-ar
 BUILDDIR=build-$(HOSTARCH)
 
-ARCHDIR=/opt/i686-elf
-
 CXXFLAGS=-ffreestanding -g -Wfatal-errors
 CXXFLAGS+=-IInclude
 CXXFLAGS+=-IModules/expat
 CXXFLAGS+=-IModules/zlib
 CXXFLAGS+=-I.
-CXXFLAGS+=-I/usr/local/ost/sysroot/usr/include
+CXXFLAGS+=-I$(OSTROOT)/usr/include
 CXXFLAGS+=-DPy_NO_ENABLE_SHARED
 
 CFLAGS=$(CXXFLAGS) -std=gnu99
