@@ -35,7 +35,7 @@ it will place executables in /tmp/i686-elf/bin
 Go to newlib directory and run
 
 	bash
-	BINPATH=/tmp/i686-elf-ost-links ./prepare_build_newlib.sh
+	BINPATH=$ELFCC ./prepare_build_newlib.sh
 
 ### Step 2: Build Binutils
 

@@ -3,17 +3,19 @@
 set -o errexit
 set -o xtrace
 
+source ../toochain_env.sh
+
 mkdir -p external
 cd external
 
 rm -rf gcc-4.9.2
 
-tar xf /tmp/gcc-4.9.2.tar.gz
-tar xf /tmp/isl-0.12.2.tar.bz2
-tar xf /tmp/mpfr-3.1.2.tar.xz
-tar xf /tmp/cloog-0.18.1.tar.gz
-tar xf /tmp/gmp-6.0.0a.tar.xz
-tar xf /tmp/mpc-1.0.2.tar.gz
+tar xf $DOWNLOADS/gcc-4.9.2.tar.gz
+tar xf $DOWNLOADS/isl-0.12.2.tar.bz2
+tar xf $DOWNLOADS/mpfr-3.1.2.tar.xz
+tar xf $DOWNLOADS/cloog-0.18.1.tar.gz
+tar xf $DOWNLOADS/gmp-6.0.0a.tar.xz
+tar xf $DOWNLOADS/mpc-1.0.2.tar.gz
 
 cd gcc-4.9.2
 ln -s ../mpfr-3.1.2 mpfr
@@ -40,7 +42,7 @@ popd
 rm -rf build-gcc
 mkdir build-gcc
 pushd build-gcc
-../gcc-4.9.2/configure --enable-option-checking --target=i686-ost --prefix=/usr/local/ost --with-sysroot=/usr/local/ost/sysroot --disable-multilib --disable-werror
+../gcc-4.9.2/configure --enable-option-checking --target=i686-ost --prefix=$OSTCC --with-sysroot=$OSTCC/sysroot --disable-multilib --disable-werror
 make all-gcc all-target-libgcc
 sudo make install-gcc install-target-libgcc
 popd

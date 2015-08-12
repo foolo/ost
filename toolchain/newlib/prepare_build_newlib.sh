@@ -12,7 +12,7 @@ mkdir -p external
 cd external
 
 rm -rf newlib-2.2.0-1
-tar xf /tmp/newlib-2.2.0-1.tar.gz
+tar xf $DOWNLOADS/newlib-2.2.0-1.tar.gz
 
 pushd newlib-2.2.0-1
 
@@ -48,9 +48,9 @@ pushd build-newlib
 ../newlib-2.2.0-1/configure --prefix=/usr --target=i686-ost
 make all
 sudo ln -sf $BINPATH/i686-ost-ranlib /usr/local/bin/i686-ost-ranlib #needed for sudo to access i686-ost-ranlib
-sudo make DESTDIR=/usr/local/ost/sysroot install
+sudo make DESTDIR= $OSTCC/sysroot install
 sudo rm -f /usr/local/bin/i686-ost-ranlib
 
-pushd /usr/local/ost/sysroot/usr
+pushd $OSTCC/sysroot/usr
 sudo cp -ar i686-ost/* .
 popd

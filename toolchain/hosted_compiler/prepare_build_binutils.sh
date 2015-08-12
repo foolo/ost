@@ -3,11 +3,13 @@
 set -o errexit
 set -o xtrace
 
+source ../toochain_env.sh
+
 mkdir -p external
 cd external
 
 rm -rf binutils-2.24
-tar xf /tmp/binutils-2.24.tar.gz
+tar xf $DOWNLOADS/binutils-2.24.tar.gz
 
 
 # Patch and configure binutils
@@ -24,7 +26,7 @@ popd
 rm -rf build-binutils
 mkdir build-binutils
 pushd build-binutils
-../binutils-2.24/configure --enable-option-checking --target=i686-ost --prefix=/usr/local/ost --disable-werror
+../binutils-2.24/configure --enable-option-checking --target=i686-ost --prefix=$OSTCC --disable-werror
 make -j5
 sudo make install
 popd
