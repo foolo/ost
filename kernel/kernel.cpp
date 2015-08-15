@@ -19,9 +19,7 @@ void kernel_main() {
 	initialize_software_interrupts();
 	terminal_initialize();
 
-	printf("Hello, kernel Worldz!\n");
-	printf("test %c\n", 'x');
-	printf("test %u\n", 7545);
+	printf("Hello, kernel World!\n");
 
 	if (!keyboard::initialize_keyboard_controller())
 	{
