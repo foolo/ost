@@ -1,25 +1,31 @@
 # todo arch by parameter
+include ../toolchain/toochain_env.sh
+export PATH := $(PATH):$(ELFCC)/bin:$(OSTCC)/bin
 HOSTARCH=ia32
 CC=i686-elf-gcc
 AS=i686-elf-as
 AR=i686-elf-ar
 BUILDDIR=build-$(HOSTARCH)
 
-ARCHDIR=/tmp/myos/usr/i686-ost
+LIBDIR=$(OSTROOT)/usr/lib
+INCDIR=$(OSTROOT)/usr/include
 
-LIBCDIR=$(ARCHDIR)/lib
+CXXFLAGS := -I$(INCDIR)
+CXXFLAGS += -ffreestanding -O2 -g -Wall -Wextra
+CXXFLAGS += -Iinclude
+CXXFLAGS += -I../toolchain  #for newlib/i686-ost/syscalls.h
+CPPFLAGS := $(CXXFLAGS) -fno-exceptions -fno-rtti
 
-CXXFLAGS=-ffreestanding -O2 -g -Wall -Wextra
-CXXFLAGS+=-I$(ARCHDIR)/include
-CXXFLAGS+=-Iinclude
-CXXFLAGS+=-I../toolchain
-CPPFLAGS=$(CXXFLAGS) -fno-exceptions -fno-rtti
 CFLAGS=$(CXXFLAGS) -std=gnu99
 
-LDFLAGS=-ffreestanding -O2 -nostdlib -L$(LIBCDIR)
-LIBS=-lgcc -lg
+LDFLAGS := -ffreestanding -O2 -nostdlib
 
-LIBK_FILE=$(LIBCDIR)/libg.a
+LDPATH := -L$(LIBDIR)
+LDPATH += -L../libk/build-ia32
+
+LIBS= -lgcc -lc -lg -lm -lk
+
+LIBK_FILE=$(LIBDIR)/libg.a
 
 BINOUT=$(BUILDDIR)/myos.bin
 
@@ -79,9 +85,11 @@ CRTN_OBJ=$(BUILDDIR)/cpp/i686-elf/crtn.s.o
 OBJS:=$(CPP_OBJFILES) $(C_OBJFILES) $(ASM_OBJFILES)
 OBJ_LINK_LIST:=$(CRTI_OBJ) $(CRTBEGIN_OBJ)   $(OBJS)   $(CRTEND_OBJ) $(CRTN_OBJ)
 
-$(BINOUT): $(OBJ_LINK_LIST) $(LIBK_FILE)
+
+LIBCDEPS := $(wildcard $(OSTROOT)/usr/lib/*)
+$(BINOUT): $(OBJ_LINK_LIST) $(LIBK_FILE) linker.ld $(LIBCDEPS)
 	@mkdir -p $(dir $@)
-	$(CC) -T linker.ld -o $(BINOUT) $(OBJ_LINK_LIST) $(LDFLAGS) $(LIBS)
+	$(CC) -T linker.ld -o $(BINOUT) $(OBJ_LINK_LIST) $(LDFLAGS) $(LDPATH) $(LIBS)
 
 
 # Create .iso
