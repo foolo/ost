@@ -34,8 +34,8 @@ it will place executables in /tmp/i686-elf/bin
 
 Go to newlib directory and run
 
-	bash
-	BINPATH=$ELFCC/ost-links ./prepare_build_newlib.sh
+    ./configure-ost-newlib.sh
+	./build-ost-newlib.sh $ELFCC/ost-links
 
 ### Step 2: Build Binutils
 
@@ -45,23 +45,20 @@ Go to hosted_compiler directory and run
 
 and then run make according to instructions in prepare_build_binutils.sh
 
-
-
-prepare_build_gcc.sh
+	prepare_build_gcc.sh
 
 
 ### Build Newlib 2
 
-	bash
-	BINPATH=/usr/local/ost/bin ./prepare_build_newlib.sh
+    ./configure-ost-newlib.sh
+	./build-ost-newlib.sh $OSTCC/bin
 
+# Build kernel
 
-
-# Make
-
+	cd kernel
 	make
 
-# Make a bootable cdrom .iso
+## Make a bootable cdrom .iso
 
 Install prerequisites
 

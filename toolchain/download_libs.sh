@@ -13,4 +13,3 @@ wget --no-clobber --directory-prefix /tmp http://ftpmirror.gnu.org/mpc/mpc-1.0.2
 wget --no-clobber --directory-prefix /tmp ftp://gcc.gnu.org/pub/gcc/infrastructure/isl-0.12.2.tar.bz2
 wget --no-clobber --directory-prefix /tmp ftp://gcc.gnu.org/pub/gcc/infrastructure/cloog-0.18.1.tar.gz
 
-wget --no-clobber --directory-prefix /tmp ftp://sourceware.org/pub/newlib/newlib-2.2.0-1.tar.gz
