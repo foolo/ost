@@ -40,6 +40,7 @@ CPPFILES=\
 	keyboard/keyboard.cpp \
 	keyboard/ia32/keyboard_controller.cpp \
 	syscalls/syscall-handler.cpp \
+	paging/page_allocator.cpp \
 
 CFILES=
 
