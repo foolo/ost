@@ -2,7 +2,7 @@
 <?fileVersion 4.0.0?><cproject storage_type_id="org.eclipse.cdt.core.XmlProjectDescriptionStorage">
 	<storageModule moduleId="org.eclipse.cdt.core.settings">
 		<cconfiguration id="0.1856457069">
-			<storageModule buildSystemId="org.eclipse.cdt.managedbuilder.core.configurationDataProvider" id="0.1856457069" moduleId="org.eclipse.cdt.core.settings" name="Default">
+			<storageModule buildSystemId="org.eclipse.cdt.managedbuilder.core.configurationDataProvider" id="0.1856457069" moduleId="org.eclipse.cdt.core.settings" name="Kernel">
 				<externalSettings/>
 				<extensions>
 					<extension id="org.eclipse.cdt.core.VCErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
@@ -14,7 +14,7 @@
 				</extensions>
 			</storageModule>
 			<storageModule moduleId="cdtBuildSystem" version="4.0.0">
-				<configuration buildProperties="" description="" id="0.1856457069" name="Default" parent="org.eclipse.cdt.build.core.prefbase.cfg">
+				<configuration buildProperties="" description="" id="0.1856457069" name="Kernel" parent="org.eclipse.cdt.build.core.prefbase.cfg">
 					<folderInfo id="0.1856457069." name="/" resourcePath="">
 						<toolChain id="org.eclipse.cdt.build.core.prefbase.toolchain.67312524" name="No ToolChain" resourceTypeBasedDiscovery="false" superClass="org.eclipse.cdt.build.core.prefbase.toolchain">
 							<targetPlatform id="org.eclipse.cdt.build.core.prefbase.toolchain.67312524.1553096285" name=""/>
@@ -76,6 +76,88 @@
 									<listOptionValue builtIn="false" value="&quot;__UINT16_TYPE__=unsigned short&quot;"/>
 								</option>
 								<inputType id="org.eclipse.cdt.build.core.settings.holder.inType.1186588655" languageId="org.eclipse.cdt.core.gcc" languageName="GNU C" sourceContentType="org.eclipse.cdt.core.cSource,org.eclipse.cdt.core.cHeader" superClass="org.eclipse.cdt.build.core.settings.holder.inType"/>
+							</tool>
+						</toolChain>
+					</folderInfo>
+				</configuration>
+			</storageModule>
+			<storageModule moduleId="org.eclipse.cdt.core.externalSettings"/>
+		</cconfiguration>
+		<cconfiguration id="0.1856457069.984988529">
+			<storageModule buildSystemId="org.eclipse.cdt.managedbuilder.core.configurationDataProvider" id="0.1856457069.984988529" moduleId="org.eclipse.cdt.core.settings" name="Unit tests">
+				<externalSettings/>
+				<extensions>
+					<extension id="org.eclipse.cdt.core.VCErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+					<extension id="org.eclipse.cdt.core.GmakeErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+					<extension id="org.eclipse.cdt.core.CWDLocator" point="org.eclipse.cdt.core.ErrorParser"/>
+					<extension id="org.eclipse.cdt.core.GCCErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+					<extension id="org.eclipse.cdt.core.GASErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+					<extension id="org.eclipse.cdt.core.GLDErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+				</extensions>
+			</storageModule>
+			<storageModule moduleId="cdtBuildSystem" version="4.0.0">
+				<configuration buildProperties="" description="" id="0.1856457069.984988529" name="Unit tests" parent="org.eclipse.cdt.build.core.prefbase.cfg">
+					<folderInfo id="0.1856457069.984988529." name="/" resourcePath="">
+						<toolChain id="org.eclipse.cdt.build.core.prefbase.toolchain.1091380813" name="No ToolChain" resourceTypeBasedDiscovery="false" superClass="org.eclipse.cdt.build.core.prefbase.toolchain">
+							<targetPlatform id="org.eclipse.cdt.build.core.prefbase.toolchain.1091380813.1237673141" name=""/>
+							<builder buildPath="${workspace_loc:/ost/kernel/unittests}" id="org.eclipse.cdt.build.core.settings.default.builder.1321336377" incrementalBuildTarget="" keepEnvironmentInBuildfile="false" managedBuildOn="false" name="Gnu Make Builder" superClass="org.eclipse.cdt.build.core.settings.default.builder"/>
+							<tool id="org.eclipse.cdt.build.core.settings.holder.libs.661235870" name="holder for library settings" superClass="org.eclipse.cdt.build.core.settings.holder.libs"/>
+							<tool id="org.eclipse.cdt.build.core.settings.holder.550483852" name="Assembly" superClass="org.eclipse.cdt.build.core.settings.holder">
+								<option id="org.eclipse.cdt.build.core.settings.holder.incpaths.1502703705" name="Include Paths" superClass="org.eclipse.cdt.build.core.settings.holder.incpaths" valueType="includePath">
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/ost/cpython-2.7.10/Include}&quot;"/>
+									<listOptionValue builtIn="false" value="/usr/local/i686-elf/lib/gcc/i686-elf/4.9.2/include"/>
+									<listOptionValue builtIn="false" value="/usr/local/ost/sysroot/usr/include"/>
+								</option>
+								<option id="org.eclipse.cdt.build.core.settings.holder.symbols.911052260" name="Symbols" superClass="org.eclipse.cdt.build.core.settings.holder.symbols" valueType="definedSymbols">
+									<listOptionValue builtIn="false" value="&quot;__UINT8_TYPE__=unsigned char&quot;"/>
+									<listOptionValue builtIn="false" value="__i386__"/>
+									<listOptionValue builtIn="false" value="&quot;__INT8_TYPE__=signed char&quot;"/>
+									<listOptionValue builtIn="false" value="__INT16_TYPE__=short"/>
+									<listOptionValue builtIn="false" value="__INT32_TYPE__=long"/>
+									<listOptionValue builtIn="false" value="&quot;__UINT32_TYPE__=unsigned long&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;__UINT64_TYPE__=unsigned long long&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;__INT64_TYPE__=long long&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;__UINT16_TYPE__=unsigned short&quot;"/>
+								</option>
+								<inputType id="org.eclipse.cdt.build.core.settings.holder.inType.738470034" languageId="org.eclipse.cdt.core.assembly" languageName="Assembly" sourceContentType="org.eclipse.cdt.core.asmSource" superClass="org.eclipse.cdt.build.core.settings.holder.inType"/>
+							</tool>
+							<tool id="org.eclipse.cdt.build.core.settings.holder.90122711" name="GNU C++" superClass="org.eclipse.cdt.build.core.settings.holder">
+								<option id="org.eclipse.cdt.build.core.settings.holder.incpaths.891579990" name="Include Paths" superClass="org.eclipse.cdt.build.core.settings.holder.incpaths" valueType="includePath">
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/ost/cpython-2.7.10/Include}&quot;"/>
+									<listOptionValue builtIn="false" value="/usr/local/i686-elf/lib/gcc/i686-elf/4.9.2/include"/>
+									<listOptionValue builtIn="false" value="/usr/local/ost/sysroot/usr/include"/>
+								</option>
+								<option id="org.eclipse.cdt.build.core.settings.holder.symbols.1559828254" name="Symbols" superClass="org.eclipse.cdt.build.core.settings.holder.symbols" valueType="definedSymbols">
+									<listOptionValue builtIn="false" value="&quot;__UINT8_TYPE__=unsigned char&quot;"/>
+									<listOptionValue builtIn="false" value="__i386__"/>
+									<listOptionValue builtIn="false" value="&quot;__INT8_TYPE__=signed char&quot;"/>
+									<listOptionValue builtIn="false" value="__INT16_TYPE__=short"/>
+									<listOptionValue builtIn="false" value="__INT32_TYPE__=long"/>
+									<listOptionValue builtIn="false" value="&quot;__UINT32_TYPE__=unsigned long&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;__UINT64_TYPE__=unsigned long long&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;__INT64_TYPE__=long long&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;__UINT16_TYPE__=unsigned short&quot;"/>
+								</option>
+								<inputType id="org.eclipse.cdt.build.core.settings.holder.inType.1799109024" languageId="org.eclipse.cdt.core.g++" languageName="GNU C++" sourceContentType="org.eclipse.cdt.core.cxxSource,org.eclipse.cdt.core.cxxHeader" superClass="org.eclipse.cdt.build.core.settings.holder.inType"/>
+							</tool>
+							<tool id="org.eclipse.cdt.build.core.settings.holder.338677845" name="GNU C" superClass="org.eclipse.cdt.build.core.settings.holder">
+								<option id="org.eclipse.cdt.build.core.settings.holder.incpaths.623979782" name="Include Paths" superClass="org.eclipse.cdt.build.core.settings.holder.incpaths" valueType="includePath">
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/ost/cpython-2.7.10/Include}&quot;"/>
+									<listOptionValue builtIn="false" value="/usr/local/i686-elf/lib/gcc/i686-elf/4.9.2/include"/>
+									<listOptionValue builtIn="false" value="/usr/local/ost/sysroot/usr/include"/>
+								</option>
+								<option id="org.eclipse.cdt.build.core.settings.holder.symbols.1020321395" name="Symbols" superClass="org.eclipse.cdt.build.core.settings.holder.symbols" valueType="definedSymbols">
+									<listOptionValue builtIn="false" value="&quot;__UINT8_TYPE__=unsigned char&quot;"/>
+									<listOptionValue builtIn="false" value="__i386__"/>
+									<listOptionValue builtIn="false" value="&quot;__INT8_TYPE__=signed char&quot;"/>
+									<listOptionValue builtIn="false" value="__INT16_TYPE__=short"/>
+									<listOptionValue builtIn="false" value="__INT32_TYPE__=long"/>
+									<listOptionValue builtIn="false" value="&quot;__UINT32_TYPE__=unsigned long&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;__UINT64_TYPE__=unsigned long long&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;__INT64_TYPE__=long long&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;__UINT16_TYPE__=unsigned short&quot;"/>
+								</option>
+								<inputType id="org.eclipse.cdt.build.core.settings.holder.inType.1646544666" languageId="org.eclipse.cdt.core.gcc" languageName="GNU C" sourceContentType="org.eclipse.cdt.core.cSource,org.eclipse.cdt.core.cHeader" superClass="org.eclipse.cdt.build.core.settings.holder.inType"/>
 							</tool>
 						</toolChain>
 					</folderInfo>
