@@ -21,7 +21,8 @@ void init_map(void* kernel_end_address)
 inline pageframe_t table_index_to_address(unsigned i)
 {
 	// Get index of lowest 1-bit in map
-	int lowest_set_bit = __builtin_ctz(frame_map[i]);
+	uint32_t map = frame_map[i];
+	int lowest_set_bit = __builtin_ctz(map);
 	// Translate iterator plus bit index to frame number
 	intptr_t frame_number = i * 32 + lowest_set_bit;
 	// Mark the frame as allocated by clearing the corresponding bit
@@ -36,7 +37,8 @@ pageframe_t allocate_frame()
 	unsigned count_start = static_i;
 	while (static_i < TABLE_LENGTH)
 	{
-		if (frame_map != 0x00000000)
+		uint32_t map = frame_map[static_i];
+		if (map != 0x00000000)
 		{
 			return table_index_to_address(static_i);
 		}
@@ -45,7 +47,8 @@ pageframe_t allocate_frame()
 	static_i = table_start;
 	while (static_i < count_start)
 	{
-		if (frame_map != 0x00000000)
+		uint32_t map = frame_map[static_i];
+		if (map != 0x00000000)
 		{
 			return table_index_to_address(static_i);
 		}
