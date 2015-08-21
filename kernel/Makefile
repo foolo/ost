@@ -39,6 +39,7 @@ CPPFILES=\
 	keyboard/ia32/keyboard_controller.cpp \
 	syscalls/syscall-handler.cpp \
 	paging/page_allocator.cpp \
+	memory/multiboot_mmap.cpp \
 
 CFILES=
 

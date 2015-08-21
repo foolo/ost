@@ -5,6 +5,7 @@
 #include "interrupts.h"
 #include "interrupts/ia32/ia32-interrupts.h" // todo just for test_syscall
 #include "keyboard.h"
+#include "multiboot_mmap.h"
 
 #if !defined(__i386__)
 #error "ix86-elf compiler required"
@@ -19,6 +20,7 @@ extern "C" void kernel_main(unsigned long magic, unsigned long addr)
 	initialize_IDT();
 	initialize_software_interrupts();
 	terminal_initialize();
+	multiboot_mmap(magic, (multiboot_info_t*) addr);
 
 	printf("Hello, kernel World!\n");
 
