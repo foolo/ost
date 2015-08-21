@@ -8,12 +8,10 @@ AR=i686-elf-ar
 BUILDDIR=build-$(HOSTARCH)
 
 LIBDIR=$(OSTROOT)/usr/lib
-INCDIR=$(OSTROOT)/usr/include
-
-CXXFLAGS := -I$(INCDIR)
-CXXFLAGS += -ffreestanding -O2 -g -Wall -Wextra
-CXXFLAGS += -Iinclude
-CXXFLAGS += -I../toolchain  #for newlib/i686-ost/syscalls.h
+INCFLAGS := -I$(OSTROOT)/usr/include
+INCFLAGS += -I../toolchain  #for newlib/i686-ost/syscalls.h
+INCFLAGS += -Iinclude
+CXXFLAGS := $(INCFLAGS) -ffreestanding -O2 -g -Wall -Wextra
 CPPFLAGS := $(CXXFLAGS) -fno-exceptions -fno-rtti
 
 CFLAGS=$(CXXFLAGS) -std=gnu99
@@ -45,7 +43,7 @@ CPPFILES=\
 CFILES=
 
 ASMFILES=\
-	boot.s \
+	boot.S \
 	interrupts/ia32/interrupts.s \
 
 CPP_OBJFILES := $(patsubst %, $(BUILDDIR)/%.o, $(CPPFILES))
@@ -63,6 +61,10 @@ default: $(BINOUT)
 $(BUILDDIR)/%.s.o: %.s
 	@mkdir -p $(dir $@)
 	$(AS) $*.s -o $(BUILDDIR)/$*.s.o
+
+$(BUILDDIR)/%.S.o: %.S
+	@mkdir -p $(dir $@)
+	$(CC) -c $*.S -o $(BUILDDIR)/$*.S.o $(INCFLAGS)
 
 $(BUILDDIR)/%.cpp.o: %.cpp
 	@mkdir -p $(dir $@)

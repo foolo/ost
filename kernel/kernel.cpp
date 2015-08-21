@@ -10,10 +10,11 @@
 #error "ix86-elf compiler required"
 #endif
 
-namespace kernel {
+namespace kernel
+{
 
-extern "C"
-void kernel_main() {
+extern "C" void kernel_main(unsigned long magic, unsigned long addr)
+{
 	initialize_PIC();
 	initialize_IDT();
 	initialize_software_interrupts();
