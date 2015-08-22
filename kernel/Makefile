@@ -38,6 +38,7 @@ CPPFILES=\
 	keyboard/keyboard.cpp \
 	keyboard/ia32/keyboard_controller.cpp \
 	syscalls/syscall-handler.cpp \
+	syscalls/syscalls_bypass.cpp \
 	paging/page_allocator.cpp \
 	memory/multiboot_mmap.cpp \
 
@@ -93,7 +94,9 @@ OBJ_LINK_LIST:=$(CRTI_OBJ) $(CRTBEGIN_OBJ)   $(OBJS)   $(CRTEND_OBJ) $(CRTN_OBJ)
 LIBCDEPS := $(wildcard $(OSTROOT)/usr/lib/*)
 $(BINOUT): $(OBJ_LINK_LIST) $(LIBK_FILE) linker.ld $(LIBCDEPS)
 	@mkdir -p $(dir $@)
-	$(CC) -T linker.ld -o $(BINOUT) $(OBJ_LINK_LIST) $(LDFLAGS) $(LDPATH) $(LIBS)
+	# LIBS occurs twice in the linker command because LIBC depends on on syscalls_bypass.cpp.o
+	# An alternative would have been to place syscall_bypass.o at the end of the command
+	$(CC) -T linker.ld -o $(BINOUT) $(LIBS) $(OBJ_LINK_LIST) $(LDFLAGS) $(LDPATH) $(LIBS)
 
 
 # Create .iso

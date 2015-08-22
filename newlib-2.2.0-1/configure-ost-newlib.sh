@@ -10,5 +10,5 @@ pushd newlib/libc/sys/ost
 autoreconf
 popd
 
-./configure --prefix=/usr --target=i686-ost
+./configure --prefix=/usr --target=i686-ost --disable-newlib-supplied-syscalls
 
