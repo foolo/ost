@@ -25,6 +25,7 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/ost/cpython-2.7.10/Include}&quot;"/>
 									<listOptionValue builtIn="false" value="/usr/local/i686-elf/lib/gcc/i686-elf/4.9.2/include"/>
 									<listOptionValue builtIn="false" value="/usr/local/ost/sysroot/usr/include"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/ost/kernel/include}&quot;"/>
 								</option>
 								<option id="org.eclipse.cdt.build.core.settings.holder.symbols.2026601086" name="Symbols" superClass="org.eclipse.cdt.build.core.settings.holder.symbols" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="&quot;__UINT8_TYPE__=unsigned char&quot;"/>
@@ -44,6 +45,7 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/ost/cpython-2.7.10/Include}&quot;"/>
 									<listOptionValue builtIn="false" value="/usr/local/i686-elf/lib/gcc/i686-elf/4.9.2/include"/>
 									<listOptionValue builtIn="false" value="/usr/local/ost/sysroot/usr/include"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/ost/kernel/include}&quot;"/>
 								</option>
 								<option id="org.eclipse.cdt.build.core.settings.holder.symbols.819446201" name="Symbols" superClass="org.eclipse.cdt.build.core.settings.holder.symbols" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="&quot;__UINT8_TYPE__=unsigned char&quot;"/>
@@ -63,6 +65,7 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/ost/cpython-2.7.10/Include}&quot;"/>
 									<listOptionValue builtIn="false" value="/usr/local/i686-elf/lib/gcc/i686-elf/4.9.2/include"/>
 									<listOptionValue builtIn="false" value="/usr/local/ost/sysroot/usr/include"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/ost/kernel/include}&quot;"/>
 								</option>
 								<option id="org.eclipse.cdt.build.core.settings.holder.symbols.877347759" name="Symbols" superClass="org.eclipse.cdt.build.core.settings.holder.symbols" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="&quot;__UINT8_TYPE__=unsigned char&quot;"/>
@@ -107,6 +110,7 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/ost/cpython-2.7.10/Include}&quot;"/>
 									<listOptionValue builtIn="false" value="/usr/local/i686-elf/lib/gcc/i686-elf/4.9.2/include"/>
 									<listOptionValue builtIn="false" value="/usr/local/ost/sysroot/usr/include"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/ost/kernel/include}&quot;"/>
 								</option>
 								<option id="org.eclipse.cdt.build.core.settings.holder.symbols.911052260" name="Symbols" superClass="org.eclipse.cdt.build.core.settings.holder.symbols" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="&quot;__UINT8_TYPE__=unsigned char&quot;"/>
@@ -126,6 +130,7 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/ost/cpython-2.7.10/Include}&quot;"/>
 									<listOptionValue builtIn="false" value="/usr/local/i686-elf/lib/gcc/i686-elf/4.9.2/include"/>
 									<listOptionValue builtIn="false" value="/usr/local/ost/sysroot/usr/include"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/ost/kernel/include}&quot;"/>
 								</option>
 								<option id="org.eclipse.cdt.build.core.settings.holder.symbols.1559828254" name="Symbols" superClass="org.eclipse.cdt.build.core.settings.holder.symbols" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="&quot;__UINT8_TYPE__=unsigned char&quot;"/>
@@ -145,6 +150,7 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/ost/cpython-2.7.10/Include}&quot;"/>
 									<listOptionValue builtIn="false" value="/usr/local/i686-elf/lib/gcc/i686-elf/4.9.2/include"/>
 									<listOptionValue builtIn="false" value="/usr/local/ost/sysroot/usr/include"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/ost/kernel/include}&quot;"/>
 								</option>
 								<option id="org.eclipse.cdt.build.core.settings.holder.symbols.1020321395" name="Symbols" superClass="org.eclipse.cdt.build.core.settings.holder.symbols" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="&quot;__UINT8_TYPE__=unsigned char&quot;"/>
@@ -169,14 +175,18 @@
 	<storageModule moduleId="cdtBuildSystem" version="4.0.0">
 		<project id="ost.null.1337329727" name="ost"/>
 	</storageModule>
-	<storageModule moduleId="scannerConfiguration">
-		<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
-		<scannerConfigBuildInfo instanceId="0.1856457069">
-			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
-		</scannerConfigBuildInfo>
-	</storageModule>
 	<storageModule moduleId="refreshScope" versionNumber="1">
 		<resource resourceType="PROJECT" workspacePath="/ost"/>
 	</storageModule>
 	<storageModule moduleId="org.eclipse.cdt.internal.ui.text.commentOwnerProjectMappings"/>
+	<storageModule moduleId="scannerConfiguration">
+		<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
+		<scannerConfigBuildInfo instanceId="0.1856457069.984988529">
+			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
+		</scannerConfigBuildInfo>
+		<scannerConfigBuildInfo instanceId="0.1856457069">
+			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
+		</scannerConfigBuildInfo>
+	</storageModule>
+	<storageModule moduleId="org.eclipse.cdt.core.LanguageSettingsProviders"/>
 </cproject>
