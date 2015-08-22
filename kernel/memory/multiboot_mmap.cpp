@@ -34,7 +34,7 @@ void multiboot_mmap(unsigned long magic, multiboot_info_t *mbi)
 	if (CHECK_FLAG (mbi->flags, 3))
 	{
 		multiboot_module_t *mod;
-		int i;
+		unsigned int i;
 
 		printf("mods_count = %d, mods_addr = 0x%x\n", (int) mbi->mods_count,
 				(int) mbi->mods_addr);
@@ -90,8 +90,8 @@ void multiboot_mmap(unsigned long magic, multiboot_info_t *mbi)
 		mmap = (multiboot_memory_map_t *) mbi->mmap_addr;
 		while ((unsigned long)mmap < mbi->mmap_addr + mbi->mmap_length)
 		{
-			printf(" size = 0x%x, base_addr = 0x%x%x,"
-					" length = 0x%x%x, type = 0x%x\n", (unsigned) mmap->size,
+			printf(" size = 0x%x, base_addr = 0x%llx%llx,"
+					" length = 0x%llx%llx, type = 0x%x\n", (unsigned) mmap->size,
 					mmap->addr >> 32, mmap->addr & 0xffffffff, mmap->len >> 32,
 					mmap->len & 0xffffffff, (unsigned) mmap->type);
 
