@@ -84,16 +84,18 @@ void multiboot_mmap(unsigned long magic, multiboot_info_t *mbi)
 		multiboot_memory_map_t *mmap;
 
 		printf("mmap_addr = 0x%x, mmap_length = 0x%x\n",
-				(unsigned) mbi->mmap_addr, (unsigned) mbi->mmap_length);
-		for (mmap = (multiboot_memory_map_t *) mbi->mmap_addr;
-				(unsigned long) mmap < mbi->mmap_addr + mbi->mmap_length;
-				mmap = (multiboot_memory_map_t *) ((unsigned long) mmap
-						+ mmap->size + sizeof(mmap->size)))
+				mbi->mmap_addr, (unsigned) mbi->mmap_length);
+
+
+		mmap = (multiboot_memory_map_t *) mbi->mmap_addr;
+		while ((unsigned long)mmap < mbi->mmap_addr + mbi->mmap_length)
 		{
 			printf(" size = 0x%x, base_addr = 0x%x%x,"
 					" length = 0x%x%x, type = 0x%x\n", (unsigned) mmap->size,
 					mmap->addr >> 32, mmap->addr & 0xffffffff, mmap->len >> 32,
 					mmap->len & 0xffffffff, (unsigned) mmap->type);
+
+			mmap = (multiboot_memory_map_t *) ((unsigned long) mmap + mmap->size + sizeof(mmap->size));
 		}
 	}
 }
