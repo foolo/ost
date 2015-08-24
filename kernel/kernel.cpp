@@ -7,20 +7,16 @@
 #include "keyboard.h"
 #include "multiboot_mmap.h"
 
-#if !defined(__i386__)
-#error "ix86-elf compiler required"
-#endif
-
 namespace kernel
 {
 
 extern "C" void kernel_main(unsigned long magic, unsigned long addr)
 {
 	terminal_initialize();
-	multiboot_mmap(magic, (multiboot_info_t*) addr);
-	initialize_PIC();
-	initialize_IDT();
-	initialize_software_interrupts();
+//	multiboot_mmap(magic, (multiboot_info_t*) addr);
+//	initialize_PIC();
+//	initialize_IDT();
+//	initialize_software_interrupts();
 
 	printf("Hello, kernel World!\n");
 

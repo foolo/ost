@@ -1,17 +1,21 @@
 # todo arch by parameter
 include ../toolchain/toochain_env.sh
-export PATH := $(PATH):$(ELFCC)/bin:$(OSTCC)/bin
+#export PATH= $(PATH):$(ELFCC)/bin:$(OSTCC)/bin
+export PATH := $(PATH):/usr/local/x86_64-elf/bin
 HOSTARCH=ia32
-CC=i686-elf-gcc
-AS=i686-elf-as
-AR=i686-elf-ar
+CC=x86_64-elf-gcc
+#AS=x86_64-elf-as
+AR=x86_64-elf-ar
 BUILDDIR=build-$(HOSTARCH)
+
+#foo:
+	#@echo HHHHHHHHHH $(PATH) 
 
 LIBDIR=$(OSTROOT)/usr/lib
 INCFLAGS := -I$(OSTROOT)/usr/include
-INCFLAGS += -I../toolchain  #for newlib/i686-ost/syscalls.h
+INCFLAGS += -I../toolchain  #for newlib/x86_64-ost/syscalls.h
 INCFLAGS += -Iinclude
-CXXFLAGS := $(INCFLAGS) -ffreestanding -O2 -g -Wall -Wextra
+CXXFLAGS := $(INCFLAGS) -ffreestanding -O2 -g -Wall -Wextra -mcmodel=large -mno-red-zone -mno-mmx -mno-sse -mno-sse2
 CPPFLAGS := $(CXXFLAGS) -fno-exceptions -fno-rtti
 
 CFLAGS=$(CXXFLAGS) -std=gnu99
@@ -82,10 +86,10 @@ $(BUILDDIR)/%.c.o: %.c
 # Link
 
 
-CRTI_OBJ=$(BUILDDIR)/cpp/i686-elf/crti.s.o
+CRTI_OBJ=$(BUILDDIR)/cpp/x86_64-elf/crti.S.o
 CRTBEGIN_OBJ:=$(shell $(CC) -print-file-name=crtbegin.o)
 CRTEND_OBJ:=  $(shell $(CC) -print-file-name=crtend.o)
-CRTN_OBJ=$(BUILDDIR)/cpp/i686-elf/crtn.s.o
+CRTN_OBJ=$(BUILDDIR)/cpp/x86_64-elf/crtn.S.o
 
 OBJS:=$(CPP_OBJFILES) $(C_OBJFILES) $(ASM_OBJFILES)
 OBJ_LINK_LIST:=$(CRTI_OBJ) $(CRTBEGIN_OBJ)   $(OBJS)   $(CRTEND_OBJ) $(CRTN_OBJ)

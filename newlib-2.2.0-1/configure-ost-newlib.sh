@@ -10,5 +10,7 @@ pushd newlib/libc/sys/ost
 autoreconf
 popd
 
-./configure --prefix=/usr --target=i686-ost --disable-newlib-supplied-syscalls
+CFLAGS='-ffreestanding  -mcmodel=large -mno-red-zone -mno-mmx -mno-sse -mno-sse2'
+
+./configure --prefix=/usr --target=x86_64-ost --disable-newlib-supplied-syscalls CFLAGS='-mcmodel=large'
 

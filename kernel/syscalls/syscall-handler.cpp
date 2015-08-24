@@ -102,7 +102,7 @@ int handle_syscall_gettimeofday(struct timeval * /*p*/, void * /*z*/)
 	return -1;
 }
 
-int handle_unknown_syscall(uint32_t syscall_id, uint32_t param1, uint32_t param2, uint32_t param3)
+int handle_unknown_syscall(long syscall_id, long param1, long param2, long param3)
 {
 	printf("Unknown syscall %lu with parameters %lu, %lu, %lu", syscall_id, param1, param2, param3);
 	return -1;

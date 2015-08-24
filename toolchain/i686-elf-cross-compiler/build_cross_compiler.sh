@@ -35,14 +35,14 @@ export PATH=$ELFCC/bin:$PATH
 
 mkdir build-binutils
 pushd build-binutils
-../binutils-2.24/configure --enable-option-checking --target=i686-elf --prefix=$ELFCC --disable-multilib --disable-werror --disable-nls
+../binutils-2.24/configure --enable-option-checking --target=x86_64-elf --prefix=$ELFCC --disable-multilib --disable-werror --disable-nls
 popd
 
 ## Gcc
 
 mkdir -p build-gcc
 pushd build-gcc
-../gcc-4.9.2/configure --enable-option-checking --target=i686-elf --prefix=$ELFCC
+../gcc-4.9.2/configure --enable-option-checking --target=x86_64-elf --prefix=$ELFCC
 popd
 
 
@@ -54,17 +54,17 @@ popd
 pushd build-gcc
 make all-gcc
 make all-target-libgcc
-sudo ln -fs $ELFCC/bin/i686-elf-ranlib /usr/local/bin/i686-elf-ranlib # Needed for install-target-libgcc, as sudo does not use PATH
+sudo ln -fs $ELFCC/bin/x86_64-elf-ranlib /usr/local/bin/x86_64-elf-ranlib # Needed for install-target-libgcc, as sudo does not use PATH
 sudo make install-gcc
 sudo make install-target-libgcc
 popd
 
-# Fix for Newlib. Newlib expects "i686-ost" compiler, fix with some links
+# Fix for Newlib. Newlib expects "x86_64-ost" compiler, fix with some links
 sudo mkdir -p $ELFCC/ost-links
 pushd $ELFCC/ost-links
-sudo ln -sr $ELFCC/bin/i686-elf-ar   i686-ost-ar
-sudo ln -sr $ELFCC/bin/i686-elf-as   i686-ost-as
-sudo ln -sr $ELFCC/bin/i686-elf-gcc  i686-ost-gcc
-sudo ln -sr $ELFCC/bin/i686-elf-gcc  i686-ost-cc # Newlib uses cc instead of gcc
-sudo ln -sr $ELFCC/bin/i686-elf-ranlib i686-ost-ranlib
+sudo ln -sr $ELFCC/bin/x86_64-elf-ar   x86_64-ost-ar
+sudo ln -sr $ELFCC/bin/x86_64-elf-as   x86_64-ost-as
+sudo ln -sr $ELFCC/bin/x86_64-elf-gcc  x86_64-ost-gcc
+sudo ln -sr $ELFCC/bin/x86_64-elf-gcc  x86_64-ost-cc # Newlib uses cc instead of gcc
+sudo ln -sr $ELFCC/bin/x86_64-elf-ranlib x86_64-ost-ranlib
 

@@ -2,13 +2,13 @@
 include ../toolchain/toochain_env.sh
 export PATH := $(PATH):$(ELFCC)/bin:$(OSTCC)/bin
 HOSTARCH=ia32
-CC=i686-elf-gcc
-AS=i686-elf-as
-AR=i686-elf-ar
+CC=x86_64-elf-gcc
+AS=x86_64-elf-as
+AR=x86_64-elf-ar
 BUILDDIR=build-$(HOSTARCH)
 
 
-CPPFLAGS := -O2 -g -Wall -Wextra -ffreestanding -fbuiltin
+CPPFLAGS := -O2 -g -Wall -Wextra -ffreestanding -fbuiltin -mcmodel=large -mno-red-zone -mno-mmx -mno-sse -mno-sse2
 CPPFLAGS += -Iinclude
 CPPFLAGS += -I$(OSTROOT)/usr/include
 

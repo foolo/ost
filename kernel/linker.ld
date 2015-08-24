@@ -1,46 +1,51 @@
-/* The bootloader will look at this image and start execution at the symbol
-   designated as the entry point. */
 ENTRY(_start)
-
-/* Tell where the various sections of the object files will be put in the final
-   kernel image. */
 SECTIONS
 {
-	/* Begin putting sections at 1 MiB, a conventional place for kernels to be
-	   loaded at by the bootloader. */
-	. = 1M;
+    . = 0xC0000000;
 
-	/* First put the multiboot header, as it is required to be put very early
-	   early in the image or the bootloader won't recognize the file format.
-	   Next we'll put the .text section. */
-	.text BLOCK(4K) : ALIGN(4K)
-	{
-		*(.multiboot)
-		*(.text)
-	}
+    .text : AT(ADDR(.text) - 0xC0000000)
+    {
+        _code = .;
+        *(.text)
+        *(.rodata*)
+        . = ALIGN(4096);
+    }
 
-	/* Read-only data. */
-	.rodata BLOCK(4K) : ALIGN(4K)
-	{
-		*(.rodata)
-	}
+   .data : AT(ADDR(.data) - 0xC0000000)
+   {
+        _data = .;
+        *(.data)
+        . = ALIGN(4096);
+   }
 
-	/* Read-write data (initialized) */
-	.data BLOCK(4K) : ALIGN(4K)
-	{
-		*(.data)
-	}
+   .eh_frame : AT(ADDR(.eh_frame) - 0xC0000000)
+   {
+       _ehframe = .;
+       *(.eh_frame)
+        . = ALIGN(4096);
+   }
 
-	/* Read-write data (uninitialized) and stack */
-	.bss BLOCK(4K) : ALIGN(4K)
-	{
-		*(COMMON)
-		*(.bss)
-		*(.bootstrap_stack)
-	}
-	kernel_end_address = .;
+   .bss : AT(ADDR(.bss) - 0xC0000000)
+   {
+       _bss = .;
+       *(.bss)
 
-	/* The compiler may produce other sections, by default it will put them in
-	   a segment with the same name. Simply add stuff here as needed. */
+       /*
+        * You usually need to include generated COMMON symbols
+        * under kernel BSS section or use gcc's -fno-common
+        */
+
+        *(COMMON)
+       . = ALIGN(4096);
+   }
+   	kernel_end_address = .;
+   
+
+   _end = .;
+
+   /DISCARD/ :
+   {
+        *(.comment)
+   }
 }
 

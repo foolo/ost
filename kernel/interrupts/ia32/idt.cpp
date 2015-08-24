@@ -22,7 +22,7 @@ extern "C" void load_idt(uint32_t *idt_ptr);
 namespace kernel
 {
 
-void create_idt_entry(uint32_t callback_function_pointer, uint8_t vector_index)
+void create_idt_entry(void *callback_function_pointer, uint8_t vector_index)
 {
 	static const uint8_t KERNEL_CODE_SEGMENT_OFFSET = 0x08;
 	static const uint8_t INTERRUPT_GATE = 0x8e;
@@ -30,14 +30,14 @@ void create_idt_entry(uint32_t callback_function_pointer, uint8_t vector_index)
 	IDT_entry *entry = IDT + vector_index;
 
 	/* populate IDT entry of keyboard's interrupt */
-	entry->offset_lowerbits = callback_function_pointer & 0xffff;
+	entry->offset_lowerbits = (uintptr_t)callback_function_pointer & 0xffff;
 	entry->selector = KERNEL_CODE_SEGMENT_OFFSET;
 	entry->zero = 0;
 	entry->type_attr = INTERRUPT_GATE;
-	entry->offset_higherbits = (callback_function_pointer & 0xffff0000) >> 16;
+	entry->offset_higherbits = ((uintptr_t)callback_function_pointer & 0xffff0000) >> 16;
 
 	// prepare address for
-	uint32_t idt_address = (uint32_t)IDT;
+	uint32_t idt_address = (uintptr_t)IDT & 0xffffffff;
 	uint32_t idt_ptr[2];
 	idt_ptr[0] = (sizeof (struct IDT_entry) * IDT_SIZE) + ((idt_address & 0xffff) << 16);
 	idt_ptr[1] = idt_address >> 16 ;
@@ -46,7 +46,7 @@ void create_idt_entry(uint32_t callback_function_pointer, uint8_t vector_index)
 	load_idt(idt_ptr);
 }
 
-void register_callback(uint32_t callback_function_pointer, uint8_t irq)
+void register_callback(void *callback_function_pointer, uint8_t irq)
 {
 	uint8_t vector_index = IRQ_0_VECTOR_START + irq;
 	create_idt_entry(callback_function_pointer, vector_index);
@@ -68,16 +68,16 @@ extern "C" void keyboard_handler(void)
 
 extern "C" void syscall_handler_wrapper(void);
 
-extern "C" void syscall_handler(uint32_t syscall_id, uint32_t param1, uint32_t param2, uint32_t param3)
+extern "C" void syscall_handler(int syscall_id, long int param1, long int param2, long int param3)
 {
 	if (syscall_id == SYSCALL_EXIT)
 	{
-		int file = (int)param1;
+		long int file = (long int)param1;
 		handle_syscall_exit(file);
 	}
 	else if (syscall_id == SYSCALL_CLOSE)
 	{
-		int file = (int)param1;
+		long int file = (long int)param1;
 		handle_syscall_close(file);
 	}
 	else if (syscall_id == SYSCALL_EXECVE)
@@ -181,12 +181,12 @@ extern "C" void syscall_handler(uint32_t syscall_id, uint32_t param1, uint32_t p
 
 void initialize_IDT()
 {
-	register_callback((uint32_t)keyboard_handler_wrapper, KEYBOARD_IRQ);
+	register_callback((void*)keyboard_handler_wrapper, KEYBOARD_IRQ);
 }
 
 void initialize_software_interrupts()
 {
-	create_idt_entry((uint32_t)syscall_handler_wrapper, SYSCALL_INTERRUPT_VECTOR);
+	create_idt_entry((void*)syscall_handler_wrapper, SYSCALL_INTERRUPT_VECTOR);
 }
 
 
