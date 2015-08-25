@@ -23,12 +23,13 @@ Extract, configure, make, make install
 
 ## Download GNU libraries
 
-./download_libs.sh
+	cd toolchain
+	./download_libs.sh
 
 ## Build i686-elf cross compiler
 
-run build_cross_compiler.sh and follow instructions for make
-it will place executables in /tmp/i686-elf/bin
+	cd i686-elf-cross-compiler
+	./build_cross_compiler.sh
 
 ### Build Newlib 1
 
