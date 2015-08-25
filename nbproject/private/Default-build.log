@@ -1,6 +1,0 @@
-make: i686-elf-gcc: Command not found
-make: i686-elf-gcc: Command not found
-i686-elf-as cpp/i686-elf/crti.s -o build-ia32/cpp/i686-elf/crti.s.o
-make: i686-elf-as: Command not found
-Makefile:64: recipe for target 'build-ia32/cpp/i686-elf/crti.s.o' failed
-make: *** [build-ia32/cpp/i686-elf/crti.s.o] Error 127
