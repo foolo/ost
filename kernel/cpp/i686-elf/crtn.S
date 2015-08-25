@@ -1,4 +1,5 @@
-/* x86 crtn.s */
+/* x86 crtn.S */
+
 .section .init
 	/* gcc will nicely put the contents of crtend.o's .init section here. */
 	popl %ebp

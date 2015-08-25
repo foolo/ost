@@ -1,4 +1,5 @@
-/* x86 crti.s */
+/* x86 crti.S */
+
 .section .init
 .global _init
 .type _init, @function

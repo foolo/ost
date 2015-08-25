@@ -3,7 +3,6 @@ include ../toolchain/toochain_env.sh
 export PATH := $(PATH):$(ELFCC)/bin:$(OSTCC)/bin
 HOSTARCH=ia32
 CC=i686-elf-gcc
-AS=i686-elf-as
 AR=i686-elf-ar
 BUILDDIR=build-$(HOSTARCH)
 
@@ -46,7 +45,7 @@ CFILES=
 
 ASMFILES=\
 	boot.S \
-	interrupts/ia32/interrupts.s \
+	interrupts/ia32/interrupts.S \
 
 CPP_OBJFILES := $(patsubst %, $(BUILDDIR)/%.o, $(CPPFILES))
 C_OBJFILES :=   $(patsubst %, $(BUILDDIR)/%.o, $(CFILES))
@@ -59,11 +58,6 @@ default: $(BINOUT)
 
 
 # Compile
-
-$(BUILDDIR)/%.s.o: %.s
-	@mkdir -p $(dir $@)
-	$(AS) $*.s -o $(BUILDDIR)/$*.s.o
-
 $(BUILDDIR)/%.S.o: %.S
 	@mkdir -p $(dir $@)
 	$(CC) -c $*.S -o $(BUILDDIR)/$*.S.o $(INCFLAGS)
@@ -82,10 +76,10 @@ $(BUILDDIR)/%.c.o: %.c
 # Link
 
 
-CRTI_OBJ=$(BUILDDIR)/cpp/i686-elf/crti.s.o
+CRTI_OBJ=$(BUILDDIR)/cpp/i686-elf/crti.S.o
 CRTBEGIN_OBJ:=$(shell $(CC) -print-file-name=crtbegin.o)
 CRTEND_OBJ:=  $(shell $(CC) -print-file-name=crtend.o)
-CRTN_OBJ=$(BUILDDIR)/cpp/i686-elf/crtn.s.o
+CRTN_OBJ=$(BUILDDIR)/cpp/i686-elf/crtn.S.o
 
 OBJS:=$(CPP_OBJFILES) $(C_OBJFILES) $(ASM_OBJFILES)
 OBJ_LINK_LIST:=$(CRTI_OBJ) $(CRTBEGIN_OBJ)   $(OBJS)   $(CRTEND_OBJ) $(CRTN_OBJ)
