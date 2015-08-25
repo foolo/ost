@@ -1538,6 +1538,18 @@
           <buildCommand>${MAKE}</buildCommand>
           <cleanCommand>${MAKE} clean</cleanCommand>
           <executablePath></executablePath>
+          <cTool>
+            <incDir>
+              <pElem>/usr/local/i686-elf/lib/gcc/i686-elf/4.9.2/include</pElem>
+              <pElem>/usr/local/ost/sysroot/usr/include</pElem>
+            </incDir>
+          </cTool>
+          <ccTool>
+            <incDir>
+              <pElem>/usr/local/i686-elf/lib/gcc/i686-elf/4.9.2/include</pElem>
+              <pElem>/usr/local/ost/sysroot/usr/include</pElem>
+            </incDir>
+          </ccTool>
         </makeTool>
       </makefileType>
       <item path="cpython-2.7.10/Include/Python-ast.h"
