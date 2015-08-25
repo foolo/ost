@@ -7,10 +7,6 @@
 #include "keyboard.h"
 #include "multiboot_mmap.h"
 
-#if !defined(__i386__)
-#error "ix86-elf compiler required"
-#endif
-
 namespace kernel
 {
 
