@@ -1531,7 +1531,6 @@
         <rebuildPropChanged>false</rebuildPropChanged>
       </toolsSet>
       <codeAssistance>
-        <excludePattern>/toolchain/</excludePattern>
       </codeAssistance>
       <makefileType>
         <makeTool>
