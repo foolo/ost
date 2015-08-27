@@ -10,4 +10,4 @@ serdep.tmp
 newlib/libc/sys/ost/Makefile.in
 newlib/libc/sys/ost/aclocal.m4
 newlib/libc/sys/ost/configure
-
+newlib/libc/sys/configure
