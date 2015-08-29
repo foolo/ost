@@ -42,7 +42,7 @@ popd
 rm -rf build-gcc
 mkdir build-gcc
 pushd build-gcc
-../gcc-4.9.2/configure --enable-option-checking --target=i686-ost --prefix=$OSTCC --with-sysroot=$OSTCC/sysroot --disable-multilib --disable-werror
+../gcc-4.9.2/configure --enable-option-checking --target=i686-ost --prefix=$OSTCC --with-sysroot=$OSTROOT --enable-languages=c,c++ --disable-werror
 make all-gcc all-target-libgcc
 sudo make install-gcc install-target-libgcc
 popd
