@@ -26,6 +26,7 @@
 									<listOptionValue builtIn="false" value="/usr/local/i686-elf/lib/gcc/i686-elf/4.9.2/include"/>
 									<listOptionValue builtIn="false" value="/usr/local/ost/sysroot/usr/include"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/ost/kernel/include}&quot;"/>
+									<listOptionValue builtIn="false" value="/usr/local/ost/include/c++/4.9.2"/>
 								</option>
 								<option id="org.eclipse.cdt.build.core.settings.holder.symbols.2026601086" name="Symbols" superClass="org.eclipse.cdt.build.core.settings.holder.symbols" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="&quot;__UINT8_TYPE__=unsigned char&quot;"/>
@@ -46,6 +47,7 @@
 									<listOptionValue builtIn="false" value="/usr/local/i686-elf/lib/gcc/i686-elf/4.9.2/include"/>
 									<listOptionValue builtIn="false" value="/usr/local/ost/sysroot/usr/include"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/ost/kernel/include}&quot;"/>
+									<listOptionValue builtIn="false" value="/usr/local/ost/include/c++/4.9.2"/>
 								</option>
 								<option id="org.eclipse.cdt.build.core.settings.holder.symbols.819446201" name="Symbols" superClass="org.eclipse.cdt.build.core.settings.holder.symbols" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="&quot;__UINT8_TYPE__=unsigned char&quot;"/>
@@ -66,6 +68,7 @@
 									<listOptionValue builtIn="false" value="/usr/local/i686-elf/lib/gcc/i686-elf/4.9.2/include"/>
 									<listOptionValue builtIn="false" value="/usr/local/ost/sysroot/usr/include"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/ost/kernel/include}&quot;"/>
+									<listOptionValue builtIn="false" value="/usr/local/ost/include/c++/4.9.2"/>
 								</option>
 								<option id="org.eclipse.cdt.build.core.settings.holder.symbols.877347759" name="Symbols" superClass="org.eclipse.cdt.build.core.settings.holder.symbols" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="&quot;__UINT8_TYPE__=unsigned char&quot;"/>
@@ -111,6 +114,7 @@
 									<listOptionValue builtIn="false" value="/usr/local/i686-elf/lib/gcc/i686-elf/4.9.2/include"/>
 									<listOptionValue builtIn="false" value="/usr/local/ost/sysroot/usr/include"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/ost/kernel/include}&quot;"/>
+									<listOptionValue builtIn="false" value="/usr/local/ost/include/c++/4.9.2"/>
 								</option>
 								<option id="org.eclipse.cdt.build.core.settings.holder.symbols.911052260" name="Symbols" superClass="org.eclipse.cdt.build.core.settings.holder.symbols" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="&quot;__UINT8_TYPE__=unsigned char&quot;"/>
@@ -131,6 +135,7 @@
 									<listOptionValue builtIn="false" value="/usr/local/i686-elf/lib/gcc/i686-elf/4.9.2/include"/>
 									<listOptionValue builtIn="false" value="/usr/local/ost/sysroot/usr/include"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/ost/kernel/include}&quot;"/>
+									<listOptionValue builtIn="false" value="/usr/local/ost/include/c++/4.9.2"/>
 								</option>
 								<option id="org.eclipse.cdt.build.core.settings.holder.symbols.1559828254" name="Symbols" superClass="org.eclipse.cdt.build.core.settings.holder.symbols" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="&quot;__UINT8_TYPE__=unsigned char&quot;"/>
@@ -151,6 +156,7 @@
 									<listOptionValue builtIn="false" value="/usr/local/i686-elf/lib/gcc/i686-elf/4.9.2/include"/>
 									<listOptionValue builtIn="false" value="/usr/local/ost/sysroot/usr/include"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/ost/kernel/include}&quot;"/>
+									<listOptionValue builtIn="false" value="/usr/local/ost/include/c++/4.9.2"/>
 								</option>
 								<option id="org.eclipse.cdt.build.core.settings.holder.symbols.1020321395" name="Symbols" superClass="org.eclipse.cdt.build.core.settings.holder.symbols" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="&quot;__UINT8_TYPE__=unsigned char&quot;"/>

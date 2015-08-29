@@ -70,7 +70,7 @@ Taken from http://www.linuxfromscratch.org/lfs/view/development/chapter05/gcc-li
 	make
 	sudo make install
 
-Remove lines from /usr/local/ost/include/c++/4.9.2/bits/os_defines.h
+Remove these lines from /usr/local/ost/include/c++/4.9.2/bits/os_defines.h
 
 	#if __GLIBC_PREREQ(2,15) && defined(_GNU_SOURCE)
 	# undef _GLIBCXX_HAVE_GETS
