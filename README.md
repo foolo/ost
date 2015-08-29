@@ -35,7 +35,7 @@ Extract, configure, make, make install
 
 Go to newlib directory and run
 
-    ./configure-ost-newlib.sh
+	./configure-ost-newlib.sh
 	./build-ost-newlib.sh $ELFCC/ost-links
 
 ### Step 2: Build Binutils
@@ -51,13 +51,32 @@ and then run make according to instructions in prepare_build_binutils.sh
 
 ### Build Newlib 2
 
-    ./configure-ost-newlib.sh
+	./configure-ost-newlib.sh
 	./build-ost-newlib.sh $OSTCC/bin
 
 # Build kernel
 
 	cd kernel
 	make
+
+
+
+# Libstdc++
+
+Taken from http://www.linuxfromscratch.org/lfs/view/development/chapter05/gcc-libstdc++.html
+
+	cd toolchain/hosted_compiler/external/build-gcc
+	../gcc-4.9.2/libstdc++-v3/configure --enable-option-checking --target=i686-ost --prefix=$OSTCC --with-sysroot=$OSTROOT --enable-languages=c,c++ --disable-werror --disable-multilib --disable-nls  --disable-libstdcxx-threads --disable-libstdcxx-pch
+	make
+	sudo make install
+
+Remove lines from /usr/local/ost/include/c++/4.9.2/bits/os_defines.h
+
+	#if __GLIBC_PREREQ(2,15) && defined(_GNU_SOURCE)
+	# undef _GLIBCXX_HAVE_GETS
+	#endif
+
+
 
 ## Make a bootable cdrom .iso
 

@@ -1,6 +1,7 @@
 # todo arch by parameter
 include ../toolchain/toochain_env.sh
 export PATH := $(PATH):$(ELFCC)/bin:$(OSTCC)/bin
+export CPLUS_INCLUDE_PATH := /usr/local/ost/include/c++/4.9.2
 HOSTARCH=ia32
 CC=i686-elf-gcc
 AR=i686-elf-ar
@@ -8,6 +9,7 @@ BUILDDIR=build-$(HOSTARCH)
 
 LIBDIR=$(OSTROOT)/usr/lib
 INCFLAGS := -I$(OSTROOT)/usr/include
+INCFLAGS += -I$(OSTROOT)/usr/include/sys
 INCFLAGS += -I../toolchain  #for newlib/i686-ost/syscalls.h
 INCFLAGS += -Iinclude
 CXXFLAGS := $(INCFLAGS) -ffreestanding -O2 -g -Wall -Wextra
