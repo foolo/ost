@@ -15,11 +15,13 @@ INCFLAGS += -I$(OSTROOT)/usr/include/sys
 INCFLAGS += -I../toolchain  #for newlib/i686-ost/syscalls.h
 INCFLAGS += -Iinclude
 
-CXXFLAGS := $(INCFLAGS) -ffreestanding -O2 -g -Wall -Wextra
+COMMONFLAGS := $(INCFLAGS) -ffreestanding -O2 -g -Wall -Wextra
 
-CPPFLAGS := $(CXXFLAGS) -fno-exceptions -fno-rtti
+CPPFLAGS := $(COMMONFLAGS) -fno-exceptions -fno-rtti
 
-CFLAGS := $(CXXFLAGS) -std=gnu99
+CFLAGS := $(COMMONFLAGS) -std=gnu99
+
+ASMFLAGS := $(COMMONFLAGS)
 
 LDFLAGS := -ffreestanding -O2 -nostdlib
 
@@ -67,7 +69,7 @@ default: $(BINOUT)
 # Compile
 $(BUILDDIR)/%.S.o: %.S
 	@mkdir -p $(dir $@)
-	$(CC) -c $*.S -o $(BUILDDIR)/$*.S.o $(INCFLAGS)
+	$(CC) -c $*.S -o $(BUILDDIR)/$*.S.o $(ASMFLAGS)
 
 $(BUILDDIR)/%.cpp.o: %.cpp
 	@mkdir -p $(dir $@)
