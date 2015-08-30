@@ -62,9 +62,8 @@ popd
 # Fix for Newlib. Newlib expects "i686-ost" compiler, fix with some links
 sudo mkdir -p $ELFCC/ost-links
 pushd $ELFCC/ost-links
-sudo ln -sr $ELFCC/bin/i686-elf-ar   i686-ost-ar
-sudo ln -sr $ELFCC/bin/i686-elf-as   i686-ost-as
-sudo ln -sr $ELFCC/bin/i686-elf-gcc  i686-ost-gcc
-sudo ln -sr $ELFCC/bin/i686-elf-gcc  i686-ost-cc # Newlib uses cc instead of gcc
-sudo ln -sr $ELFCC/bin/i686-elf-ranlib i686-ost-ranlib
-
+sudo ln -srf $ELFCC/bin/i686-elf-ar   i686-ost-ar
+sudo ln -srf $ELFCC/bin/i686-elf-as   i686-ost-as
+sudo ln -srf $ELFCC/bin/i686-elf-gcc  i686-ost-gcc
+sudo ln -srf $ELFCC/bin/i686-elf-gcc  i686-ost-cc # Newlib uses cc instead of gcc
+sudo ln -srf $ELFCC/bin/i686-elf-ranlib i686-ost-ranlib
