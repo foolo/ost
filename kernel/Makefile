@@ -7,19 +7,24 @@ CC=i686-elf-gcc
 AR=i686-elf-ar
 BUILDDIR=build-$(HOSTARCH)
 
-LIBDIR=$(OSTROOT)/usr/lib
-INCFLAGS := -I$(OSTROOT)/usr/include
+LIBDIR := $(OSTROOT)/usr/lib
+
+INCFLAGS :=
+INCFLAGS += -I$(OSTROOT)/usr/include
 INCFLAGS += -I$(OSTROOT)/usr/include/sys
 INCFLAGS += -I../toolchain  #for newlib/i686-ost/syscalls.h
 INCFLAGS += -Iinclude
+
 CXXFLAGS := $(INCFLAGS) -ffreestanding -O2 -g -Wall -Wextra
+
 CPPFLAGS := $(CXXFLAGS) -fno-exceptions -fno-rtti
 
-CFLAGS=$(CXXFLAGS) -std=gnu99
+CFLAGS := $(CXXFLAGS) -std=gnu99
 
 LDFLAGS := -ffreestanding -O2 -nostdlib
 
-LDPATH := -L$(LIBDIR)
+LDPATH :=
+LDPATH += -L$(LIBDIR)
 LDPATH += -L../libk/build-ia32
 
 LIBS= -lgcc -lc -lg -lm -lk
