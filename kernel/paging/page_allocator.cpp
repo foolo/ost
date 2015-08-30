@@ -3,6 +3,9 @@
 #include <stdint.h>
 #include "page_allocator.h"
 
+namespace kernel
+{
+
 uint32_t frame_map[TABLE_LENGTH];
 unsigned table_start = 0;
 unsigned static_i = 0;
@@ -70,3 +73,5 @@ void free_frame(pageframe_t pf)
 	int bit_index = frame_number % 32;
 	frame_map[map_index] |= (1 << bit_index);
 }
+
+} // namespace kernel

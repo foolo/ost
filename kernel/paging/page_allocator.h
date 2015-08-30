@@ -7,8 +7,10 @@
 #define TABLE_LENGTH 32768
 #define PAGE_SIZE 0x1000
 
-typedef void* pageframe_t;
+namespace kernel
+{
 
+typedef void* pageframe_t;
 
 void init_map(void* kernel_end_address);
 inline pageframe_t table_index_to_address(unsigned i);
@@ -16,3 +18,5 @@ inline pageframe_t table_index_to_address(unsigned i);
 pageframe_t allocate_frame();
 inline intptr_t frame_address_to_frame_number(pageframe_t pf);
 void free_frame(pageframe_t pf);
+
+} // namespace kernel
