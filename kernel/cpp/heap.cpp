@@ -1,4 +1,5 @@
 #include <stddef.h>
+#include <unistd.h>
 
 void *operator new(size_t /*size*/)
 {
@@ -20,4 +21,13 @@ void operator delete(void * /*p*/)
 void operator delete[](void * /*p*/)
 {
 	//free(p); // todo
+}
+
+
+namespace std
+{
+	void __throw_bad_alloc()
+	{
+		_exit(1);
+	}
 }
