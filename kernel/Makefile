@@ -107,10 +107,10 @@ $(BINOUT): $(OBJ_LINK_LIST) $(LIBK_FILE) linker.ld $(LIBCDEPS)
 
 $(ISOOUT): $(BINOUT)
 	@echo Creating $@
-	mkdir -p build/isodir/boot/grub
-	cp $(BINOUT) build/isodir/boot/
-	cp grub.cfg   build/isodir/boot/grub/
-	grub-mkrescue -o $@ build/isodir
+	mkdir -p $(BUILDDIR)/isodir/boot/grub
+	cp $(BINOUT) $(BUILDDIR)/isodir/boot/
+	cp grub.cfg   $(BUILDDIR)/isodir/boot/grub/
+	grub-mkrescue -o $@ $(BUILDDIR)/isodir
 
 .PHONY: clean all
 
