@@ -34,6 +34,7 @@ LIBS= -lgcc -lc -lg -lm -lk
 LIBK_FILE=$(LIBDIR)/libg.a
 
 BINOUT=$(BUILDDIR)/myos.bin
+ISOOUT=$(BUILDDIR)/myos.iso
 
 # Source files
 
@@ -60,7 +61,7 @@ CPP_OBJFILES := $(patsubst %, $(BUILDDIR)/%.o, $(CPPFILES))
 C_OBJFILES :=   $(patsubst %, $(BUILDDIR)/%.o, $(CFILES))
 ASM_OBJFILES := $(patsubst %, $(BUILDDIR)/%.o, $(ASMFILES))
 
-default: $(BINOUT)
+default: $(ISOOUT)
 
 -include $(CPP_OBJFILES:.o=.d)
 -include $(C_OBJFILES:.o=.d)
@@ -104,11 +105,11 @@ $(BINOUT): $(OBJ_LINK_LIST) $(LIBK_FILE) linker.ld $(LIBCDEPS)
 
 # Create .iso
 
-%.iso: $(BINOUT)
+$(ISOOUT): $(BINOUT)
 	@echo Creating $@
 	mkdir -p build/isodir/boot/grub
-	cp $(BINOUT) build/isodir/boot/myos.bin
-	cp grub.cfg   build/isodir/boot/grub/grub.cfg
+	cp $(BINOUT) build/isodir/boot/
+	cp grub.cfg   build/isodir/boot/grub/
 	grub-mkrescue -o $@ build/isodir
 
 .PHONY: clean all
