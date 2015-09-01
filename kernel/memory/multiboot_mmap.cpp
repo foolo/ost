@@ -6,6 +6,9 @@
 namespace kernel
 {
 
+const int g_MEM_RANGES_COUNT = 5;
+MemoryRange g_mem_ranges[g_MEM_RANGES_COUNT];
+
 void multiboot_mmap(unsigned long magic, multiboot_info_t *mbi)
 {
 	/* Am I booted by a Multiboot-compliant boot loader? */
@@ -90,6 +93,7 @@ void multiboot_mmap(unsigned long magic, multiboot_info_t *mbi)
 				mbi->mmap_length);
 
 		mmap = (multiboot_memory_map_t *) mbi->mmap_addr;
+		unsigned range_index = 0;
 		while ((unsigned long) mmap < mbi->mmap_addr + mbi->mmap_length)
 		{
 			printf("size = %lx, ", mmap->size);
@@ -97,6 +101,18 @@ void multiboot_mmap(unsigned long magic, multiboot_info_t *mbi)
 			printf("length = %8llx, ", mmap->len);
 			printf("type = %lx", mmap->type);
 			printf("\n");
+
+			const uint32_t USABLE_RAM = 1;
+			if (mmap->type == USABLE_RAM)
+			{
+				uint32_t start = mmap->addr;
+				uint32_t end = mmap->addr + mmap->len;
+				g_mem_ranges[range_index++] = MemoryRange(start, end);
+				if (range_index >= g_MEM_RANGES_COUNT)
+				{
+					break;
+				}
+			}
 			mmap = (multiboot_memory_map_t *) ((unsigned long) mmap + mmap->size + sizeof(mmap->size));
 		}
 	}

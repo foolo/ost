@@ -1,7 +1,9 @@
 #include <stddef.h>
 #include <inttypes.h>
 #include <stdint.h>
+#include <stdio.h>
 #include "page_allocator.h"
+#include "multiboot_mmap.h"
 
 namespace kernel
 {
@@ -19,6 +21,11 @@ void init_map(void* kernel_end_address)
 		frame_map[i] = 0xffffffff;
 	}
 	static_i = table_start;
+
+	for(int i = 0; i < g_MEM_RANGES_COUNT; i++)
+	{
+		printf("range: %lx .. %lx\n", g_mem_ranges[i].m_start, g_mem_ranges[i].m_end);
+	}
 }
 
 inline pageframe_t table_index_to_address(unsigned i)
