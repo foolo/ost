@@ -12,6 +12,11 @@ namespace kernel
 
 typedef void* pageframe_t;
 
+inline bool is_page_aligned(uint32_t addr)
+{
+	return (addr & 0x0fff) == 0;
+}
+
 void init_map(void* kernel_end_address);
 inline pageframe_t table_index_to_address(unsigned i);
 

@@ -1,5 +1,6 @@
 CXXFLAGS :=	-g -Werror -Wall -fmessage-length=0
 CXXFLAGS += -I..
+CXXFLAGS += -I../include
 
 OBJS := \
 	page_allocator_test.o \

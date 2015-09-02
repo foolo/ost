@@ -24,7 +24,7 @@ void init_map(void* kernel_end_address)
 
 	for(int i = 0; i < g_MEM_RANGES_COUNT; i++)
 	{
-		printf("range: %lx .. %lx\n", g_mem_ranges[i].m_start, g_mem_ranges[i].m_end);
+		printf("range: %lx .. %lx\n", (long unsigned)g_mem_ranges[i].m_start, (long unsigned)g_mem_ranges[i].m_end);
 	}
 }
 
