@@ -17,6 +17,21 @@ inline bool is_page_aligned(uint32_t addr)
 	return (addr & 0x0fff) == 0;
 }
 
+// Used for start of range
+inline uint32_t round_up_to_page(uint32_t addr)
+{
+	if (!is_page_aligned(addr)) {
+		return (addr & 0xfffff000) + 0x1000; // next whole page
+	}
+	return addr;
+}
+
+// Used for end of range
+inline uint32_t round_down_to_page(uint32_t addr)
+{
+	return (addr & 0xfffff000);
+}
+
 void init_map(void* kernel_end_address);
 inline pageframe_t table_index_to_address(unsigned i);
 
