@@ -106,7 +106,7 @@ void multiboot_mmap(unsigned long magic, multiboot_info_t *mbi)
 			if (mmap->type == USABLE_RAM)
 			{
 				uint32_t start = mmap->addr;
-				uint32_t end = mmap->addr + mmap->len;
+				uint32_t end = mmap->addr + mmap->len - 1;
 				g_mem_ranges[range_index++] = MemoryRange(start, end);
 				if (range_index >= g_MEM_RANGES_COUNT)
 				{
