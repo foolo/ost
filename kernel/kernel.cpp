@@ -27,10 +27,6 @@ extern "C" void kernel_main(unsigned long magic, unsigned long addr)
 	{
 		printf("PS2 controller initialization failed\n");
 	}
-
-	while(true)
-	{
-	}
 }
 
 } /* namespace kernel */
