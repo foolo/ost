@@ -35,7 +35,7 @@ inline uint32_t round_down_to_page(uint32_t addr)
 }
 
 MemoryRange page_align_mem_range(const MemoryRange& mem_range);
-
+bool register_memory_range(const MemoryRange& mem_range);
 void init_map(void* kernel_end_address);
 inline pageframe_t table_index_to_address(unsigned i);
 

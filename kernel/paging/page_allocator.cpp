@@ -13,6 +13,12 @@ uint32_t frame_map[TABLE_LENGTH];
 unsigned table_start = 0;
 unsigned static_i = 0;
 
+// page aligned memory ranges [first_usable_page_address, last_usable_page_address]
+// Example: A range of one megabyte starting at 0xC0000000 would end at 0xC00ff000
+const int MEM_RANGES_CNT_MAX = 5;
+int mem_ranges_counter = 0;
+MemoryRange mem_ranges[MEM_RANGES_CNT_MAX];
+
 MemoryRange page_align_mem_range(const MemoryRange& mem_range)
 {
 	if (mem_range.GetEnd() < (PAGE_SIZE - 1))
@@ -34,6 +40,17 @@ MemoryRange page_align_mem_range(const MemoryRange& mem_range)
 	return MemoryRange(start, end);
 }
 
+bool register_memory_range(const MemoryRange& mem_range)
+{
+	if (mem_ranges_counter >= 5)
+	{
+		return false;
+	}
+	mem_ranges[mem_ranges_counter] = page_align_mem_range(mem_range);
+	mem_ranges_counter ++;
+	return true;
+}
+
 void init_map(void* kernel_end_address)
 {
 	unsigned first_frame_after_kernel = (intptr_t)(kernel_end_address) / PAGE_SIZE;
@@ -44,9 +61,9 @@ void init_map(void* kernel_end_address)
 	}
 	static_i = table_start;
 
-	for(int i = 0; i < g_MEM_RANGES_COUNT; i++)
+	for(int i = 0; i < MEM_RANGES_CNT_MAX; i++)
 	{
-		printf("range: %lx .. %lx\n", (long unsigned)g_mem_ranges[i].GetStart(), (long unsigned)g_mem_ranges[i].GetEnd());
+		printf("range: %lx .. %lx\n", (long unsigned)mem_ranges[i].GetStart(), (long unsigned)mem_ranges[i].GetEnd());
 	}
 }
 

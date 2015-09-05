@@ -5,12 +5,6 @@
 
 using namespace kernel;
 
-namespace kernel
-{
-	const int g_MEM_RANGES_COUNT = 5;
-	MemoryRange g_mem_ranges[g_MEM_RANGES_COUNT];
-}
-
 TEST_CASE( "Test allocate_frame", "[factorial]" )
 {
 	uintptr_t kernel_end_address = 0x37ab3fd1;

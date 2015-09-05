@@ -2,13 +2,11 @@
 #include <stdint.h>
 #include "multiboot.h"
 #include "multiboot_mmap.h"
+#include "page_allocator.h"
 #include "memory/MemoryRange.h"
 
 namespace kernel
 {
-
-const int g_MEM_RANGES_COUNT = 5;
-MemoryRange g_mem_ranges[g_MEM_RANGES_COUNT];
 
 void multiboot_mmap(unsigned long magic, multiboot_info_t *mbi)
 {
@@ -108,8 +106,8 @@ void multiboot_mmap(unsigned long magic, multiboot_info_t *mbi)
 			{
 				uint32_t start = mmap->addr;
 				uint32_t end = mmap->addr + mmap->len - 1;
-				g_mem_ranges[range_index++] = MemoryRange(start, end);
-				if (range_index >= g_MEM_RANGES_COUNT)
+				MemoryRange memoryRange(start, end);
+				if (!register_memory_range(memoryRange))
 				{
 					break;
 				}
