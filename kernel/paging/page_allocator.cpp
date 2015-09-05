@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include "page_allocator.h"
 #include "multiboot_mmap.h"
+#include "memory/MemoryRange.h"
 
 namespace kernel
 {

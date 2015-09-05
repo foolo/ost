@@ -1,6 +1,7 @@
 #include "catch.hpp"
 #include "page_allocator.h"
 #include "multiboot_mmap.h"
+#include "memory/MemoryRange.h"
 
 using namespace kernel;
 

@@ -14,6 +14,7 @@ INCFLAGS += -I$(OSTROOT)/usr/include
 INCFLAGS += -I$(OSTROOT)/usr/include/sys
 INCFLAGS += -I../toolchain  #for newlib/i686-ost/syscalls.h
 INCFLAGS += -Iinclude
+INCFLAGS += -I.
 
 COMMONFLAGS := $(INCFLAGS) -ffreestanding -O2 -g -Wall -Wextra
 
