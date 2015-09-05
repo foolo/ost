@@ -12,6 +12,27 @@ uint32_t frame_map[TABLE_LENGTH];
 unsigned table_start = 0;
 unsigned static_i = 0;
 
+MemoryRange page_align_mem_range(const MemoryRange& mem_range)
+{
+	if (mem_range.m_end < (PAGE_SIZE - 1))
+	{
+		return MemoryRange();
+	}
+	if (mem_range.m_start > 0xfffff000)
+	{
+		return MemoryRange();
+	}
+
+	uint32_t start = round_up_to_page(mem_range.m_start);
+	uint32_t end = round_down_to_page(mem_range.m_end - (PAGE_SIZE - 1));
+
+	if (start > end)
+	{
+		return MemoryRange();
+	}
+	return MemoryRange(start, end);
+}
+
 void init_map(void* kernel_end_address)
 {
 	unsigned first_frame_after_kernel = (intptr_t)(kernel_end_address) / PAGE_SIZE;

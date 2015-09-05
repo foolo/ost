@@ -10,18 +10,18 @@ namespace kernel
 
 struct MemoryRange
 {
-public:
 	uint32_t m_start;
 	uint32_t m_end;
-	MemoryRange()
+	bool m_valid;
+
+public:
+	MemoryRange() :
+			m_start(0), m_end(0), m_valid(false)
 	{
-		m_start = 0;
-		m_end = 0;
 	}
-	MemoryRange(uint32_t start, uint32_t end)
+	MemoryRange(uint32_t start, uint32_t end) :
+			m_start(start), m_end(end), m_valid(true)
 	{
-		m_start = start;
-		m_end = end;
 	}
 };
 
