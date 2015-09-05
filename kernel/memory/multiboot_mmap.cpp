@@ -84,36 +84,37 @@ void multiboot_mmap(unsigned long magic, multiboot_info_t *mbi)
 	}
 
 	/* Are mmap_* valid? */
-	if (CHECK_FLAG(mbi->flags, 6))
+	if (!CHECK_FLAG(mbi->flags, 6))
 	{
-		multiboot_memory_map_t *mmap;
-		printf("mmap_addr = 0x%lx, mmap_length = 0x%lx\n",
-				mbi->mmap_addr,
-				mbi->mmap_length);
+		printf("mmap fields are not valid\n");
+		return;
+	}
 
-		mmap = (multiboot_memory_map_t *) mbi->mmap_addr;
-		unsigned range_index = 0;
-		while ((unsigned long) mmap < mbi->mmap_addr + mbi->mmap_length)
+	printf("mmap_addr = 0x%lx, mmap_length = 0x%lx\n",
+			mbi->mmap_addr,
+			mbi->mmap_length);
+
+	multiboot_memory_map_t *mmap = (multiboot_memory_map_t *) mbi->mmap_addr;
+	while ((unsigned long) mmap < mbi->mmap_addr + mbi->mmap_length)
+	{
+		printf("size = %lx, ", mmap->size);
+		printf("base_addr = %8llx, ", mmap->addr);
+		printf("length = %8llx, ", mmap->len);
+		printf("type = %lx", mmap->type);
+		printf("\n");
+
+		const uint32_t USABLE_RAM = 1;
+		if (mmap->type == USABLE_RAM)
 		{
-			printf("size = %lx, ", mmap->size);
-			printf("base_addr = %8llx, ", mmap->addr);
-			printf("length = %8llx, ", mmap->len);
-			printf("type = %lx", mmap->type);
-			printf("\n");
-
-			const uint32_t USABLE_RAM = 1;
-			if (mmap->type == USABLE_RAM)
+			uint32_t start = mmap->addr;
+			uint32_t end = mmap->addr + mmap->len - 1;
+			MemoryRange memoryRange(start, end);
+			if (!register_memory_range(memoryRange))
 			{
-				uint32_t start = mmap->addr;
-				uint32_t end = mmap->addr + mmap->len - 1;
-				MemoryRange memoryRange(start, end);
-				if (!register_memory_range(memoryRange))
-				{
-					break;
-				}
+				break;
 			}
-			mmap = (multiboot_memory_map_t *) ((unsigned long) mmap + mmap->size + sizeof(mmap->size));
 		}
+		mmap = (multiboot_memory_map_t *) ((unsigned long) mmap + mmap->size + sizeof(mmap->size));
 	}
 }
 
