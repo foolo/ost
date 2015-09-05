@@ -6,9 +6,6 @@
 namespace kernel
 {
 
-const int g_MEM_RANGES_COUNT = 5;
-MemoryRange g_mem_ranges[g_MEM_RANGES_COUNT];
-
 bool MemoryRange::IsValid() const
 {
 	return m_valid;
