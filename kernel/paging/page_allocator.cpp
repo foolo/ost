@@ -15,17 +15,17 @@ unsigned static_i = 0;
 
 MemoryRange page_align_mem_range(const MemoryRange& mem_range)
 {
-	if (mem_range.m_end < (PAGE_SIZE - 1))
+	if (mem_range.GetEnd() < (PAGE_SIZE - 1))
 	{
 		return MemoryRange();
 	}
-	if (mem_range.m_start > 0xfffff000)
+	if (mem_range.GetStart() > 0xfffff000)
 	{
 		return MemoryRange();
 	}
 
-	uint32_t start = round_up_to_page(mem_range.m_start);
-	uint32_t end = round_down_to_page(mem_range.m_end - (PAGE_SIZE - 1));
+	uint32_t start = round_up_to_page(mem_range.GetStart());
+	uint32_t end = round_down_to_page(mem_range.GetEnd() - (PAGE_SIZE - 1));
 
 	if (start > end)
 	{
@@ -46,7 +46,7 @@ void init_map(void* kernel_end_address)
 
 	for(int i = 0; i < g_MEM_RANGES_COUNT; i++)
 	{
-		printf("range: %lx .. %lx\n", (long unsigned)g_mem_ranges[i].m_start, (long unsigned)g_mem_ranges[i].m_end);
+		printf("range: %lx .. %lx\n", (long unsigned)g_mem_ranges[i].GetStart(), (long unsigned)g_mem_ranges[i].GetEnd());
 	}
 }
 

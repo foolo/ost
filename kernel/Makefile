@@ -51,6 +51,7 @@ CPPFILES=\
 	syscalls/syscalls_bypass.cpp \
 	paging/page_allocator.cpp \
 	memory/multiboot_mmap.cpp \
+	memory/MemoryRange.cpp \
 
 CFILES=
 

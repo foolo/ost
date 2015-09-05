@@ -1,7 +1,8 @@
 #include <stdio.h>
+#include <stdint.h>
 #include "multiboot.h"
 #include "multiboot_mmap.h"
-#include <stdint.h>
+#include "memory/MemoryRange.h"
 
 namespace kernel
 {

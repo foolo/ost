@@ -6,6 +6,7 @@ OBJS := \
 	page_allocator_test.o \
 	tests_main.o \
 	page_allocator.o \
+	MemoryRange.o \
 
 LIBS =
 
@@ -14,6 +15,9 @@ TARGET =	unittests.out
 default: $(TARGET)
 
 page_allocator.o : ../paging/page_allocator.cpp
+	$(CXX) $(CXXFLAGS) -c $< -o $@
+
+MemoryRange.o : ../memory/MemoryRange.cpp
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 $(TARGET):	$(OBJS)
