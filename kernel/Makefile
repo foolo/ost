@@ -91,7 +91,9 @@ CRTBEGIN_OBJ:=$(shell $(CC) -print-file-name=crtbegin.o)
 CRTEND_OBJ:=  $(shell $(CC) -print-file-name=crtend.o)
 CRTN_OBJ=$(BUILDDIR)/cpp/i686-elf/crtn.S.o
 
-OBJS:=$(CPP_OBJFILES) $(C_OBJFILES) $(ASM_OBJFILES)
+#Ordering is important here. ASM_OBJFILES needs to be first so that multiboot_header is in the first page.
+OBJS:=$(ASM_OBJFILES) $(CPP_OBJFILES) $(C_OBJFILES)
+
 OBJ_LINK_LIST:=$(CRTI_OBJ) $(CRTBEGIN_OBJ)   $(OBJS)   $(CRTEND_OBJ) $(CRTN_OBJ)
 
 
