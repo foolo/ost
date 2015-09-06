@@ -39,6 +39,7 @@ bool register_memory_range(const MemoryRange& mem_range);
 void init_map(void* kernel_end_address);
 inline pageframe_t table_index_to_address(unsigned i);
 unsigned address_to_table_index(uint32_t addr);
+unsigned address_to_bit_index(uint32_t addr);
 uint32_t jump_to_next_map(uint32_t addr);
 pageframe_t allocate_frame();
 inline intptr_t frame_address_to_frame_number(pageframe_t pf);

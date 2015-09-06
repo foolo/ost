@@ -90,6 +90,12 @@ unsigned address_to_table_index(uint32_t addr)
 	return table_index;
 }
 
+unsigned address_to_bit_index(uint32_t addr)
+{
+	unsigned bit_index = (addr / PAGE_SIZE) & 0x0000001f;
+	return bit_index;
+}
+
 uint32_t jump_to_next_map(uint32_t addr)
 {
 	return (addr | (PAGE_SIZE * 32 - 1)) + 1;
@@ -106,13 +112,13 @@ pageframe_t allocate_frame()
 			return table_index_to_address(static_i);
 		}
 		static_i++;
-	}
+			}
 	static_i = table_start;
 	while (static_i < count_start)
-	{
+			{
 		uint32_t map = frame_map[static_i];
 		if (map != 0x00000000)
-		{
+				{
 			return table_index_to_address(static_i);
 		}
 		static_i++;

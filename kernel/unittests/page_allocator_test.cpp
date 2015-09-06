@@ -49,6 +49,16 @@ TEST_CASE("address_to_table_index")
 	REQUIRE(address_to_table_index(addr) == (addr >> shift));
 }
 
+TEST_CASE("address_to_bit_index")
+{
+	REQUIRE(address_to_bit_index(0xffffffff) == 31);
+	REQUIRE(address_to_bit_index(0xfffe0fff) == 0);
+	REQUIRE(address_to_bit_index(0x00000000) == 0);
+	REQUIRE(address_to_bit_index(0x0001f000) == 31);
+	REQUIRE(address_to_bit_index(0xfffe5fff) == 5);
+	REQUIRE(address_to_bit_index(0x00015000) == 0x15);
+}
+
 TEST_CASE("jump_to_next_map")
 {
 	// one map is 32 (0x20) pages
