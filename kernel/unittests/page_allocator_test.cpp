@@ -33,6 +33,23 @@ TEST_CASE( "Test allocate_frame", "[factorial]" )
 	}
 }
 
+TEST_CASE("register_memory_range")
+{
+	REQUIRE(register_memory_range(MemoryRange(0,0x0000Afff)) == true);
+	REQUIRE(register_memory_range(MemoryRange(0,0)) == true);
+	REQUIRE(register_memory_range(MemoryRange(0,0)) == true);
+	REQUIRE(register_memory_range(MemoryRange(0,0)) == true);
+	REQUIRE(register_memory_range(MemoryRange(0,0)) == true);
+	REQUIRE(register_memory_range(MemoryRange(0,0)) == true);
+	REQUIRE(register_memory_range(MemoryRange(0,0)) == true);
+	REQUIRE(register_memory_range(MemoryRange(0,0x0000Afff)) == true);
+	REQUIRE(register_memory_range(MemoryRange(0,0x0000Afff)) == true);
+	REQUIRE(register_memory_range(MemoryRange(0,0x0000Afff)) == true);
+	REQUIRE(register_memory_range(MemoryRange(0,0x0000Afff)) == true);
+	REQUIRE(register_memory_range(MemoryRange(0,0x0000Afff)) == false);
+	REQUIRE(register_memory_range(MemoryRange(0,0x0000Afff)) == false);
+}
+
 TEST_CASE( "Test is_page_aligned", "[what]" )
 {
 	REQUIRE(is_page_aligned(0x00000000) == true);
