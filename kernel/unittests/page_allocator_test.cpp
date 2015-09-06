@@ -33,6 +33,22 @@ TEST_CASE( "Test allocate_frame", "[factorial]" )
 	}
 }
 
+TEST_CASE("address_to_table_index")
+{
+	int page_bits = 12;
+	int map_bit_bits = 5;
+	int shift = page_bits + map_bit_bits;
+	uint32_t addr;
+	addr = 0x00000000;
+	REQUIRE(address_to_table_index(addr) == (addr >> shift));
+	addr = 0x0000ef12;
+	REQUIRE(address_to_table_index(addr) == (addr >> shift));
+	addr = 0xabcdef12;
+	REQUIRE(address_to_table_index(addr) == (addr >> shift));
+	addr = 0xffffffff;
+	REQUIRE(address_to_table_index(addr) == (addr >> shift));
+}
+
 TEST_CASE("jump_to_next_map")
 {
 	// one map is 32 (0x20) pages

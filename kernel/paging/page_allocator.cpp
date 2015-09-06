@@ -83,6 +83,13 @@ inline pageframe_t table_index_to_address(unsigned i)
 	return (pageframe_t)(frame_number * PAGE_SIZE);
 }
 
+unsigned address_to_table_index(uint32_t addr)
+{
+	unsigned page_index = addr / PAGE_SIZE;
+	unsigned table_index = page_index / 32;
+	return table_index;
+}
+
 uint32_t jump_to_next_map(uint32_t addr)
 {
 	return (addr | (PAGE_SIZE * 32 - 1)) + 1;
