@@ -46,8 +46,11 @@ bool register_memory_range(const MemoryRange& mem_range)
 	{
 		return false;
 	}
-	mem_ranges[mem_ranges_counter] = page_align_mem_range(mem_range);
-	mem_ranges_counter ++;
+	MemoryRange range(page_align_mem_range(mem_range));
+	if (range.IsValid())
+	{
+		mem_ranges[mem_ranges_counter++] = range;
+	}
 	return true;
 }
 
