@@ -33,6 +33,25 @@ TEST_CASE( "Test allocate_frame", "[factorial]" )
 	}
 }
 
+TEST_CASE("jump_to_next_map")
+{
+	// one map is 32 (0x20) pages
+	// one page is 0x1000 bytes
+	// one map is 0x20*0x1000 = 0x20000 bytes
+	uint32_t MAP_SIZE = PAGE_SIZE * 32;
+	uint32_t MAP_SIZE_MASK = PAGE_SIZE * 32 - 1;
+	REQUIRE(MAP_SIZE == 0x20000);
+	REQUIRE(MAP_SIZE_MASK == 0x1ffff);
+
+	REQUIRE(jump_to_next_map(0x00000000) == MAP_SIZE);
+	REQUIRE(jump_to_next_map(0x00014bf2) == MAP_SIZE);
+	REQUIRE(jump_to_next_map(0x0001ffff) == MAP_SIZE);
+	REQUIRE(jump_to_next_map(0x00020000) == 2*MAP_SIZE);
+	REQUIRE(jump_to_next_map(0x00020ddd) == 2*MAP_SIZE);
+	REQUIRE(jump_to_next_map(0x00520000) == 0x54/2*MAP_SIZE);
+	REQUIRE(jump_to_next_map(0x0052eeee) == 0x54/2*MAP_SIZE);
+}
+
 TEST_CASE("register_memory_range")
 {
 	REQUIRE(register_memory_range(MemoryRange(0,0x0000Afff)) == true);
