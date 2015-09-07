@@ -11,7 +11,6 @@ namespace kernel
 
 uint32_t frame_map[TABLE_LENGTH];
 unsigned table_start = 0;
-unsigned static_i = 0;
 
 // page aligned memory ranges [first_usable_page_address, last_usable_page_address]
 // Example: A range of one megabyte starting at 0xC0000000 would end at 0xC00ff000
@@ -62,8 +61,6 @@ void init_map(void* kernel_end_address)
 	{
 		frame_map[i] = 0xffffffff;
 	}
-	static_i = table_start;
-
 	for(int i = 0; i < MEM_RANGES_CNT_MAX; i++)
 	{
 		printf("range: %lx .. %lx\n", (long unsigned)mem_ranges[i].GetStart(), (long unsigned)mem_ranges[i].GetEnd());
@@ -104,27 +101,34 @@ uint32_t jump_to_next_map(uint32_t addr)
 
 pageframe_t allocate_frame()
 {
-	unsigned count_start = static_i;
-	while (static_i < TABLE_LENGTH)
+	for (int i = 0; i < mem_ranges_counter; i++)
 	{
-		uint32_t map = frame_map[static_i];
-		if (map != 0x00000000)
+		uintptr_t first = mem_ranges[i].GetStart();
+		uintptr_t last = mem_ranges[i].GetEnd();
+
+		uintptr_t addr = first;
+		while (addr <= last)
 		{
-			return table_index_to_address(static_i);
-		}
-		static_i++;
-			}
-	static_i = table_start;
-	while (static_i < count_start)
+			unsigned table_index = address_to_table_index(addr);
+			uint32_t &map = frame_map[table_index];
+			if (map == 0x00000000)
 			{
-		uint32_t map = frame_map[static_i];
-		if (map != 0x00000000)
+				addr = jump_to_next_map(addr);
+			}
+			else
+			{
+				unsigned bit_index = address_to_bit_index(addr);
+				bool isfree = (map & (1 << bit_index)) != 0;
+				if (isfree)
 				{
-			return table_index_to_address(static_i);
+					map &= ~(1 << bit_index);
+					return (pageframe_t)addr;
+				}
+				addr += PAGE_SIZE;
+			}
 		}
-		static_i++;
 	}
-	return NULL;
+	return 0;
 }
 
 inline intptr_t frame_address_to_frame_number(pageframe_t pf)

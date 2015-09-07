@@ -7,7 +7,7 @@ using namespace kernel;
 
 TEST_CASE( "Test allocate_frame", "[factorial]" )
 {
-	uintptr_t kernel_end_address = 0x37ab3fd1;
+	uintptr_t kernel_end_address = 0x00124567;
 
 	unsigned x_first_frame_after_kernel = kernel_end_address / PAGE_SIZE;
 	//=> 0x37ab3
@@ -19,8 +19,10 @@ TEST_CASE( "Test allocate_frame", "[factorial]" )
 	uintptr_t expected_allocated_frame_number = x_table_start * 32;
 	pageframe_t expected_allocated_addr = (pageframe_t)(expected_allocated_frame_number * PAGE_SIZE);
 
-
 	init_map((void*)kernel_end_address);
+
+	register_memory_range(MemoryRange(0x00000000, 0x0009fc00));
+	register_memory_range(MemoryRange(0x00100000, 0x07ee0000));
 
 	pageframe_t actual_allocated_addr = allocate_frame();
 	REQUIRE( actual_allocated_addr == expected_allocated_addr );
