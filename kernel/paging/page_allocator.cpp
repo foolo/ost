@@ -68,6 +68,7 @@ void init_map(void* kernel_end_address)
 	{
 		printf("range: %lx .. %lx\n", (long unsigned)mem_ranges[i].GetStart(), (long unsigned)mem_ranges[i].GetEnd());
 	}
+	mem_ranges_counter = 0;
 }
 
 inline pageframe_t table_index_to_address(unsigned i)

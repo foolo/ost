@@ -80,6 +80,7 @@ TEST_CASE("jump_to_next_map")
 
 TEST_CASE("register_memory_range")
 {
+	init_map((void*)0);
 	REQUIRE(register_memory_range(MemoryRange(0,0x0000Afff)) == true);
 	REQUIRE(register_memory_range(MemoryRange(0,0)) == true);
 	REQUIRE(register_memory_range(MemoryRange(0,0)) == true);
