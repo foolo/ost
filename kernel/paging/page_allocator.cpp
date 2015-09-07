@@ -29,8 +29,8 @@ MemoryRange page_align_mem_range(const MemoryRange& mem_range)
 		return MemoryRange();
 	}
 
-	uint32_t start = round_up_to_page(mem_range.GetStart());
-	uint32_t end = round_down_to_page(mem_range.GetEnd() - (PAGE_SIZE - 1));
+	addr_t start = round_up_to_page(mem_range.GetStart());
+	addr_t end = round_down_to_page(mem_range.GetEnd() - (PAGE_SIZE - 1));
 
 	if (start > end)
 	{
@@ -81,20 +81,20 @@ inline pageframe_t table_index_to_address(unsigned i)
 	return (pageframe_t)(frame_number * PAGE_SIZE);
 }
 
-unsigned address_to_table_index(uint32_t addr)
+unsigned address_to_table_index(addr_t addr)
 {
 	unsigned page_index = addr / PAGE_SIZE;
 	unsigned table_index = page_index / 32;
 	return table_index;
 }
 
-unsigned address_to_bit_index(uint32_t addr)
+unsigned address_to_bit_index(addr_t addr)
 {
 	unsigned bit_index = (addr / PAGE_SIZE) & 0x0000001f;
 	return bit_index;
 }
 
-uint32_t jump_to_next_map(uint32_t addr)
+addr_t jump_to_next_map(addr_t addr)
 {
 	return (addr | (PAGE_SIZE * 32 - 1)) + 1;
 }
@@ -103,10 +103,10 @@ pageframe_t allocate_frame()
 {
 	for (int i = 0; i < mem_ranges_counter; i++)
 	{
-		uintptr_t first = mem_ranges[i].GetStart();
-		uintptr_t last = mem_ranges[i].GetEnd();
+		addr_t first = mem_ranges[i].GetStart();
+		addr_t last = mem_ranges[i].GetEnd();
 
-		uintptr_t addr = first;
+		addr_t addr = first;
 		while (addr <= last)
 		{
 			unsigned table_index = address_to_table_index(addr);
@@ -131,13 +131,13 @@ pageframe_t allocate_frame()
 	return 0;
 }
 
-inline intptr_t frame_address_to_frame_number(pageframe_t pf)
+inline addr_t frame_address_to_frame_number(addr_t pf)
 {
 	// pf / PAGE_SIZE
-	return (intptr_t)pf >> 12;
+	return pf >> 12;
 }
 
-void free_frame(pageframe_t pf)
+void free_frame(addr_t pf)
 {
 	int frame_number = frame_address_to_frame_number(pf);
 	int map_index = frame_number / 32;

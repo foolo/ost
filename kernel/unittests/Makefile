@@ -1,4 +1,4 @@
-CXXFLAGS :=	-g -Werror -Wall -fmessage-length=0
+CXXFLAGS :=	-g -Werror -Wall -fmessage-length=0 -m32
 CXXFLAGS += -I..
 CXXFLAGS += -I../include
 

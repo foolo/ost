@@ -7,7 +7,7 @@ using namespace kernel;
 
 TEST_CASE( "Test allocate_frame", "[factorial]" )
 {
-	uintptr_t kernel_end_address = 0x00124567;
+	addr_t kernel_end_address = 0x00124567;
 
 	unsigned x_first_frame_after_kernel = kernel_end_address / PAGE_SIZE;
 	//=> 0x37ab3
@@ -16,7 +16,7 @@ TEST_CASE( "Test allocate_frame", "[factorial]" )
 	// => (0x37ab3 / 0x20) + 1  = 0x1BD6
 
 
-	uintptr_t expected_allocated_frame_number = x_table_start * 32;
+	addr_t expected_allocated_frame_number = x_table_start * 32;
 	pageframe_t expected_allocated_addr = (pageframe_t)(expected_allocated_frame_number * PAGE_SIZE);
 
 	init_map((void*)kernel_end_address);
@@ -29,7 +29,7 @@ TEST_CASE( "Test allocate_frame", "[factorial]" )
 
 
 	for (int i = 0; i < 100; i++) {
-		expected_allocated_addr = (pageframe_t)((uintptr_t)expected_allocated_addr + PAGE_SIZE);
+		expected_allocated_addr = (pageframe_t)((addr_t)expected_allocated_addr + PAGE_SIZE);
 		actual_allocated_addr = allocate_frame();
 		REQUIRE( actual_allocated_addr == expected_allocated_addr );
 	}
@@ -40,7 +40,7 @@ TEST_CASE("address_to_table_index")
 	int page_bits = 12;
 	int map_bit_bits = 5;
 	int shift = page_bits + map_bit_bits;
-	uint32_t addr;
+	addr_t addr;
 	addr = 0x00000000;
 	REQUIRE(address_to_table_index(addr) == (addr >> shift));
 	addr = 0x0000ef12;
@@ -66,8 +66,8 @@ TEST_CASE("jump_to_next_map")
 	// one map is 32 (0x20) pages
 	// one page is 0x1000 bytes
 	// one map is 0x20*0x1000 = 0x20000 bytes
-	uint32_t MAP_SIZE = PAGE_SIZE * 32;
-	uint32_t MAP_SIZE_MASK = PAGE_SIZE * 32 - 1;
+	addr_t MAP_SIZE = PAGE_SIZE * 32;
+	addr_t MAP_SIZE_MASK = PAGE_SIZE * 32 - 1;
 	REQUIRE(MAP_SIZE == 0x20000);
 	REQUIRE(MAP_SIZE_MASK == 0x1ffff);
 

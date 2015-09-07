@@ -106,8 +106,8 @@ void multiboot_mmap(unsigned long magic, multiboot_info_t *mbi)
 		const uint32_t USABLE_RAM = 1;
 		if (mmap->type == USABLE_RAM)
 		{
-			uint32_t start = mmap->addr;
-			uint32_t end = mmap->addr + mmap->len - 1;
+			addr_t start = mmap->addr;
+			addr_t end = mmap->addr + mmap->len - 1;
 			MemoryRange memoryRange(start, end);
 			if (!register_memory_range(memoryRange))
 			{
