@@ -18,6 +18,19 @@ const int MEM_RANGES_CNT_MAX = 5;
 int mem_ranges_counter = 0;
 MemoryRange mem_ranges[MEM_RANGES_CNT_MAX];
 
+void reset_page_allocator()
+{
+	for (unsigned i = 0; i < TABLE_LENGTH; i++)
+	{
+		frame_map[i] = 0x00000000;
+	}
+	for (int i = 0; i < MEM_RANGES_CNT_MAX; i++)
+	{
+		mem_ranges[i] = MemoryRange();
+	}
+	mem_ranges_counter = 0;
+}
+
 MemoryRange page_align_mem_range(const MemoryRange& mem_range)
 {
 	if (mem_range.GetEnd() < (PAGE_SIZE - 1))
@@ -65,7 +78,6 @@ void init_map(void* kernel_end_address)
 	{
 		printf("range: %lx .. %lx\n", (long unsigned)mem_ranges[i].GetStart(), (long unsigned)mem_ranges[i].GetEnd());
 	}
-	mem_ranges_counter = 0;
 }
 
 inline pageframe_t table_index_to_address(unsigned i)

@@ -19,10 +19,13 @@ TEST_CASE( "Test allocate_frame", "[factorial]" )
 	addr_t expected_allocated_frame_number = x_table_start * 32;
 	pageframe_t expected_allocated_addr = (pageframe_t)(expected_allocated_frame_number * PAGE_SIZE);
 
-	init_map((void*)kernel_end_address);
+
+	reset_page_allocator();
 
 	register_memory_range(MemoryRange(0x00000000, 0x0009fc00));
 	register_memory_range(MemoryRange(0x00100000, 0x07ee0000));
+
+	init_map((void*)kernel_end_address);
 
 	pageframe_t actual_allocated_addr = allocate_frame();
 	REQUIRE( actual_allocated_addr == expected_allocated_addr );
@@ -82,7 +85,7 @@ TEST_CASE("jump_to_next_map")
 
 TEST_CASE("register_memory_range")
 {
-	init_map((void*)0);
+	reset_page_allocator();
 	REQUIRE(register_memory_range(MemoryRange(0,0x0000Afff)) == true);
 	REQUIRE(register_memory_range(MemoryRange(0,0)) == true);
 	REQUIRE(register_memory_range(MemoryRange(0,0)) == true);

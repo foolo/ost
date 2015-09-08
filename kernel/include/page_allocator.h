@@ -34,7 +34,7 @@ inline addr_t round_down_to_page(addr_t addr)
 {
 	return (addr & 0xfffff000);
 }
-
+void reset_page_allocator();
 MemoryRange page_align_mem_range(const MemoryRange& mem_range);
 bool register_memory_range(const MemoryRange& mem_range);
 void init_map(void* kernel_end_address);
