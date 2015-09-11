@@ -66,18 +66,20 @@ bool register_memory_range(const MemoryRange& mem_range)
 	return true;
 }
 
-void init_map(void* kernel_end_address)
+void init_map(void* /*kernel_end_address*/)
 {
-	unsigned first_frame_after_kernel = (intptr_t)(kernel_end_address) / PAGE_SIZE;
-	table_start = first_frame_after_kernel / 32 + 1;
-	for (unsigned i = table_start; i < TABLE_LENGTH; i++)
-	{
-		frame_map[i] = 0xffffffff;
+	for (int i = 0; i < mem_ranges_counter; i++) {
+		addr_t first = mem_ranges[i].GetStart();
+		addr_t last = mem_ranges[i].GetEnd();
+		for(addr_t addr = first; addr <= last; addr += PAGE_SIZE) {
+			unsigned table_index = address_to_table_index(addr);
+			unsigned bit_index = address_to_bit_index(addr);
+			frame_map[table_index] |= (1 << bit_index);
+		}
 	}
-	for(int i = 0; i < MEM_RANGES_CNT_MAX; i++)
-	{
-		printf("range: %lx .. %lx\n", (long unsigned)mem_ranges[i].GetStart(), (long unsigned)mem_ranges[i].GetEnd());
-	}
+	// Allocate the page on address 0, to avoid returning a pointer to address 0.
+	// If address 0 is returned, it will compare equal to the null pointer, assuming that the null pointer is 0 on the target platform.
+	frame_map[0] &= ~1;
 }
 
 inline pageframe_t table_index_to_address(unsigned i)

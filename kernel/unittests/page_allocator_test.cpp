@@ -5,37 +5,29 @@
 
 using namespace kernel;
 
-TEST_CASE( "Test allocate_frame", "[factorial]" )
+TEST_CASE( "init_map" )
 {
-	addr_t kernel_end_address = 0x00124567;
-
-	unsigned x_first_frame_after_kernel = kernel_end_address / PAGE_SIZE;
-	//=> 0x37ab3
-
-	unsigned x_table_start = x_first_frame_after_kernel / 32 + 1;
-	// => (0x37ab3 / 0x20) + 1  = 0x1BD6
-
-
-	addr_t expected_allocated_frame_number = x_table_start * 32;
-	pageframe_t expected_allocated_addr = (pageframe_t)(expected_allocated_frame_number * PAGE_SIZE);
-
-
 	reset_page_allocator();
+	register_memory_range(MemoryRange(0x00000000, 0x0000fc00));
+	register_memory_range(MemoryRange(0x00100000, 0x00108000));
+	register_memory_range(MemoryRange(0xB0133111, 0xB0137222));
+	init_map((void*)NULL);
 
-	register_memory_range(MemoryRange(0x00000000, 0x0009fc00));
-	register_memory_range(MemoryRange(0x00100000, 0x07ee0000));
-
-	init_map((void*)kernel_end_address);
-
-	pageframe_t actual_allocated_addr = allocate_frame();
-	REQUIRE( actual_allocated_addr == expected_allocated_addr );
-
-
-	for (int i = 0; i < 100; i++) {
-		expected_allocated_addr = (pageframe_t)((addr_t)expected_allocated_addr + PAGE_SIZE);
-		actual_allocated_addr = allocate_frame();
-		REQUIRE( actual_allocated_addr == expected_allocated_addr );
+	REQUIRE( allocate_frame() == (pageframe_t) 0x00001000);
+	for (int i = 2; i < 0xf; i++)
+	{
+		REQUIRE( allocate_frame() == (pageframe_t) (i * PAGE_SIZE));
 	}
+	REQUIRE( allocate_frame() == (pageframe_t) 0x00100000);
+	REQUIRE( allocate_frame() == (pageframe_t) 0x00101000);
+	for (int i = 2; i < 8; i++)
+	{
+		REQUIRE( allocate_frame() == (pageframe_t) (0x00100000 + i * PAGE_SIZE));
+	}
+	REQUIRE( allocate_frame() == (pageframe_t) 0xB0134000);
+	REQUIRE( allocate_frame() == (pageframe_t) 0xB0135000);
+	REQUIRE( allocate_frame() == (pageframe_t) 0xB0136000);
+	REQUIRE( allocate_frame() == (pageframe_t) 0);
 }
 
 TEST_CASE("address_to_table_index")
