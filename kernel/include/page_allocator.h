@@ -37,7 +37,8 @@ inline addr_t round_down_to_page(addr_t addr)
 void reset_page_allocator();
 MemoryRange page_align_mem_range(const MemoryRange& mem_range);
 bool register_memory_range(const MemoryRange& mem_range);
-void init_map(void* kernel_end_address);
+void init_map();
+void allocate_kernel(void* kernel_start, void* kernel_end);
 inline pageframe_t table_index_to_address(unsigned i);
 unsigned address_to_table_index(addr_t addr);
 unsigned address_to_bit_index(addr_t addr);

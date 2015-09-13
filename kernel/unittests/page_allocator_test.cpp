@@ -11,7 +11,7 @@ TEST_CASE( "init_map" )
 	register_memory_range(MemoryRange(0x00000000, 0x0000fc00));
 	register_memory_range(MemoryRange(0x00100000, 0x00108000));
 	register_memory_range(MemoryRange(0xB0133111, 0xB0137222));
-	init_map((void*)NULL);
+	init_map();
 
 	REQUIRE( allocate_frame() == (pageframe_t) 0x00001000);
 	for (int i = 2; i < 0xf; i++)
@@ -27,6 +27,35 @@ TEST_CASE( "init_map" )
 	REQUIRE( allocate_frame() == (pageframe_t) 0xB0134000);
 	REQUIRE( allocate_frame() == (pageframe_t) 0xB0135000);
 	REQUIRE( allocate_frame() == (pageframe_t) 0xB0136000);
+	REQUIRE( allocate_frame() == (pageframe_t) 0);
+}
+
+TEST_CASE( "allocate_kernel" )
+{
+	reset_page_allocator();
+	register_memory_range(MemoryRange(0x00100000, 0x00108000));
+	init_map();
+	allocate_kernel((void*)0x00100000, (void*)0x00102000);
+	REQUIRE( allocate_frame() == (pageframe_t) 0x00103000);
+
+	reset_page_allocator();
+	register_memory_range(MemoryRange(0x00100000, 0x00108000));
+	init_map();
+	allocate_kernel((void*)0x00105111, (void*)0x00109111);
+	REQUIRE( allocate_frame() == (pageframe_t) 0x00100000);
+	REQUIRE( allocate_frame() == (pageframe_t) 0x00101000);
+	REQUIRE( allocate_frame() == (pageframe_t) 0x00102000);
+	REQUIRE( allocate_frame() == (pageframe_t) 0x00103000);
+	REQUIRE( allocate_frame() == (pageframe_t) 0x00104000);
+	REQUIRE( allocate_frame() == (pageframe_t) 0);
+
+	reset_page_allocator();
+	register_memory_range(MemoryRange(0x00100000, 0x00108000));
+	init_map();
+	allocate_kernel((void*)0x000ff111, (void*)0x00104111);
+	REQUIRE( allocate_frame() == (pageframe_t) 0x00105000);
+	REQUIRE( allocate_frame() == (pageframe_t) 0x00106000);
+	REQUIRE( allocate_frame() == (pageframe_t) 0x00107000);
 	REQUIRE( allocate_frame() == (pageframe_t) 0);
 }
 

@@ -8,20 +8,27 @@
 #include "multiboot_mmap.h"
 #include "page_allocator.h"
 
+extern addr_t kernel_start_address;
+extern addr_t kernel_end_address;
+
 namespace kernel
 {
 
 extern "C" void kernel_main(unsigned long magic, unsigned long addr)
 {
 	terminal_initialize();
-	multiboot_mmap(magic, (multiboot_info_t*) addr);
 	initialize_PIC();
 	initialize_IDT();
 	initialize_software_interrupts();
 
 	printf("Hello, kernel World!\n");
+	printf("kernel start: %p\n", &kernel_start_address);
+	printf("kernel end:   %p\n", &kernel_end_address);
 
-	init_map(NULL);
+	reset_page_allocator();
+	multiboot_mmap(magic, (multiboot_info_t*) addr);
+	init_map();
+	allocate_kernel(&kernel_start_address, &kernel_end_address);
 
 	if (!keyboard::initialize_keyboard_controller())
 	{
