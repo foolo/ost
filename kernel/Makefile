@@ -16,7 +16,7 @@ INCFLAGS += -I../toolchain  #for newlib/i686-ost/syscalls.h
 INCFLAGS += -Iinclude
 INCFLAGS += -I.
 
-COMMONFLAGS := $(INCFLAGS) -ffreestanding -O2 -g -Wall -Wextra
+COMMONFLAGS := $(INCFLAGS) -ffreestanding -O0 -g -Wall -Wextra
 
 CPPFLAGS := $(COMMONFLAGS) -fno-exceptions -fno-rtti
 
