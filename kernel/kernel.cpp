@@ -30,6 +30,8 @@ extern "C" void kernel_main(unsigned long magic, unsigned long addr)
 	init_map();
 	allocate_kernel(&kernel_start_address, &kernel_end_address);
 
+	print_map();
+
 	if (!keyboard::initialize_keyboard_controller())
 	{
 		printf("PS2 controller initialization failed\n");

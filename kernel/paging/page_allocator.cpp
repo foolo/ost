@@ -170,4 +170,33 @@ void free_frame(addr_t pf)
 	frame_map[map_index] |= (1 << bit_index);
 }
 
+void print_map()
+{
+	for(int i = 0; i < MEM_RANGES_CNT_MAX; i++)
+	{
+		if (mem_ranges[i].IsValid())
+		{
+			printf("range: %lx .. %lx\n", (long unsigned)mem_ranges[i].GetStart(), (long unsigned)mem_ranges[i].GetEnd());
+		}
+	}
+	bool isfree_state = false;
+	for(addr_t addr = 0; addr < 0xfffff000; addr += PAGE_SIZE) {
+		unsigned table_index = address_to_table_index(addr);
+		unsigned bit_index = address_to_bit_index(addr);
+		bool isfree = frame_map[table_index] & (1 << bit_index);
+		if (isfree_state != isfree)
+		{
+			if (isfree)
+			{
+				printf("start: %8lx\n", addr);
+			}
+			else
+			{
+				printf("end:   %8lx\n", addr - PAGE_SIZE);
+			}
+			isfree_state = isfree;
+		}
+	}
+}
+
 } // namespace kernel

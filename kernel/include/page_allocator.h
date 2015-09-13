@@ -46,5 +46,6 @@ addr_t jump_to_next_map(addr_t addr);
 pageframe_t allocate_frame();
 inline intptr_t frame_address_to_frame_number(pageframe_t pf);
 void free_frame(pageframe_t pf);
+void print_map();
 
 } // namespace kernel
