@@ -188,11 +188,11 @@ void print_map()
 		{
 			if (isfree)
 			{
-				printf("start: %8lx\n", addr);
+				printf("start: %8lx\n", (unsigned long)addr);
 			}
 			else
 			{
-				printf("end:   %8lx\n", addr - PAGE_SIZE);
+				printf("end:   %8lx\n", (unsigned long)addr - PAGE_SIZE);
 			}
 			isfree_state = isfree;
 		}
