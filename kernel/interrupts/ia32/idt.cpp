@@ -3,7 +3,7 @@
 #include "keyboard/keyboard.h"
 #include "ia32/ia32-io.h"
 #include "newlib/i686-ost/syscalls.h"
-#include "syscall-handler.h"
+#include "syscalls/syscall-handler.h"
 
 static const int IDT_SIZE = 256;
 
