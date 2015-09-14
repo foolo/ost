@@ -1,6 +1,6 @@
 #include "interrupts/interrupts.h"
 #include "ia32-interrupts.h"
-#include "keyboard.h"
+#include "keyboard/keyboard.h"
 #include "ia32/ia32-io.h"
 #include "newlib/i686-ost/syscalls.h"
 #include "syscall-handler.h"

@@ -4,7 +4,7 @@
 #include "terminal.h"
 #include "interrupts/interrupts.h"
 #include "interrupts/ia32/ia32-interrupts.h" // todo just for test_syscall
-#include "keyboard.h"
+#include "keyboard/keyboard.h"
 #include "memory/multiboot_mmap.h"
 #include "memory/page_allocator.h"
 

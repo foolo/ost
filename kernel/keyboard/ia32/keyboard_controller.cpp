@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdint.h>
-#include "keyboard.h"
+#include "keyboard/keyboard.h"
 #include "ia32/ia32-io.h"
 
 namespace kernel {
