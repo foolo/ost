@@ -14,7 +14,7 @@ TARGET =	unittests.out
 
 default: $(TARGET)
 
-page_allocator.o : ../paging/page_allocator.cpp
+page_allocator.o : ../memory/page_allocator.cpp
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 MemoryRange.o : ../memory/MemoryRange.cpp

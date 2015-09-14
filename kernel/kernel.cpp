@@ -5,8 +5,8 @@
 #include "interrupts.h"
 #include "interrupts/ia32/ia32-interrupts.h" // todo just for test_syscall
 #include "keyboard.h"
-#include "multiboot_mmap.h"
-#include "page_allocator.h"
+#include "memory/multiboot_mmap.h"
+#include "memory/page_allocator.h"
 
 extern addr_t kernel_start_address;
 extern addr_t kernel_end_address;

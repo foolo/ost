@@ -16,7 +16,7 @@
     Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA. */
 
 #define ASM_FILE	1
-#include "multiboot_defines.h"
+#include "memory/multiboot_defines.h"
 
 /* C symbol format. HAVE_ASM_USCORE is defined by configure. */
 #ifdef HAVE_ASM_USCORE

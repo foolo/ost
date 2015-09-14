@@ -1,0 +1,18 @@
+
+syscalls.c
+
+
+ caddr_t sbrk(int incr)
+ {
++	// TODO: implement as syscall
++	extern caddr_t _end; // from linker.ld
++	static caddr_t program_break= &_end;
++	if (program_break == 0)
++	{
++		program_break = &_end;
++	}
++	program_break += incr;
++	return program_break;
+ 	return 0;
+ }
+

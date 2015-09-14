@@ -49,7 +49,7 @@ CPPFILES=\
 	keyboard/ia32/keyboard_controller.cpp \
 	syscalls/syscall-handler.cpp \
 	syscalls/syscalls_bypass.cpp \
-	paging/page_allocator.cpp \
+	memory/page_allocator.cpp \
 	memory/multiboot_mmap.cpp \
 	memory/MemoryRange.cpp \
 
