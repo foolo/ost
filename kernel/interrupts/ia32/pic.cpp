@@ -1,4 +1,4 @@
-#include "interrupts.h"
+#include "interrupts/interrupts.h"
 #include "ia32-interrupts.h"
 
 // ICW1 flags
