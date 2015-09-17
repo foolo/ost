@@ -1,5 +1,4 @@
-#ifndef INTERRUPTS_H_
-#define INTERRUPTS_H_
+#pragma once
 
 #include <stdio.h>
 #include <stdint.h>
@@ -11,5 +10,3 @@ void initialize_IDT();
 void initialize_software_interrupts();
 
 } // namespace
-
-#endif

@@ -1,5 +1,4 @@
-#ifndef IA32_IO_H_
-#define IA32_IO_H_
+#pragma once
 
 namespace kernel {
 
@@ -16,5 +15,3 @@ static inline uint8_t inb(uint16_t port)
 }
 
 } // namespace
-
-#endif

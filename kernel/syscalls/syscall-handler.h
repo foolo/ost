@@ -1,5 +1,4 @@
-#ifndef SYSCALL_HANDLER_H_
-#define SYSCALL_HANDLER_H_
+#pragma once
 
 #include <stdio.h>
 #include <stdint.h>
@@ -30,5 +29,3 @@ int handle_unknown_syscall(uint32_t syscall_id, uint32_t param1, uint32_t param2
 
 
 } // namespace
-
-#endif

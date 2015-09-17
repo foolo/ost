@@ -1,5 +1,4 @@
-#ifndef GRUB_MMAP_H_
-#define GRUB_MMAP_H_
+#pragma once
 
 #include "multiboot.h"
 
@@ -13,5 +12,3 @@ struct MemoryRange;
 void multiboot_mmap(unsigned long magic, multiboot_info_t *mbi);
 
 } // namespace kernel
-
-#endif // GRUB_MMAP_H_

@@ -1,5 +1,4 @@
-#ifndef IA32_INTERRUPTS_H_
-#define IA32_INTERRUPTS_H_
+#pragma once
 
 #include "ia32/ia32-io.h"
 
@@ -31,5 +30,3 @@ inline void PIC_sendEOI(unsigned char irq)
 }
 
 } // namespace
-
-#endif

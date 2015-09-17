@@ -1,5 +1,4 @@
-#ifndef KERNEL_MEMORY_MEMORY_RANGE_H_
-#define KERNEL_MEMORY_MEMORY_RANGE_H_
+#pragma once
 
 namespace kernel {
 
@@ -25,5 +24,3 @@ public:
 };
 
 } // namespace kernel
-
-#endif /* KERNEL_MEMORY_MEMORY_RANGE_H_ */

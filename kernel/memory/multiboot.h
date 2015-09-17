@@ -19,8 +19,7 @@
  *  IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-#ifndef MULTIBOOT_HEADER
-#define MULTIBOOT_HEADER 1
+#pragma once
 
 #include <stdint.h>
 #include "multiboot_defines.h"
@@ -148,5 +147,3 @@ struct multiboot_mod_list
 typedef struct multiboot_mod_list multiboot_module_t;
 
 #endif /* ! ASM_FILE */
-
-#endif /* ! MULTIBOOT_HEADER */
