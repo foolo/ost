@@ -9,7 +9,7 @@ mkdir -p external
 cd external
 
 rm -rf binutils-2.24
-tar xf $DOWNLOADS/binutils-2.24.tar.gz
+tar xf ../../downloads/binutils-2.24.tar.gz
 
 
 # Patch and configure binutils

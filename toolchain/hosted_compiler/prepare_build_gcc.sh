@@ -10,12 +10,12 @@ cd external
 
 rm -rf gcc-4.9.2
 
-tar xf $DOWNLOADS/gcc-4.9.2.tar.gz
-tar xf $DOWNLOADS/isl-0.12.2.tar.bz2
-tar xf $DOWNLOADS/mpfr-3.1.2.tar.xz
-tar xf $DOWNLOADS/cloog-0.18.1.tar.gz
-tar xf $DOWNLOADS/gmp-6.0.0a.tar.xz
-tar xf $DOWNLOADS/mpc-1.0.2.tar.gz
+tar xf ../../downloads/gcc-4.9.2.tar.gz
+tar xf ../../downloads/isl-0.12.2.tar.bz2
+tar xf ../../downloads/mpfr-3.1.2.tar.xz
+tar xf ../../downloads/cloog-0.18.1.tar.gz
+tar xf ../../downloads/gmp-6.0.0a.tar.xz
+tar xf ../../downloads/mpc-1.0.2.tar.gz
 
 cd gcc-4.9.2
 ln -s ../mpfr-3.1.2 mpfr
