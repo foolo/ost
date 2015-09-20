@@ -7,6 +7,7 @@
 #include "keyboard/keyboard.h"
 #include "memory/multiboot_mmap.h"
 #include "memory/page_allocator.h"
+#include "memory/ia32/paging.h"
 
 extern addr_t kernel_start_address;
 extern addr_t kernel_end_address;
@@ -36,6 +37,8 @@ extern "C" void kernel_main(unsigned long magic, unsigned long addr)
 	{
 		printf("PS2 controller initialization failed\n");
 	}
+
+	set_up_paging();
 }
 
 } /* namespace kernel */
