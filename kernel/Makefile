@@ -53,6 +53,7 @@ CPPFILES=\
 	memory/multiboot_mmap.cpp \
 	memory/MemoryRange.cpp \
 	memory/ia32/paging.cpp \
+	storage/ata/ia32/ide_controller.cpp \
 
 CFILES=
 
@@ -88,7 +89,7 @@ $(BUILDDIR)/%.c.o: %.c
 
 
 # Link
-
+ 
 
 CRTI_OBJ=$(BUILDDIR)/cpp/i686-elf/crti.S.o
 CRTBEGIN_OBJ:=$(shell $(CC) -print-file-name=crtbegin.o)

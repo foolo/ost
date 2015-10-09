@@ -8,6 +8,7 @@
 #include "memory/multiboot_mmap.h"
 #include "memory/page_allocator.h"
 #include "memory/ia32/paging.h"
+#include "storage/ata/ia32/ide_controller.h"
 
 extern addr_t kernel_start_address;
 extern addr_t kernel_end_address;
@@ -39,6 +40,8 @@ extern "C" void kernel_main(unsigned long magic, unsigned long addr)
 	}
 
 	set_up_paging();
+
+	ide_initialize(0x1F0, 0x3F6, 0x170, 0x376, 0x000);
 }
 
 } /* namespace kernel */
