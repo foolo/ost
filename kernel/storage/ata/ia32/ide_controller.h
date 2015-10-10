@@ -87,6 +87,20 @@
 #define      ATA_READ      0x00
 #define      ATA_WRITE     0x01
 
+enum AtaResult {
+	ATA_RESULT_OK,
+	ATA_RESULT_DRIVE_NOT_FOUND,
+	ATA_RESULT_INVALID_POSITION,
+	ATA_RESULT_DRIVE_FAULT,
+	ATA_RESULT_DRQ_NOT_SET,
+	ATA_RESULT_no_address_mark_Found,
+	ATA_RESULT_no_media_or_media_error,
+	ATA_RESULT_command_aborted,
+	ATA_RESULT_id_mark_not_Found,
+	ATA_RESULT_uncorrectable_data_error,
+	ATA_RESULT_bad_sectors,
+	ATA_RESULT_unknown,
+};
 
 #define insl(port, buffer, count) asm volatile("cld; rep; insl" :: "D" (buffer), "d" (port), "c" (count))
 
@@ -94,7 +108,7 @@ namespace kernel
 {
 
 void ide_initialize(unsigned int BAR0, unsigned int BAR1, unsigned int BAR2, unsigned int BAR3, unsigned int BAR4);
-void ide_read_sectors(unsigned char drive, unsigned char numsects, unsigned int lba, unsigned short es, unsigned int edi);
+AtaResult ide_read_sectors(unsigned char drive, unsigned char numsects, unsigned int lba, unsigned short es, unsigned int edi);
 void ide_irq();
 
 } // namespace kernel
