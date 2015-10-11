@@ -83,9 +83,10 @@
 #define      ATA_PRIMARY      0x00
 #define      ATA_SECONDARY    0x01
 
-// Directions:
-#define      ATA_READ      0x00
-#define      ATA_WRITE     0x01
+enum AtaDirection {
+	ATA_READ,
+	ATA_WRITE,
+};
 
 enum AtaResult {
 	ATA_RESULT_OK,
@@ -108,7 +109,7 @@ namespace kernel
 {
 
 void ide_initialize(unsigned int BAR0, unsigned int BAR1, unsigned int BAR2, unsigned int BAR3, unsigned int BAR4);
-AtaResult ide_read_sectors(unsigned char drive, unsigned char numsects, unsigned int lba, unsigned short es, unsigned int edi);
+AtaResult ide_read_sectors(uint8_t drive, uint8_t numsects, uint32_t lba, unsigned short es, uint32_t edi);
 void ide_irq();
 
 } // namespace kernel

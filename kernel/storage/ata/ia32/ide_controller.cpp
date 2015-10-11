@@ -18,9 +18,9 @@ uint8_t ide_buf[2048] = { 0 };
 unsigned static char ide_irq_invoked = 0;
 
 struct IDEChannelRegisters {
-	unsigned short base;  // I/O Base.
-	unsigned short ctrl;  // Control Base
-	unsigned short bmide; // Bus Master IDE
+	uint16_t base;  // I/O Base.
+	uint16_t ctrl;  // Control Base
+	uint16_t bmide; // Bus Master IDE
 	uint8_t nIEN;  // nIEN (No Interrupt);
 } channels[2];
 
@@ -31,8 +31,8 @@ struct ide_device {
 	unsigned short Type;        // 0: ATA, 1:ATAPI.
 	unsigned short Signature;   // Drive Signature
 	unsigned short Capabilities;   // Features.
-	unsigned int CommandSets; // Command Sets Supported.
-	unsigned int Size;        // Size in Sectors.
+	uint32_t CommandSets; // Command Sets Supported.
+	uint32_t Size;        // Size in Sectors.
 	uint8_t Model[41];   // Model in string.
 } ide_devices[4];
 
@@ -231,16 +231,16 @@ void ide_initialize(unsigned int BAR0, unsigned int BAR1, unsigned int BAR2, uns
 			ide_devices[count].Drive = j;
 			ide_devices[count].Signature = *((unsigned short *) (ide_buf + ATA_IDENT_DEVICETYPE));
 			ide_devices[count].Capabilities = *((unsigned short *) (ide_buf + ATA_IDENT_CAPABILITIES));
-			ide_devices[count].CommandSets = *((unsigned int *) (ide_buf + ATA_IDENT_COMMANDSETS));
+			ide_devices[count].CommandSets = *((uint32_t *) (ide_buf + ATA_IDENT_COMMANDSETS));
 
 			// (VII) Get Size:
 			if (ide_devices[count].CommandSets & (1 << 26)) {
 				// Device uses 48-Bit Addressing:
-				ide_devices[count].Size = *((unsigned int *) (ide_buf + ATA_IDENT_MAX_LBA_EXT));
+				ide_devices[count].Size = *((uint32_t *) (ide_buf + ATA_IDENT_MAX_LBA_EXT));
 			}
 			else {
 				// Device uses CHS or 28-bit Addressing:
-				ide_devices[count].Size = *((unsigned int *) (ide_buf + ATA_IDENT_MAX_LBA));
+				ide_devices[count].Size = *((uint32_t *) (ide_buf + ATA_IDENT_MAX_LBA));
 			}
 
 			// (VIII) String indicates model of device (like Western Digital HDD and SONY DVD-RW...):
@@ -257,22 +257,20 @@ void ide_initialize(unsigned int BAR0, unsigned int BAR1, unsigned int BAR2, uns
 	// 4- Print Summary:
 	for (int i = 0; i < 4; i++) {
 		if (ide_devices[i].Reserved == 1) {
-			unsigned int size_mb = ide_devices[i].Size / 1024 / 2;
+			uint32_t size_mb = ide_devices[i].Size / 1024 / 2;
 			bool is_ata = (ide_devices[i].Type == 0);
-			printf(" Found %s Drive %dMiB - %s\n", (is_ata ? "ATA" : "ATAPI"), size_mb, ide_devices[i].Model);
+			printf("Found %s Drive %lu MiB (%lu bytes) - %s\n", (is_ata ? "ATA" : "ATAPI"), size_mb, ide_devices[i].Size/2,  ide_devices[i].Model);
 		}
 	}
 }
 
-AtaStatus ide_ata_access(uint8_t direction, uint8_t drive, unsigned int lba, uint8_t numsects, unsigned short selector, unsigned int edi) {
+AtaStatus ide_ata_access(AtaDirection direction, uint8_t drive, uint32_t lba, uint8_t numsects, unsigned short selector, uint32_t edi) {
 	uint8_t lba_mode; // 0: CHS, 1:LBA28, 2: LBA48
-	uint8_t cmd;
 	uint8_t lba_io[6];
-	unsigned int channel = ide_devices[drive].Channel; // Read the Channel.
-	unsigned int slavebit = ide_devices[drive].Drive; // Read the Drive [Master/Slave]
-	unsigned int bus = channels[channel].base; // Bus Base, like 0x1F0 which is also data port.
-	unsigned int words = 256; // Almost every ATA drive has a sector-size of 512-byte.
-	unsigned short cyl, i;
+	uint8_t channel = ide_devices[drive].Channel; // Read the Channel.
+	uint8_t slavebit = ide_devices[drive].Drive; // Read the Drive [Master/Slave]
+	uint32_t bus = channels[channel].base; // Bus Base, like 0x1F0 which is also data port.
+	uint32_t words = 256; // Almost every ATA drive has a sector-size of 512-byte.
 	uint8_t head, sect;
 
 	// Disable IRQ
@@ -287,26 +285,26 @@ AtaStatus ide_ata_access(uint8_t direction, uint8_t drive, unsigned int lba, uin
 		lba_io[1] = (lba & 0x0000FF00) >> 8;
 		lba_io[2] = (lba & 0x00FF0000) >> 16;
 		lba_io[3] = (lba & 0xFF000000) >> 24;
-		lba_io[4] = 0; // LBA28 is integer, so 32-bits are enough to access 2TB.
-		lba_io[5] = 0; // LBA28 is integer, so 32-bits are enough to access 2TB.
+		lba_io[4] = 0;
+		lba_io[5] = 0;
 		head = 0; // Lower 4-bits of HDDEVSEL are not used here.
 	}
 	else if (ide_devices[drive].Capabilities & 0x200) { // Drive supports LBA?
 		// LBA28:
 		lba_mode = 1;
-		lba_io[0] = (lba & 0x00000FF) >> 0;
-		lba_io[1] = (lba & 0x000FF00) >> 8;
-		lba_io[2] = (lba & 0x0FF0000) >> 16;
-		lba_io[3] = 0; // These Registers are not used here.
-		lba_io[4] = 0; // These Registers are not used here.
-		lba_io[5] = 0; // These Registers are not used here.
+		lba_io[0] = (lba & 0x000000FF) >> 0;
+		lba_io[1] = (lba & 0x0000FF00) >> 8;
+		lba_io[2] = (lba & 0x00FF0000) >> 16;
+		lba_io[3] = 0;
+		lba_io[4] = 0;
+		lba_io[5] = 0;
 		head = (lba & 0xF000000) >> 24;
 	}
 	else {
 		// CHS:
 		lba_mode = 0;
 		sect = (lba % 63) + 1;
-		cyl = (lba + 1 - sect) / (16 * 63);
+		unsigned short cyl = (lba + 1 - sect) / (16 * 63);
 		lba_io[0] = sect;
 		lba_io[1] = (cyl >> 0) & 0xFF;
 		lba_io[2] = (cyl >> 8) & 0xFF;
@@ -342,25 +340,18 @@ AtaStatus ide_ata_access(uint8_t direction, uint8_t drive, unsigned int lba, uin
 	ide_write(channel, ATA_REG_LBA2, lba_io[2]);
 
 	// (VI) Select the command and send it;
-	// Routine that is followed:
-	// If ( DMA & LBA48)   DO_DMA_EXT;
-	// If ( DMA & LBA28)   DO_DMA_LBA;
-	// If ( DMA & LBA28)   DO_DMA_CHS;
-	// If (!DMA & LBA48)   DO_PIO_EXT;
-	// If (!DMA & LBA28)   DO_PIO_LBA;
-	// If (!DMA & !LBA#)   DO_PIO_CHS;
-	if (lba_mode == 0 && direction == 0) cmd = ATA_CMD_READ_PIO;
-	if (lba_mode == 1 && direction == 0) cmd = ATA_CMD_READ_PIO;
-	if (lba_mode == 2 && direction == 0) cmd = ATA_CMD_READ_PIO_EXT;
-	if (lba_mode == 0 && direction == 1) cmd = ATA_CMD_WRITE_PIO;
-	if (lba_mode == 1 && direction == 1) cmd = ATA_CMD_WRITE_PIO;
-	if (lba_mode == 2 && direction == 1) cmd = ATA_CMD_WRITE_PIO_EXT;
+	uint8_t cmd;
+	if (lba_mode == 0 && direction == ATA_READ) cmd = ATA_CMD_READ_PIO;
+	if (lba_mode == 1 && direction == ATA_READ) cmd = ATA_CMD_READ_PIO;
+	if (lba_mode == 2 && direction == ATA_READ) cmd = ATA_CMD_READ_PIO_EXT;
+	if (lba_mode == 0 && direction == ATA_WRITE) cmd = ATA_CMD_WRITE_PIO;
+	if (lba_mode == 1 && direction == ATA_WRITE) cmd = ATA_CMD_WRITE_PIO;
+	if (lba_mode == 2 && direction == ATA_WRITE) cmd = ATA_CMD_WRITE_PIO_EXT;
 
-	ide_write(channel, ATA_REG_COMMAND, cmd);               // Send the Command.
+	ide_write(channel, ATA_REG_COMMAND, cmd); // Send the Command.
 
-	if (direction == 0) {
-		// PIO Read.
-		for (i = 0; i < numsects; i++) {
+	if (direction == ATA_READ) {
+		for (int i = 0; i < numsects; i++) {
 			AtaStatus result = ide_polling(channel, true);
 			if (result != ATA_STATUS_OK) {
 				return result;
@@ -374,9 +365,9 @@ AtaStatus ide_ata_access(uint8_t direction, uint8_t drive, unsigned int lba, uin
 		}
 	}
 	else {
-		// PIO Write.
-		for (i = 0; i < numsects; i++) {
-			ide_polling(channel, false); // Polling.
+		// ATA_WRITE
+		for (int i = 0; i < numsects; i++) {
+			ide_polling(channel, false);
 			asm("pushw %ds");
 			asm("mov %%ax, %%ds"::"a"(selector));
 			asm("rep outsw"::"c"(words), "d"(bus), "S"(edi));
@@ -387,7 +378,7 @@ AtaStatus ide_ata_access(uint8_t direction, uint8_t drive, unsigned int lba, uin
 		ide_write(channel, ATA_REG_COMMAND, (uint8_t[] ) { ATA_CMD_CACHE_FLUSH,
 				ATA_CMD_CACHE_FLUSH,
 				ATA_CMD_CACHE_FLUSH_EXT } [lba_mode]);
-		ide_polling(channel, 0); // Polling.
+		ide_polling(channel, 0);
 	}
 	return ATA_STATUS_OK;
 }
@@ -403,7 +394,7 @@ void ide_irq() {
 	ide_irq_invoked = 1;
 }
 
-AtaResult ide_read_sectors(uint8_t drive, uint8_t numsects, unsigned int lba, unsigned short es, unsigned int edi) {
+AtaResult ide_read_sectors(uint8_t drive, uint8_t numsects, uint32_t lba, unsigned short es, uint32_t edi) {
 
 	if (drive > 3 || ide_devices[drive].Reserved == 0) {
 		return ATA_RESULT_DRIVE_NOT_FOUND;
