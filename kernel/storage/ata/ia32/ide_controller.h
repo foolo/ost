@@ -54,9 +54,6 @@
 #define ATA_IDENT_COMMANDSETS  164
 #define ATA_IDENT_MAX_LBA_EXT  200
 
-#define IDE_ATA        0x00
-#define IDE_ATAPI      0x01
-
 #define ATA_MASTER     0x00
 #define ATA_SLAVE      0x01
 
@@ -70,10 +67,12 @@
 #define ATA_REG_HDDEVSEL   0x06
 #define ATA_REG_COMMAND    0x07
 #define ATA_REG_STATUS     0x07
+
 #define ATA_REG_SECCOUNT1  0x08
 #define ATA_REG_LBA3       0x09
 #define ATA_REG_LBA4       0x0A
 #define ATA_REG_LBA5       0x0B
+
 #define ATA_REG_CONTROL    0x0C
 #define ATA_REG_ALTSTATUS  0x0C
 #define ATA_REG_DEVADDRESS 0x0D
@@ -86,6 +85,11 @@
 enum AtaDirection {
 	ATA_READ,
 	ATA_WRITE,
+};
+
+enum AtaDeviceType {
+	ATA_DEVICE,
+	ATAPI_DEVICE,
 };
 
 enum AtaResult {
@@ -108,7 +112,8 @@ enum AtaResult {
 namespace kernel
 {
 
-void ide_initialize(unsigned int BAR0, unsigned int BAR1, unsigned int BAR2, unsigned int BAR3, unsigned int BAR4);
+void ide_initialize_parallel_ata();
+
 AtaResult ide_read_sectors(uint8_t drive, uint8_t numsects, uint32_t lba, unsigned short es, uint32_t edi);
 void ide_irq();
 

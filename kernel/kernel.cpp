@@ -41,7 +41,7 @@ extern "C" void kernel_main(unsigned long magic, unsigned long addr)
 
 	set_up_paging();
 
-	ide_initialize(0x1F0, 0x3F6, 0x170, 0x376, 0x000);
+	ide_initialize_parallel_ata();
 }
 
 } /* namespace kernel */

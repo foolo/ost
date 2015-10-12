@@ -28,9 +28,9 @@ struct ide_device {
 	uint8_t Reserved;    // 0 (Empty) or 1 (This Drive really exists).
 	uint8_t Channel;     // 0 (Primary Channel) or 1 (Secondary Channel).
 	uint8_t Drive;       // 0 (Master Drive) or 1 (Slave Drive).
-	unsigned short Type;        // 0: ATA, 1:ATAPI.
-	unsigned short Signature;   // Drive Signature
-	unsigned short Capabilities;   // Features.
+	AtaDeviceType DeviceType;
+	uint16_t Signature;   // Drive Signature
+	uint16_t Capabilities;   // Features.
 	uint32_t CommandSets; // Command Sets Supported.
 	uint32_t Size;        // Size in Sectors.
 	uint8_t Model[41];   // Model in string.
@@ -58,7 +58,7 @@ void ide_write(uint8_t channel, uint8_t reg, uint8_t data) {
 }
 
 uint8_t ide_read(uint8_t channel, uint8_t reg) {
-	uint8_t result;
+	uint8_t result = 0;
 	if (reg > 0x07 && reg < 0x0C) {
 		ide_write(channel, ATA_REG_CONTROL, 0x80 | channels[channel].nIEN);
 	}
@@ -104,7 +104,7 @@ AtaStatus ide_polling(uint8_t channel, bool advanced_check) {
 	return ATA_STATUS_OK;
 }
 
-AtaResult ide_get_result(unsigned int drive, AtaStatus status) {
+AtaResult ide_get_result(uint8_t drive, AtaStatus status) {
 	if (status == ATA_STATUS_OK) {
 		return ATA_RESULT_OK;
 	}
@@ -155,17 +155,17 @@ void ide_read_buffer(uint8_t channel, uint8_t reg, unsigned int buffer, unsigned
 	}
 }
 
-void ide_initialize(unsigned int BAR0, unsigned int BAR1, unsigned int BAR2, unsigned int BAR3, unsigned int BAR4) {
+void ide_initialize(uint16_t BAR0, uint16_t BAR1, uint16_t BAR2, uint16_t BAR3, uint16_t BAR4) {
 
 	int count = 0;
 
 	// 1- Detect I/O Ports which interface IDE Controller:
-	channels[ATA_PRIMARY].base = (BAR0 & 0xFFFFFFFC) + 0x1F0 * (!BAR0);
-	channels[ATA_PRIMARY].ctrl = (BAR1 & 0xFFFFFFFC) + 0x3F6 * (!BAR1);
-	channels[ATA_SECONDARY].base = (BAR2 & 0xFFFFFFFC) + 0x170 * (!BAR2);
-	channels[ATA_SECONDARY].ctrl = (BAR3 & 0xFFFFFFFC) + 0x376 * (!BAR3);
-	channels[ATA_PRIMARY].bmide = (BAR4 & 0xFFFFFFFC) + 0; // Bus Master IDE
-	channels[ATA_SECONDARY].bmide = (BAR4 & 0xFFFFFFFC) + 8; // Bus Master IDE
+	channels[ATA_PRIMARY].base = BAR0 & 0xFFFC;
+	channels[ATA_PRIMARY].ctrl = BAR1 & 0xFFFC;
+	channels[ATA_SECONDARY].base = BAR2 & 0xFFFC;
+	channels[ATA_SECONDARY].ctrl = BAR3 & 0xFFFC;
+	channels[ATA_PRIMARY].bmide = BAR4 & 0xFFFC + 0; // Bus Master IDE
+	channels[ATA_SECONDARY].bmide = BAR4 & 0xFFFC + 8; // Bus Master IDE
 
 	// 2- Disable IRQs:
 	ide_write(ATA_PRIMARY, ATA_REG_CONTROL, 2);
@@ -174,7 +174,7 @@ void ide_initialize(unsigned int BAR0, unsigned int BAR1, unsigned int BAR2, uns
 	// 3- Detect ATA-ATAPI Devices:
 	for (int i = 0; i < 2; i++) {
 		for (int j = 0; j < 2; j++) {
-			uint8_t err = 0, type = IDE_ATA, status;
+			uint8_t err = 0, status;
 			ide_devices[count].Reserved = 0; // Assuming that no drive here.
 
 			// (I) Select Drive:
@@ -203,15 +203,16 @@ void ide_initialize(unsigned int BAR0, unsigned int BAR1, unsigned int BAR2, uns
 			}
 
 			// (IV) Probe for ATAPI Devices:
+			AtaDeviceType deviceType = ATA_DEVICE;
 			if (err != 0) {
 				uint8_t cl = ide_read(i, ATA_REG_LBA1);
 				uint8_t ch = ide_read(i, ATA_REG_LBA2);
 
 				if (cl == 0x14 && ch == 0xEB) {
-					type = IDE_ATAPI;
+					deviceType = ATAPI_DEVICE;
 				}
 				else if (cl == 0x69 && ch == 0x96) {
-					type = IDE_ATAPI;
+					deviceType = ATAPI_DEVICE;
 				}
 				else {
 					continue; // Unknown Type (may not be a device).
@@ -226,11 +227,11 @@ void ide_initialize(unsigned int BAR0, unsigned int BAR1, unsigned int BAR2, uns
 
 			// (VI) Read Device Parameters:
 			ide_devices[count].Reserved = 1;
-			ide_devices[count].Type = type;
+			ide_devices[count].DeviceType = deviceType;
 			ide_devices[count].Channel = i;
 			ide_devices[count].Drive = j;
-			ide_devices[count].Signature = *((unsigned short *) (ide_buf + ATA_IDENT_DEVICETYPE));
-			ide_devices[count].Capabilities = *((unsigned short *) (ide_buf + ATA_IDENT_CAPABILITIES));
+			ide_devices[count].Signature = *((uint16_t *) (ide_buf + ATA_IDENT_DEVICETYPE));
+			ide_devices[count].Capabilities = *((uint16_t *) (ide_buf + ATA_IDENT_CAPABILITIES));
 			ide_devices[count].CommandSets = *((uint32_t *) (ide_buf + ATA_IDENT_COMMANDSETS));
 
 			// (VII) Get Size:
@@ -258,11 +259,16 @@ void ide_initialize(unsigned int BAR0, unsigned int BAR1, unsigned int BAR2, uns
 	for (int i = 0; i < 4; i++) {
 		if (ide_devices[i].Reserved == 1) {
 			uint32_t size_mb = ide_devices[i].Size / 1024 / 2;
-			bool is_ata = (ide_devices[i].Type == 0);
+			bool is_ata = (ide_devices[i].DeviceType == ATA_DEVICE);
 			printf("Found %s Drive %lu MiB (%lu bytes) - %s\n", (is_ata ? "ATA" : "ATAPI"), size_mb, ide_devices[i].Size/2,  ide_devices[i].Model);
 		}
 	}
 }
+
+void ide_initialize_parallel_ata() {
+	ide_initialize(0x1F0, 0x3F6, 0x170, 0x376, 0x000);
+}
+
 
 AtaStatus ide_ata_access(AtaDirection direction, uint8_t drive, uint32_t lba, uint8_t numsects, unsigned short selector, uint32_t edi) {
 	uint8_t lba_mode; // 0: CHS, 1:LBA28, 2: LBA48
@@ -304,7 +310,7 @@ AtaStatus ide_ata_access(AtaDirection direction, uint8_t drive, uint32_t lba, ui
 		// CHS:
 		lba_mode = 0;
 		sect = (lba % 63) + 1;
-		unsigned short cyl = (lba + 1 - sect) / (16 * 63);
+		uint16_t cyl = (lba + 1 - sect) / (16 * 63);
 		lba_io[0] = sect;
 		lba_io[1] = (cyl >> 0) & 0xFF;
 		lba_io[2] = (cyl >> 8) & 0xFF;
@@ -399,15 +405,15 @@ AtaResult ide_read_sectors(uint8_t drive, uint8_t numsects, uint32_t lba, unsign
 	if (drive > 3 || ide_devices[drive].Reserved == 0) {
 		return ATA_RESULT_DRIVE_NOT_FOUND;
 	}
-	else if (((lba + numsects) > ide_devices[drive].Size) && (ide_devices[drive].Type == IDE_ATA)) {
+	else if (((lba + numsects) > ide_devices[drive].Size) && (ide_devices[drive].DeviceType == ATA_DEVICE)) {
 		return ATA_RESULT_INVALID_POSITION;
 	}
 	// 3: Read in PIO Mode through Polling & IRQs:
-	if (ide_devices[drive].Type == IDE_ATA) {
+	if (ide_devices[drive].DeviceType == ATA_DEVICE) {
 		AtaStatus status = ide_ata_access(ATA_READ, drive, lba, numsects, es, edi);
 		return ide_get_result(drive, status);
 	}
-	else if (ide_devices[drive].Type == IDE_ATAPI) {
+	else if (ide_devices[drive].DeviceType == ATAPI_DEVICE) {
 		printf("ATAPI read not implemented\n");
 		/*for (int i = 0; i < numsects; i++) {
 			err = ide_atapi_read(drive, lba + i, 1, es, edi + (i * 2048));
