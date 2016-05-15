@@ -61,23 +61,26 @@ struct IDT_entry {
 
 struct IDT_entry IDT[IDT_SIZE];
 
+
 extern "C" void load_idt(uint32_t *idt_ptr);
 
-void register_callback(uint32_t callback_function_pointer, uint8_t irq)
-{
+
+
+void register_callback(uint32_t callback_function_pointer, uint8_t vector_index) {
 	static const uint8_t KERNEL_CODE_SEGMENT_OFFSET = 0x08;
 	static const uint8_t INTERRUPT_GATE = 0x8e;
-
-	uint8_t vector_index = IRQ_0_VECTOR_START + irq;
+	static const uint8_t TRAP_GATE = 0x8f;
 	IDT_entry *entry = IDT + vector_index;
-
 	/* populate IDT entry of keyboard's interrupt */
 	entry->offset_lowerbits = callback_function_pointer & 0xffff;
 	entry->selector = KERNEL_CODE_SEGMENT_OFFSET;
 	entry->zero = 0;
-	entry->type_attr = INTERRUPT_GATE;
+	entry->type_attr = (vector_index < 0x20) ? INTERRUPT_GATE : TRAP_GATE ;
 	entry->offset_higherbits = (callback_function_pointer & 0xffff0000) >> 16;
+}
 
+void load_idt_main()
+{
 	// prepare address for
 	uint32_t idt_address = (uint32_t)IDT;
 	uint32_t idt_ptr[2];
@@ -86,7 +89,9 @@ void register_callback(uint32_t callback_function_pointer, uint8_t irq)
 
 	// fill the IDT descriptor
 	load_idt(idt_ptr);
+}
 
+void enable_irq(uint8_t irq) {
 	// enable the irq
 	uint8_t pic_addr = (irq < 8) ? PIC1_DATA : PIC2_DATA;
 	uint8_t mask = inb(pic_addr);

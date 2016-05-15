@@ -1,6 +1,10 @@
+*.o
 build*/
 *.out
 *.bin
 *.iso
 .settings/org.eclipse.cdt.ui.prefs
+newlib*/
+
+toolchain*/
 

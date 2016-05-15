@@ -87,6 +87,19 @@ load_idt:
 	sti 				#turn on interrupts
 	ret
 
+.global read_idt
+read_idt:
+	movl 4(%esp),%edx
+	sidt (%edx)
+	ret
+
+.global read_gdt
+read_gdt:
+	movl 4(%esp),%edx
+	sgdt (%edx)
+	ret
+
+
 .global keyboard_handler
 keyboard_handler:
 	pushal
@@ -95,6 +108,45 @@ keyboard_handler:
 	popal
 	iret
 
+
+.global div0_handler
+div0_handler:
+	pushal
+	cld
+	call div0_handler_main
+	popal
+	iret
+
+
+gdt_pointer:
+     .word 0 # For limit storage
+     .long 0 # For base storage
+
+
+.global load_gdt
+load_gdt:
+   cli
+   movl  4(%esp), %eax         #MOV   EAX, [esp + 4]  #first argument, gdt address, 32bit
+   movl %eax, (gdt_pointer+2) #MOV   [gdtr + 2], EAX
+   movw  8(%esp),%ax          #MOV   AX, [ESP + 8] #2nd argument, gdt size,  16 bit
+   movw  %ax,gdt_pointer      #MOV   [gdtr], AX
+   lgdt gdt_pointer           #LGDT  [gdtr]
+   ret
+
+.global reloadSegments
+reloadSegments:
+   # Reload CS register containing code selector:
+   ljmp $0x0008, $reload_CS
+   #jMP   0x08:reload_CS # 0x08 points at the new code selector
+reload_CS:
+   # Reload data segment registers:
+   movw  $0x10,%ax # 0x10 points at the new data selector
+   movw  %ax,%ds
+   movw  %ax,%es
+   movw  %ax,%fs
+   movw  %ax,%gs
+   movw  %ax,%ss
+   ret
 
 
 # Set the size of the _start symbol to the current location '.' minus its start.

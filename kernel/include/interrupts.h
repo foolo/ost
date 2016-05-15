@@ -41,8 +41,11 @@ inline void PIC_sendEOI(unsigned char irq)
 	outb(PIC1_COMMAND, PIC_EOI);
 }
 
+void clear_idt();
 void initialize_PIC();
-void register_callback(uint32_t callback_function_pointer, uint8_t irq);
+void register_callback(uint32_t callback_function_pointer, uint8_t vector);
+void load_idt_main();
+void enable_irq(uint8_t irq);
 
 } // namespace
 

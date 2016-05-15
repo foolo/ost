@@ -49,7 +49,7 @@ libc:
 
 $(BUILDDIR)/%.o: %.s
 	@mkdir -p $(dir $@)
-	$(AS) $*.s -o $(BUILDDIR)/$*.o
+	$(AS) $*.s -o $(BUILDDIR)/$*.o -g
 
 $(BUILDDIR)/%.o: %.cpp
 	@mkdir -p $(dir $@)
