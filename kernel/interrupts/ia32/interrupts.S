@@ -5,6 +5,14 @@ load_idt:
 	sti 				#turn on interrupts
 	ret
 
+.global div0_handler_wrapper
+div0_handler_wrapper:
+	pushal
+	cld
+	call div0_handler
+	popal
+	iret
+
 .global keyboard_handler_wrapper
 keyboard_handler_wrapper:
 	pushal
