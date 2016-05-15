@@ -21,7 +21,6 @@ extern "C" void kernel_main(unsigned long magic, unsigned long addr)
 	terminal_initialize();
 	initialize_PIC();
 	initialize_IDT();
-	initialize_software_interrupts();
 
 	printf("Hello, kernel World!\n");
 	printf("kernel start: %p\n", &kernel_start_address);

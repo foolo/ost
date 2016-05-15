@@ -35,7 +35,10 @@ void create_idt_entry(uint32_t callback_function_pointer, uint8_t vector_index)
 	entry->zero = 0;
 	entry->type_attr = INTERRUPT_GATE;
 	entry->offset_higherbits = (callback_function_pointer & 0xffff0000) >> 16;
+}
 
+void load_idt_main()
+{
 	// prepare address for
 	uint32_t idt_address = (uint32_t)IDT;
 	uint32_t idt_ptr[2];
@@ -46,11 +49,8 @@ void create_idt_entry(uint32_t callback_function_pointer, uint8_t vector_index)
 	load_idt(idt_ptr);
 }
 
-void register_callback(uint32_t callback_function_pointer, uint8_t irq)
+void enable_irq(uint8_t irq)
 {
-	uint8_t vector_index = IRQ_0_VECTOR_START + irq;
-	create_idt_entry(callback_function_pointer, vector_index);
-
 	// enable the irq
 	uint8_t pic_addr = (irq < 8) ? PIC1_DATA : PIC2_DATA;
 	uint8_t mask = inb(pic_addr);
@@ -181,12 +181,10 @@ extern "C" void syscall_handler(uint32_t syscall_id, uint32_t param1, uint32_t p
 
 void initialize_IDT()
 {
-	register_callback((uint32_t)keyboard_handler_wrapper, KEYBOARD_IRQ);
-}
-
-void initialize_software_interrupts()
-{
+	create_idt_entry((uint32_t)keyboard_handler_wrapper, IRQ_0_VECTOR_START + KEYBOARD_IRQ);
+	enable_irq(KEYBOARD_IRQ);
 	create_idt_entry((uint32_t)syscall_handler_wrapper, SYSCALL_INTERRUPT_VECTOR);
+	load_idt_main();
 }
 
 
