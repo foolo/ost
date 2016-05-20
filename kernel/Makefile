@@ -14,9 +14,10 @@ LIBS=-lgcc -lk
 
 LIBK_FILE=$(LIBCDIR)/build-ia32/libk.a
 
-BUILDDIR=build_i386/kernel
+BUILDDIR=build-ia32
 
 BINOUT=$(BUILDDIR)/myos.bin
+ISOOUT=$(BUILDDIR)/myos.iso
 
 # Source files
 
@@ -35,7 +36,7 @@ C_OBJFILES :=   $(patsubst %.c,   $(BUILDDIR)/%.o, $(CFILES))
 ASM_OBJFILES := $(patsubst %.s,   $(BUILDDIR)/%.o, $(ASMFILES))
 
 # Order is significant. libc makefile shall be run first.
-default: libc $(BINOUT)
+default: libc $(ISOOUT)
 
 .PHONY: libc
 libc:
@@ -80,12 +81,13 @@ $(BINOUT): $(OBJ_LINK_LIST) $(LIBK_FILE)
 
 # Create .iso
 
-%.iso: $(BINOUT)
+$(ISOOUT): $(BINOUT)
 	@echo Creating $@
-	mkdir -p build/isodir/boot/grub
-	cp $(BINOUT) build/isodir/boot/myos.bin
-	cp grub.cfg   build/isodir/boot/grub/grub.cfg
-	grub-mkrescue -o $@ build/isodir
+	mkdir -p $(BUILDDIR)/isodir/boot/grub
+	cp $(BINOUT) $(BUILDDIR)/isodir/boot/
+	cp grub.cfg   $(BUILDDIR)/isodir/boot/grub/
+	grub-mkrescue -o $@ $(BUILDDIR)/isodir
+
 
 .PHONY: clean all
 
