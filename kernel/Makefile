@@ -14,7 +14,7 @@ LIBS=-lgcc -lk
 
 LIBK_FILE=$(LIBCDIR)/build-ia32/libk.a
 
-BUILDDIR=build_i386/kernel
+BUILDDIR=build-ia32
 
 BINOUT=$(BUILDDIR)/myos.bin
 
