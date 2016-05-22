@@ -26,6 +26,7 @@ void create_idt_entry(uint32_t callback_function_pointer, uint8_t vector_index)
 {
 	static const uint8_t KERNEL_CODE_SEGMENT_OFFSET = 0x08;
 	static const uint8_t INTERRUPT_GATE = 0x8e;
+	static const uint8_t TRAP_GATE = 0x8f;
 
 	IDT_entry *entry = IDT + vector_index;
 
@@ -33,7 +34,7 @@ void create_idt_entry(uint32_t callback_function_pointer, uint8_t vector_index)
 	entry->offset_lowerbits = callback_function_pointer & 0xffff;
 	entry->selector = KERNEL_CODE_SEGMENT_OFFSET;
 	entry->zero = 0;
-	entry->type_attr = INTERRUPT_GATE;
+	entry->type_attr = (vector_index < 0x20) ? INTERRUPT_GATE : TRAP_GATE ;
 	entry->offset_higherbits = (callback_function_pointer & 0xffff0000) >> 16;
 }
 
