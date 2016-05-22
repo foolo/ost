@@ -7,6 +7,7 @@
 #include "keyboard/keyboard.h"
 #include "memory/multiboot_mmap.h"
 #include "memory/page_allocator.h"
+#include "memory/ia32/gdt.h"
 #include "memory/ia32/paging.h"
 #include "storage/ata/ia32/ide_controller.h"
 
@@ -20,8 +21,8 @@ extern "C" void kernel_main(unsigned long magic, unsigned long addr)
 {
 	terminal_initialize();
 	initialize_PIC();
+	initialize_GDT();
 	initialize_IDT();
-	initialize_software_interrupts();
 
 	printf("Hello, kernel World!\n");
 	printf("kernel start: %p\n", &kernel_start_address);

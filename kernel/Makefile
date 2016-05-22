@@ -52,6 +52,7 @@ CPPFILES=\
 	memory/page_allocator.cpp \
 	memory/multiboot_mmap.cpp \
 	memory/MemoryRange.cpp \
+	memory/ia32/gdt.cpp \
 	memory/ia32/paging.cpp \
 	storage/ata/ia32/ide_controller.cpp \
 
@@ -60,6 +61,7 @@ CFILES=
 ASMFILES=\
 	boot.S \
 	interrupts/ia32/interrupts.S \
+	memory/ia32/gdt.S \
 	memory/ia32/paging.S \
 
 CPP_OBJFILES := $(patsubst %, $(BUILDDIR)/%.o, $(CPPFILES))
