@@ -67,6 +67,13 @@ extern "C" void div0_handler(void)
 	}
 }
 
+extern "C" void page_fault_handler_wrapper(void);
+extern "C" void page_fault_handler(void)
+{
+	printf("page fault\n");
+	while(1){
+	}
+}
 
 extern "C" void keyboard_handler_wrapper(void);
 extern "C" void keyboard_handler(void)
@@ -191,6 +198,7 @@ extern "C" void syscall_handler(uint32_t syscall_id, uint32_t param1, uint32_t p
 void initialize_IDT()
 {
 	create_idt_entry((uint32_t)div0_handler_wrapper, DIVIDE_BY_ZERO_EXCEPTION_VECTOR);
+	create_idt_entry((uint32_t)page_fault_handler_wrapper, PAGE_FAULT_EXCEPTION_VECTOR);
 	create_idt_entry((uint32_t)keyboard_handler_wrapper, IRQ_0_VECTOR_START + KEYBOARD_IRQ);
 	enable_irq(KEYBOARD_IRQ);
 	create_idt_entry((uint32_t)syscall_handler_wrapper, SYSCALL_INTERRUPT_VECTOR);

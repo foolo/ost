@@ -13,6 +13,14 @@ div0_handler_wrapper:
 	popal
 	iret
 
+.global page_fault_handler_wrapper
+page_fault_handler_wrapper:
+	pushal
+	cld
+	call page_fault_handler
+	popal
+	iret
+
 .global keyboard_handler_wrapper
 keyboard_handler_wrapper:
 	pushal
