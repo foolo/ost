@@ -68,9 +68,16 @@ extern "C" void div0_handler(void)
 }
 
 extern "C" void page_fault_handler_wrapper(void);
-extern "C" void page_fault_handler(void)
+extern "C" void page_fault_handler(uint32_t error_code, uint32_t address, uint32_t *regs)
 {
 	printf("page fault\n");
+	printf("error code: %lx\n", error_code);
+	printf("address: %lx\n", address);
+	printf("regs: %p\n", regs);
+
+	for (int i = 0; i < 8; i++)  {
+		printf("reg %i: %lx\n", i, regs[i]);
+	}
 	while(1){
 	}
 }
