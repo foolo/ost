@@ -10,9 +10,14 @@
 #include "memory/ia32/gdt.h"
 #include "memory/ia32/paging.h"
 #include "storage/ata/ia32/ide_controller.h"
+#include <stdlib.h>
+
 
 extern addr_t kernel_start_address;
 extern addr_t kernel_end_address;
+
+int main(int argc, char **argv);
+
 
 namespace kernel
 {
@@ -43,6 +48,11 @@ extern "C" void kernel_main(unsigned long magic, unsigned long addr)
 	set_up_paging();
 
 	ide_initialize_parallel_ata();
+
+	char pyname[] = "python";
+	char *pyargv[1];
+	pyargv[0] = pyname;
+	main(1, pyargv);
 }
 
 } /* namespace kernel */

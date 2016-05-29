@@ -33,6 +33,7 @@ LDPATH += -L../libk/build-ia32
 LIBS= -lgcc -lc -lg -lm -lk
 
 LIBK_FILE=$(LIBDIR)/libg.a
+LIBCPYTHON_FILE=../cpython-2.7.10/build-ia32/libcpython.a
 
 BINOUT=$(BUILDDIR)/myos.bin
 ISOOUT=$(BUILDDIR)/myos.iso
@@ -105,11 +106,11 @@ OBJ_LINK_LIST:=$(CRTI_OBJ) $(CRTBEGIN_OBJ)   $(OBJS)   $(CRTEND_OBJ) $(CRTN_OBJ)
 
 
 LIBCDEPS := $(wildcard $(OSTROOT)/usr/lib/*)
-$(BINOUT): $(OBJ_LINK_LIST) $(LIBK_FILE) linker.ld $(LIBCDEPS)
+$(BINOUT): $(OBJ_LINK_LIST) $(LIBK_FILE)  $(LIBCPYTHON_FILE) linker.ld $(LIBCDEPS)
 	@mkdir -p $(dir $@)
 	# LIBS occurs twice in the linker command because LIBC depends on on syscalls_bypass.cpp.o
 	# An alternative would have been to place syscall_bypass.o at the end of the command
-	$(CC) -T linker.ld -o $(BINOUT) $(LIBS) $(OBJ_LINK_LIST) $(LDFLAGS) $(LDPATH) $(LIBS)
+	$(CC) -T linker.ld -o $(BINOUT) $(LIBS) $(OBJ_LINK_LIST) $(LIBCPYTHON_FILE)  $(LDFLAGS) $(LDPATH) $(LIBS)
 
 
 # Create .iso

@@ -9,6 +9,7 @@
 
 extern "C" void _exit()
 {
+	return;
 }
 
 extern "C" int close(int /*file*/)
@@ -31,22 +32,22 @@ extern "C" int fork()
 
 extern "C" int fstat(int /*file*/, struct stat * /*st*/)
 {
-	return 0;
+	return -1;
 }
 
 extern "C" int getpid()
 {
-	return 0;
+	return 1234;
 }
 
 extern "C" int isatty(int /*file*/)
 {
-	return 0;
+	return 0; // 0 = no
 }
 
 extern "C" int kill(int /*pid*/, int /*sig*/)
 {
-	return 0;
+	return -1;
 }
 
 extern "C" int link(char * /*old*/, char * /*new*/)
@@ -69,9 +70,14 @@ extern "C" int read(int /*file*/, char * /*ptr*/, int /*len*/)
 	return 0;
 }
 
-extern "C" caddr_t sbrk(int /*incr*/)
+static caddr_t current_break_address = (caddr_t)0x300000;
+extern "C" caddr_t sbrk(int incr)
 {
-	return 0;
+	caddr_t break_address_before_increase = current_break_address;
+	if (incr > 0) {
+		current_break_address += incr;
+	}
+	return break_address_before_increase;
 }
 
 extern "C" int stat(const char * /*file*/, struct stat * /*st*/)
