@@ -14,6 +14,8 @@
 extern addr_t kernel_start_address;
 extern addr_t kernel_end_address;
 
+extern "C" void jump_usermode(void);
+
 namespace kernel
 {
 
@@ -43,6 +45,8 @@ extern "C" void kernel_main(unsigned long magic, unsigned long addr)
 	set_up_paging();
 
 	ide_initialize_parallel_ata();
+
+	jump_usermode();
 }
 
 } /* namespace kernel */

@@ -1,11 +1,23 @@
 #include <stdio.h>
+#include <cstring>
 #include "gdt.h"
+
+
+extern "C" void sample_user_function() {
+	int i = 0;
+	while(1) {
+		printf("user space %i\n", i++);
+	}
+}
 
 namespace kernel
 {
 
 extern "C" void load_gdt(unsigned long *gdt_ptr);
 extern "C" void reloadSegments(void);
+extern "C" void activate_tss(uint16_t tss_gdt_index);
+extern "C" uint32_t get_esp(void);
+
 
 uint64_t create_descriptor(uint32_t base, uint32_t limit, uint16_t flag)
 {
@@ -31,6 +43,8 @@ uint64_t create_descriptor(uint32_t base, uint32_t limit, uint16_t flag)
 #define GDT_size 16
 uint64_t GDT[GDT_size];
 
+tss_entry_t tss_entry;
+
 void load_gdt_main()
 {
 	// prepare address for GDT
@@ -50,14 +64,19 @@ void initialize_GDT()
 	GDT[2] = create_descriptor(0, 0x000FFFFF, (GDT_DATA_PL0));
 	GDT[3] = create_descriptor(0, 0x000FFFFF, (GDT_CODE_PL3));
 	GDT[4] = create_descriptor(0, 0x000FFFFF, (GDT_DATA_PL3));
+
+	uint32_t tss_base = (uint32_t) &tss_entry;
+	uint32_t tss_limit = sizeof(tss_entry);
+	GDT[5] = create_descriptor(tss_base,  tss_limit, (GDT_TSS)); //0x28
+
+	memset((void*)&tss_entry, 0, (unsigned)sizeof(tss_entry));
+	tss_entry.ss0 = 0x10;
+	tss_entry.esp0 = get_esp(); // TODO kernel stack address
+
 	load_gdt_main();
 	reloadSegments();
 
-	/*create_idt_entry((uint32_t)div0_handler_wrapper, DIVIDE_BY_ZERO_EXCEPTION_VECTOR);
-	 create_idt_entry((uint32_t)keyboard_handler_wrapper, IRQ_0_VECTOR_START + KEYBOARD_IRQ);
-	 enable_irq(KEYBOARD_IRQ);
-	 create_idt_entry((uint32_t)syscall_handler_wrapper, SYSCALL_INTERRUPT_VECTOR);
-	 load_idt_main();*/
+	activate_tss(0x2B);  // 5th position in GDT, times 8 = 0x28. Plus 3 for RPL 3
 }
 
 } // namespace kernel
