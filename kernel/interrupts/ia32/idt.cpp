@@ -72,12 +72,21 @@ extern "C" void page_fault_handler(uint32_t error_code, uint32_t address, uint32
 {
 	printf("page fault\n");
 	printf("error code: %lx\n", error_code);
-	printf("address: %lx\n", address);
-	printf("regs: %p\n", regs);
+	printf("virtual address: %lx\n", address);
 
-	for (int i = 0; i < 8; i++)  {
-		printf("reg %i: %lx\n", i, regs[i]);
-	}
+	int eax = regs[7];
+	int ecx = regs[6];
+	int edx = regs[5];
+	int ebx = regs[4];
+	int esp = regs[3];
+	int ebp = regs[2];
+	int esi = regs[1];
+	int edi = regs[0];
+	printf("eax: %08x esp: %08x\n", eax, esp);
+	printf("ecx: %08x ebp: %08x\n", ecx, ebp);
+	printf("edx: %08x esi: %08x\n", edx, esi);
+	printf("ebx: %08x edi: %08x\n", ebx, edi);
+
 	while(1){
 	}
 }
