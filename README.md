@@ -62,6 +62,11 @@ Build newlib
 	./configure-ost-newlib.sh
 	./build-ost-newlib.sh $OSTCC/bin
 
+# Build libk
+
+	cd libk
+	make
+
 # Build kernel
 
 	cd kernel
@@ -102,11 +107,11 @@ Build the iso
 
 # Run
 
-	qemu-system-i386 -kernel myos.bin
+	qemu-system-i386 -kernel build-ia32/myos.bin
 
 or for .iso files
 
-	qemu-system-i386 -cdrom myos.iso
+	qemu-system-i386 -cdrom build-ia32/myos.iso
 
 
 # Notes
