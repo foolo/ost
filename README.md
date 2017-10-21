@@ -50,6 +50,14 @@ and then run make according to instructions in prepare_build_binutils.sh
 
 
 ### Build Newlib 2
+Remove --disable-newlib-supplied-syscalls from configure-ost-newlib.sh
+
+Create link to i686-ost-cc
+
+	cd $OSTCC/bin
+	sudo ln -s i686-ost-gcc i686-ost-cc
+
+Build newlib
 
 	./configure-ost-newlib.sh
 	./build-ost-newlib.sh $OSTCC/bin
@@ -59,6 +67,10 @@ and then run make according to instructions in prepare_build_binutils.sh
 	cd kernel
 	make
 
+# Build test application
+
+	cd test-application
+	./build-test-application.sh
 
 
 # Libstdc++
