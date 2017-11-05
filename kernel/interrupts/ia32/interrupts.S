@@ -13,11 +13,31 @@ div0_handler_wrapper:
 	popal
 	iret
 
-.global page_fault_handler_wrapper
-page_fault_handler_wrapper:
+
+.global gpf_handler_wrapper
+gpf_handler_wrapper:
 	pushal
 	cld
 
+	# push error code
+	movl 40(%esp),%eax
+	pushl %eax
+	call gpf_handler
+	popl %eax
+
+	popal
+	iret
+
+
+.global page_fault_handler_wrapper
+page_fault_handler_wrapper:
+
+	pushl %ds
+	pushl %es
+	pushl %fs
+	pushl %gs
+	pushal
+	cld
 
 	# push stack address
 	movl %esp,%eax
@@ -27,18 +47,22 @@ page_fault_handler_wrapper:
 	movl %cr2,%eax
 	pushl %eax
 
-
 	# push error code
 	movl 40(%esp),%eax
 	pushl %eax
 
 	call page_fault_handler
-
+return_to_userspace:
 	popl %eax
 	popl %eax
 	popl %eax
 
 	popal
+	popl %gs
+	popl %fs
+	popl %es
+	popl %ds
+
 	iret
 
 .global keyboard_handler_wrapper

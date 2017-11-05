@@ -69,9 +69,22 @@ int read(int file, char *ptr, int len)
 	return 0;
 }
 
+extern char end;
+
 caddr_t sbrk(int incr)
 {
-	return 0;
+	static caddr_t current_break = 0;
+
+	if (current_break  == 0) {
+		current_break = &end;
+	}
+	const int heap_size = 0x100000;
+	const caddr_t heap_end = &end + heap_size;
+	if (current_break + incr > heap_end) {
+		return (caddr_t)-1;
+	}
+	current_break += incr;
+	return current_break;
 }
 
 int stat(const char *file, struct stat *st)

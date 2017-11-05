@@ -10,6 +10,7 @@
 #include "memory/ia32/gdt.h"
 #include "memory/ia32/paging.h"
 #include "storage/ata/ia32/ide_controller.h"
+#include "binfile.cpp"
 
 extern addr_t kernel_start_address;
 extern addr_t kernel_end_address;
@@ -18,6 +19,24 @@ extern "C" void jump_usermode(void);
 
 namespace kernel
 {
+
+void load_user_process(uint32_t *kernelspace_page_directory) {
+
+	uint32_t process_start_addr = 0x8048074;
+	uint32_t process_entry_point = 0x8048080;
+
+	uint32_t heap_size = 0x100000;
+
+	uint32_t size = sizeof(binfile);
+	uint32_t *dir = create_process_pgdir(process_start_addr, size + heap_size, kernelspace_page_directory);
+	activate_page_directory((unsigned int*)dir);
+	printf("Loading process, size: %lu\n", size);
+	for (uint32_t i = 0; i < size; i++) {
+		uint8_t* p = (uint8_t*)(process_start_addr + i);
+		*p = binfile[i];
+	}
+	printf("First bytes: %lx\n", *((uint32_t*)process_entry_point));
+}
 
 extern "C" void kernel_main(unsigned long magic, unsigned long addr)
 {
@@ -42,10 +61,11 @@ extern "C" void kernel_main(unsigned long magic, unsigned long addr)
 		printf("PS2 controller initialization failed\n");
 	}
 
-	set_up_paging();
+	uint32_t *kernelspace_page_directory = create_kernel_pgdir();
 
 	ide_initialize_parallel_ata();
 
+	load_user_process(kernelspace_page_directory);
 	jump_usermode();
 }
 

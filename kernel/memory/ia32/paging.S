@@ -1,6 +1,6 @@
 .text
-.globl loadPageDirectory
-loadPageDirectory:
+.globl activate_page_directory
+activate_page_directory:
 push %ebp
 mov %esp, %ebp
 mov 8(%esp), %eax

@@ -15,18 +15,20 @@ struct IDT_entry {
 	uint16_t offset_higherbits;
 };
 
-struct IDT_entry IDT[IDT_SIZE];
+struct IDT_entry IDT[IDT_SIZE] = {{0, 0, 0, 0, 0}};
 
 extern "C" void load_idt(uint32_t *idt_ptr);
 
 namespace kernel
 {
 
-void create_idt_entry(uint32_t callback_function_pointer, uint8_t vector_index)
+void create_idt_entry(uint32_t callback_function_pointer, uint8_t vector_index, int dpl)
 {
 	static const uint8_t KERNEL_CODE_SEGMENT_OFFSET = 0x08;
 	static const uint8_t INTERRUPT_GATE = 0x8e;
 	static const uint8_t TRAP_GATE = 0x8f;
+
+	uint8_t DPL = (dpl & 3) << 5;
 
 	IDT_entry *entry = IDT + vector_index;
 
@@ -34,7 +36,7 @@ void create_idt_entry(uint32_t callback_function_pointer, uint8_t vector_index)
 	entry->offset_lowerbits = callback_function_pointer & 0xffff;
 	entry->selector = KERNEL_CODE_SEGMENT_OFFSET;
 	entry->zero = 0;
-	entry->type_attr = (vector_index < 0x20) ? INTERRUPT_GATE : TRAP_GATE ;
+	entry->type_attr = ((vector_index < 0x20) ? INTERRUPT_GATE : TRAP_GATE) | DPL;
 	entry->offset_higherbits = (callback_function_pointer & 0xffff0000) >> 16;
 }
 
@@ -66,6 +68,16 @@ extern "C" void div0_handler(void)
 	while(1){
 	}
 }
+
+extern "C" void gpf_handler_wrapper(void);
+extern "C" void gpf_handler(uint32_t error_code)
+{
+	printf("general protection fault!\n");
+	printf("error code: %lx\n", error_code);
+	while(1){
+	}
+}
+
 
 extern "C" void page_fault_handler_wrapper(void);
 extern "C" void page_fault_handler(uint32_t error_code, uint32_t address, uint32_t *regs)
@@ -213,11 +225,12 @@ extern "C" void syscall_handler(uint32_t syscall_id, uint32_t param1, uint32_t p
 
 void initialize_IDT()
 {
-	create_idt_entry((uint32_t)div0_handler_wrapper, DIVIDE_BY_ZERO_EXCEPTION_VECTOR);
-	create_idt_entry((uint32_t)page_fault_handler_wrapper, PAGE_FAULT_EXCEPTION_VECTOR);
-	create_idt_entry((uint32_t)keyboard_handler_wrapper, IRQ_0_VECTOR_START + KEYBOARD_IRQ);
+	create_idt_entry((uint32_t)div0_handler_wrapper, DIVIDE_BY_ZERO_EXCEPTION_VECTOR, 0);
+	create_idt_entry((uint32_t)gpf_handler_wrapper, GPF_EXCEPTION_VECTOR, 0);
+	create_idt_entry((uint32_t)page_fault_handler_wrapper, PAGE_FAULT_EXCEPTION_VECTOR, 0);
+	create_idt_entry((uint32_t)keyboard_handler_wrapper, IRQ_0_VECTOR_START + KEYBOARD_IRQ, 0);
 	enable_irq(KEYBOARD_IRQ);
-	create_idt_entry((uint32_t)syscall_handler_wrapper, SYSCALL_INTERRUPT_VECTOR);
+	create_idt_entry((uint32_t)syscall_handler_wrapper, SYSCALL_INTERRUPT_VECTOR, 3);
 	load_idt_main();
 }
 
