@@ -73,6 +73,8 @@ default: $(ISOOUT)
 -include $(CPP_OBJFILES:.o=.d)
 -include $(C_OBJFILES:.o=.d)
 
+# Dependencies
+$(BUILDDIR)/boot.S.o: ../test-application/binfile
 
 # Compile
 $(BUILDDIR)/%.S.o: %.S

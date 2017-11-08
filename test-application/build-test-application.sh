@@ -10,4 +10,3 @@ LDFLAGS=-Wl,-m,elf_i386
 rm -f a.out
 i686-ost-gcc $LDFLAGS test-application.cpp
 objcopy -O binary a.out binfile
-xxd -i binfile > ../kernel/binfile.cpp

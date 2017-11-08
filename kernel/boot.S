@@ -92,5 +92,14 @@ loop:   hlt
 halt_message:
 	.asciz  "Halted."
 
+
+	# initramfs section
+	# (see linux-3.2.94 usr/initramfs_data.S)
+	.global _initramfs_start
+	_initramfs_start:
+	.incbin "../test-application/binfile"
+	.global _initramfs_end
+	_initramfs_end:
+
 	/* Our stack area. */
 	.comm   stack, STACK_SIZE

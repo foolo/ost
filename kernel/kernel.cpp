@@ -10,10 +10,11 @@
 #include "memory/ia32/gdt.h"
 #include "memory/ia32/paging.h"
 #include "storage/ata/ia32/ide_controller.h"
-#include "binfile.cpp"
 
 extern addr_t kernel_start_address;
 extern addr_t kernel_end_address;
+extern addr_t _initramfs_start;
+extern addr_t _initramfs_end;
 
 extern "C" void jump_usermode(void);
 
@@ -27,14 +28,16 @@ void load_user_process(uint32_t *kernelspace_page_directory) {
 
 	uint32_t heap_size = 0x100000;
 
-	uint32_t size = sizeof(binfile);
+	uint8_t *binfile2 = (uint8_t*)&_initramfs_start;
+	uint32_t size = (uint32_t)&_initramfs_end - (uint32_t)&_initramfs_start;
 	uint32_t *dir = create_process_pgdir(process_start_addr, size + heap_size, kernelspace_page_directory);
 	activate_page_directory((unsigned int*)dir);
 	printf("Loading process, size: %lu\n", size);
 	for (uint32_t i = 0; i < size; i++) {
 		uint8_t* p = (uint8_t*)(process_start_addr + i);
-		*p = binfile[i];
+		*p = binfile2[i];
 	}
+
 	printf("First bytes: %lx\n", *((uint32_t*)process_entry_point));
 }
 
