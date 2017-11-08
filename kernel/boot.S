@@ -97,7 +97,7 @@ halt_message:
 	# (see linux-3.2.94 usr/initramfs_data.S)
 	.global _initramfs_start
 	_initramfs_start:
-	.incbin "../test-application/binfile"
+	.incbin "../init/init.bin"
 	.global _initramfs_end
 	_initramfs_end:
 

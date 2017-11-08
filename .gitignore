@@ -5,3 +5,5 @@ build*/
 *.iso
 .settings/org.eclipse.cdt.ui.prefs
 external/
+.sconsign.dblite
+init/init

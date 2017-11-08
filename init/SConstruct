@@ -1,0 +1,20 @@
+#objcopy -O binary a.out binfile
+#xxd -i binfile > ../kernel/binfile.cpp
+
+env = Environment()
+env.PrependENVPath('PATH', '/usr/local/ost/bin')
+env.Replace(CC = "i686-ost-gcc")
+env.Append(LINKFLAGS=['-Wl,-m,elf_i386'])  # TODO why is "-m elf_i386" needed?
+
+appsrc = [
+    'init.c',
+]
+
+init = env.Program('init', appsrc)
+
+binfile = Command(
+    target = "init.bin",
+    source = "init",
+    action = "objcopy -O binary init init.bin" )
+
+Depends(binfile, init)

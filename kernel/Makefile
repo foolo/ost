@@ -74,7 +74,7 @@ default: $(ISOOUT)
 -include $(C_OBJFILES:.o=.d)
 
 # Dependencies
-$(BUILDDIR)/boot.S.o: ../test-application/binfile
+$(BUILDDIR)/boot.S.o: ../init/init.bin
 
 # Compile
 $(BUILDDIR)/%.S.o: %.S
