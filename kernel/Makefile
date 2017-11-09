@@ -55,6 +55,8 @@ CPPFILES=\
 	memory/ia32/gdt.cpp \
 	memory/ia32/paging.cpp \
 	storage/ata/ia32/ide_controller.cpp \
+	util/md5/md5.c \
+	util/md5/md5digest.cpp \
 
 CFILES=
 

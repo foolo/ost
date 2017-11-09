@@ -10,6 +10,7 @@
 #include "memory/ia32/gdt.h"
 #include "memory/ia32/paging.h"
 #include "storage/ata/ia32/ide_controller.h"
+#include "util/md5/md5digest.h"
 
 extern addr_t kernel_start_address;
 extern addr_t kernel_end_address;
@@ -37,6 +38,9 @@ void load_user_process(uint32_t *kernelspace_page_directory) {
 		uint8_t* p = (uint8_t*)(process_start_addr + i);
 		*p = binfile2[i];
 	}
+	uint8_t md5_digest[16];
+	md5digest((const void *)process_start_addr, size, md5_digest);
+	print_md5(md5_digest);
 
 	printf("First bytes: %lx\n", *((uint32_t*)process_entry_point));
 }
