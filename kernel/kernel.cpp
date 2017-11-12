@@ -9,6 +9,7 @@
 #include "memory/page_allocator.h"
 #include "memory/ia32/gdt.h"
 #include "memory/ia32/paging.h"
+#include "process/elf_loader.h"
 #include "storage/ata/ia32/ide_controller.h"
 #include "util/md5/md5digest.h"
 
@@ -17,32 +18,33 @@ extern addr_t kernel_end_address;
 extern addr_t _initramfs_start;
 extern addr_t _initramfs_end;
 
-extern "C" void jump_usermode(void);
+extern "C" void jump_usermode(addr_t entry_point);
+
+uint8_t *binfile;
+uint32_t binfile_size;
 
 namespace kernel
 {
 
-void load_user_process(uint32_t *kernelspace_page_directory) {
+void load_init_process(uint32_t *kernelspace_page_directory) {
 
-	uint32_t process_start_addr = 0x8048074;
-	uint32_t process_entry_point = 0x8048080;
+	binfile = (uint8_t*)&_initramfs_start;
+	binfile_size = (uint32_t)&_initramfs_end - (uint32_t)&_initramfs_start;
 
-	uint32_t heap_size = 0x100000;
-
-	uint8_t *binfile2 = (uint8_t*)&_initramfs_start;
-	uint32_t size = (uint32_t)&_initramfs_end - (uint32_t)&_initramfs_start;
-	uint32_t *dir = create_process_pgdir(process_start_addr, size + heap_size, kernelspace_page_directory);
-	activate_page_directory((unsigned int*)dir);
-	printf("Loading process, size: %lu\n", size);
-	for (uint32_t i = 0; i < size; i++) {
-		uint8_t* p = (uint8_t*)(process_start_addr + i);
-		*p = binfile2[i];
+	uint32_t *pgdir = initialize_page_directory(PDFLAG_WRITABLE | PDFLAG_USER_PREVILEGES);
+	map_kernelspace_in_process(pgdir, kernelspace_page_directory);
+	// allocate 1MB stack space
+	set_up_userspace_page_tables(pgdir, 0xFFF00000, 0x100000);
+	// todo allocate heap
+	//uint32_t heap_size = 0x100000;
+	activate_page_directory((unsigned int*)pgdir);
+	elf32_file_header fh;
+	if (load_elf(-1, pgdir, fh)) {
+		jump_usermode(fh.e_entry);
 	}
-	uint8_t md5_digest[16];
-	md5digest((const void *)process_start_addr, size, md5_digest);
-	print_md5(md5_digest);
-
-	printf("First bytes: %lx\n", *((uint32_t*)process_entry_point));
+	else {
+		printf("load elf failed\n");
+	}
 }
 
 extern "C" void kernel_main(unsigned long magic, unsigned long addr)
@@ -72,8 +74,7 @@ extern "C" void kernel_main(unsigned long magic, unsigned long addr)
 
 	ide_initialize_parallel_ata();
 
-	load_user_process(kernelspace_page_directory);
-	jump_usermode();
+	load_init_process(kernelspace_page_directory);
 }
 
 } /* namespace kernel */

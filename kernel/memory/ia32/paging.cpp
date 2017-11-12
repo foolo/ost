@@ -52,15 +52,16 @@ void set_up_userspace_page_tables(uint32_t *userspace_pagedir, uint32_t virtual_
 {
 	uint32_t tables_to_fill = ((size-1) / PAGE_SIZE / TABLE_SIZE) + 1;
 	uint32_t start_table = virtual_start_address >> 22;
-
-	printf("Initilaizing %i page tables for process, start: %i\n", tables_to_fill, start_table);
+	printf("Initilaizing %lu page tables for process, start: %lx, end: %lx\n", tables_to_fill, start_table << 22, (start_table+tables_to_fill) << 22);
 	for (uint32_t table = start_table; table < start_table + tables_to_fill; table++)
 	{
+		if (userspace_pagedir[table] & PDFLAG_PRESENT) {
+			continue;
+		}
 		uint32_t *page_table = initialize_table(PDFLAG_WRITABLE | PDFLAG_PRESENT | PDFLAG_USER_PREVILEGES);
 		userspace_pagedir[table] = (uint32_t)page_table | PDFLAG_WRITABLE | PDFLAG_PRESENT | PDFLAG_USER_PREVILEGES;
 	}
 }
-
 
 uint32_t *initialize_page_directory(uint32_t flags)
 {
@@ -79,15 +80,6 @@ uint32_t *create_kernel_pgdir()
 	activate_page_directory((unsigned int*)pgdir);
 	enablePaging();
 	printf("Paging was initialized\n");
-	return pgdir;
-}
-
-uint32_t *create_process_pgdir(uint32_t virtual_start_address, uint32_t size, uint32_t *kernel_pgdir) {
-	uint32_t *pgdir = initialize_page_directory(PDFLAG_WRITABLE | PDFLAG_USER_PREVILEGES);
-	map_kernelspace_in_process(pgdir, kernel_pgdir);
-	set_up_userspace_page_tables(pgdir, virtual_start_address, size);
-	// allocate 1MB stack space
-	set_up_userspace_page_tables(pgdir, 0xFFF00000, 0x100000);
 	return pgdir;
 }
 

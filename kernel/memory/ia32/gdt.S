@@ -48,13 +48,13 @@ jump_usermode:
 	movw %ax,%fs
 	movw %ax,%gs #we don't need to worry about SS. it's handled by iret
 
-
 	pushl $0x23 #user data segment with bottom 2 bits set for ring 3
 	movl $0xFFFFFFFC,%eax
 	pushl %eax #user stack pointer to 0xFFFFFFFC
 	pushf
 	pushl $0x1B # ;user code segment with bottom 2 bits set for ring 3
-	push $0x8048080
+	movl 20(%esp), %eax
+	pushl %eax #entry point parameter
 
 	movl $0,%eax
 	movl %eax, %edi;
