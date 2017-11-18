@@ -4,7 +4,7 @@
 #include "memory/ia32/paging.h"
 #include "elf_loader.h"
 
-#include <cstring>
+#include <string.h>
 
 extern uint8_t *binfile;
 extern uint32_t binfile_size;

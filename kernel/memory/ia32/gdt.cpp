@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include <cstring>
+#include <string.h>
 #include "gdt.h"
 
 
