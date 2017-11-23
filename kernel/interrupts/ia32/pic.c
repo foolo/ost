@@ -15,9 +15,6 @@ static const uint8_t ICW4_BUF_SLAVE  = 0x08;		// Buffered mode/slave
 static const uint8_t ICW4_BUF_MASTER = 0x0C;		// Buffered mode/master
 static const uint8_t ICW4_SFNM       = 0x10;		// Special fully nested (not)
 
-namespace kernel
-{
-
 void initialize_PIC()
 {
 	// ICW1 - Start initialization in cascade mode
@@ -40,5 +37,3 @@ void initialize_PIC()
 	outb(PIC1_DATA , 0xff);
 	outb(PIC2_DATA , 0xff);
 }
-
-} // namespace

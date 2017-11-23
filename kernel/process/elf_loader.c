@@ -24,8 +24,6 @@ int read_binfile(char *dst, int len) {
 }
 
 
-namespace kernel {
-
 struct elf32_program_header {
 	uint32_t p_type;
 	uint32_t p_offset;
@@ -53,60 +51,60 @@ enum program_header_flags {
 	PF_R = 4,
 };
 
-bool load_program_header(int fd, elf32_program_header &ph, uint32_t *userspace_pagedir) {
-	if ((ph.p_offset & 0xfff) != (ph.p_vaddr & 0xfff)) {
+bool load_program_header(int fd, struct elf32_program_header *ph, uint32_t *userspace_pagedir) {
+	if ((ph->p_offset & 0xfff) != (ph->p_vaddr & 0xfff)) {
 		return false;
 	}
 	// todo check if phdr->p_offset > file size
-	if (ph.p_memsz < ph.p_filesz) {
+	if (ph->p_memsz < ph->p_filesz) {
 		return false;
 	}
-	if (ph.p_memsz == 0) {
+	if (ph->p_memsz == 0) {
 		return true;
 	}
-	if (ph.p_vaddr + ph.p_memsz < ph.p_vaddr) {
+	if (ph->p_vaddr + ph->p_memsz < ph->p_vaddr) {
 		return false;
 	}
-	if (ph.p_vaddr < 0x1000) {
+	if (ph->p_vaddr < 0x1000) {
 		return false;
 	}
 
-	//bool writable = (ph.p_flags & PF_W);
+	//bool writable = (ph->p_flags & PF_W);
 
-	set_up_userspace_page_tables(userspace_pagedir, ph.p_vaddr, ph.p_memsz);
+	set_up_userspace_page_tables(userspace_pagedir, ph->p_vaddr, ph->p_memsz);
 
-	if (lseek(fd, ph.p_offset, SEEK_SET) != ph.p_offset) {
+	if (lseek(fd, ph->p_offset, SEEK_SET) != ph->p_offset) {
 		return false;
 	}
-	if (read(fd, (void*)ph.p_vaddr, ph.p_filesz) != (int)ph.p_filesz) {
+	if (read(fd, (void*)ph->p_vaddr, ph->p_filesz) != (int)ph->p_filesz) {
 		return false;
 	}
-	uint32_t zero_bytes = ph.p_memsz - ph.p_filesz;
-	memset((void*)(ph.p_vaddr + ph.p_filesz), 0, zero_bytes);
+	uint32_t zero_bytes = ph->p_memsz - ph->p_filesz;
+	memset((void*)(ph->p_vaddr + ph->p_filesz), 0, zero_bytes);
 	return true;
 }
 
-bool load_elf(int fd, uint32_t *userspace_pagedir, elf32_file_header &fh) {
+bool load_elf(int fd, uint32_t *userspace_pagedir, struct elf32_file_header *fh) {
 
-	if (read(fd, &fh, sizeof(fh)) != sizeof(fh)) {
+	if (read(fd, fh, sizeof(struct elf32_file_header)) != sizeof(struct elf32_file_header)) {
 		printf("read file header failed\n");
 		return false;
 	}
 
 	// executable, x86, elf version 1
-	if (fh.e_type != 2 || fh.e_machine != 3 || fh.e_version != 1) {
+	if (fh->e_type != 2 || fh->e_machine != 3 || fh->e_version != 1) {
 		printf("invalid file header\n");
 		return false;
 	}
 
-	uint32_t offset = fh.e_phoff;
-	for (int i = 0; i < fh.e_phnum; i++) {
+	uint32_t offset = fh->e_phoff;
+	for (int i = 0; i < fh->e_phnum; i++) {
 
 		if (lseek(fd, offset, SEEK_SET) < 0) {
 			return false;
 		}
 
-		elf32_program_header ph;
+		struct elf32_program_header ph;
 		if (read(fd, &ph, sizeof(ph)) != sizeof(ph)) {
 			printf("read program header failed\n");
 			return false;
@@ -125,7 +123,7 @@ bool load_elf(int fd, uint32_t *userspace_pagedir, elf32_file_header &fh) {
 			printf("invalid program header\n");
 			return false;
 		case PT_LOAD:
-			if (!load_program_header(fd, ph, userspace_pagedir)) {
+			if (!load_program_header(fd, &ph, userspace_pagedir)) {
 				printf("load program header failed\n");
 				return false;
 			}
@@ -133,5 +131,3 @@ bool load_elf(int fd, uint32_t *userspace_pagedir, elf32_file_header &fh) {
 	}
 	return true;
 }
-
-} // namespace kernel

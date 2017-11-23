@@ -90,8 +90,4 @@ struct tss_entry_t
    uint16_t iomap_base;
 } __packed;
 
-namespace kernel {
-
 void initialize_GDT();
-
-} // namespace

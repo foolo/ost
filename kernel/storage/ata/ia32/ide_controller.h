@@ -109,14 +109,7 @@ enum AtaResult {
 
 #define insl(port, buffer, count) asm volatile("cld; rep; insl" :: "D" (buffer), "d" (port), "c" (count))
 
-namespace kernel
-{
-
 void ide_initialize_parallel_ata();
 
-AtaResult ide_read_sectors(uint8_t drive, uint8_t numsects, uint32_t lba, unsigned short es, uint32_t edi);
+enum AtaResult ide_read_sectors(uint8_t drive, uint8_t numsects, uint32_t lba, unsigned short es, uint32_t edi);
 void ide_irq();
-
-} // namespace kernel
-
-

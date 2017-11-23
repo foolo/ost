@@ -2,11 +2,8 @@
 #include "paging.h"
 #include "memory/page_allocator.h"
 
-extern "C" void enablePaging();
+void enablePaging();
 extern addr_t kernel_end_address;
-
-namespace kernel
-{
 
 const int TABLE_SIZE = 1024;
 uint32_t kernelspace_end_address;
@@ -82,5 +79,3 @@ uint32_t *create_kernel_pgdir()
 	printf("Paging was initialized\n");
 	return pgdir;
 }
-
-} // namespace kernel

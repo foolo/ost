@@ -2,8 +2,6 @@
 #include <string.h>
 #include "terminal.h"
 
-namespace kernel {
-
 size_t m_row;
 size_t m_column;
 uint8_t m_color;
@@ -107,5 +105,3 @@ void terminal_putchar(char c) {
 		}
 	}
 }
-
-} /* namespace kernel */

@@ -7,11 +7,11 @@
 #include <stdio.h>
 #include "syscall-handler.h"
 
-extern "C" void _exit()
+void _exit()
 {
 }
 
-extern "C" int close(int /*file*/)
+int close(int file)
 {
 	return 0;
 }
@@ -19,37 +19,37 @@ extern "C" int close(int /*file*/)
 // pointer to array of char * strings that define the current environment variables
 char **environ;
 
-extern "C" int execve(char * /*name*/, char ** /*argv*/, char ** /*env*/)
+int execve(char *name, char **argv, char **env)
 {
 	return 0;
 }
 
-extern "C" int fork()
+int fork()
 {
 	return 0;
 }
 
-extern "C" int fstat(int /*file*/, struct stat * /*st*/)
+int fstat(int file, struct stat *st)
 {
 	return 0;
 }
 
-extern "C" int getpid()
+int getpid()
 {
 	return 0;
 }
 
-extern "C" int isatty(int /*file*/)
+int isatty(int file)
 {
 	return 0;
 }
 
-extern "C" int kill(int /*pid*/, int /*sig*/)
+int kill(int pid, int sig)
 {
 	return 0;
 }
 
-extern "C" int link(char * /*old*/, char * /*new*/)
+int link(char *old, char *new)
 {
 
 
@@ -58,7 +58,7 @@ extern "C" int link(char * /*old*/, char * /*new*/)
 
 int lseek_binfile(int ptr);
 
-extern "C" int lseek(int file, int ptr, int dir)
+int lseek(int file, int ptr, int dir)
 {
 	if (file < 0 && dir == SEEK_SET) {
 		return lseek_binfile(ptr);
@@ -66,51 +66,51 @@ extern "C" int lseek(int file, int ptr, int dir)
 	return 0;
 }
 
-extern "C" int open(const char * /*name*/, int /*flags*/, ...)
+int open(const char *name, int flags, ...)
 {
 	return 0;
 }
 
 int read_binfile(char *dst, int len);
 
-extern "C" int read(int file, char *dst, int len) {
+int read(int file, char *dst, int len) {
 	if (file < 0) {
 		return read_binfile(dst, len);
 	}
 	return 0;
 }
 
-extern "C" caddr_t sbrk(int /*incr*/)
+caddr_t sbrk(int incr)
 {
 	return 0;
 }
 
-extern "C" int stat(const char * /*file*/, struct stat * /*st*/)
+int stat(const char *file, struct stat *st)
 {
 	return 0;
 }
 
-extern "C" clock_t times(struct tms * /*buf*/)
+clock_t times(struct tms *buf)
 {
 	return 0;
 }
 
-extern "C" int unlink(char * /*name*/)
+int unlink(char *name)
 {
 	return 0;
 }
 
-extern "C" int wait(int * /*status*/)
+int wait(int *status)
 {
 	return 0;
 }
 
-extern "C" int write(int file, char *ptr, int len)
+int write(int file, char *ptr, int len)
 {
-	return kernel::handle_syscall_write(file, ptr, len);
+	return handle_syscall_write(file, ptr, len);
 }
 
-extern "C" int gettimeofday(struct timeval * /*p*/, void * /*z*/)
+int gettimeofday(struct timeval *p, void *z)
 {
 	return 0;
 }

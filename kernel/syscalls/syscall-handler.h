@@ -2,9 +2,9 @@
 
 #include <stdio.h>
 #include <stdint.h>
-
-namespace kernel {
-
+#include <sys/stat.h>
+#include <sys/time.h>
+#include <sys/times.h>
 
 void handle_syscall_exit(int file);
 int handle_syscall_close(int file);
@@ -26,6 +26,3 @@ int handle_syscall_wait(int * status);
 int handle_syscall_write(int file, char *ptr, int len);
 int handle_syscall_gettimeofday(struct timeval * p, void * z);
 int handle_unknown_syscall(uint32_t syscall_id, uint32_t param1, uint32_t param2, uint32_t param3);
-
-
-} // namespace

@@ -1,6 +1,4 @@
-extern "C" {
 #include "md5.h"
-}
 #include "md5digest.h"
 #include <stdio.h>
 

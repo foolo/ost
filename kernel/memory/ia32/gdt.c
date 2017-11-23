@@ -3,20 +3,17 @@
 #include "gdt.h"
 
 
-extern "C" void sample_user_function() {
+void sample_user_function() {
 	int i = 0;
 	while(1) {
 		printf("user space %i\n", i++);
 	}
 }
 
-namespace kernel
-{
-
-extern "C" void load_gdt(unsigned long *gdt_ptr);
-extern "C" void reloadSegments(void);
-extern "C" void activate_tss(uint16_t tss_gdt_index);
-extern "C" uint32_t get_esp(void);
+void load_gdt(uint32_t *gdt_ptr);
+void reloadSegments(void);
+void activate_tss(uint16_t tss_gdt_index);
+uint32_t get_esp(void);
 
 
 uint64_t create_descriptor(uint32_t base, uint32_t limit, uint16_t flag)
@@ -43,7 +40,7 @@ uint64_t create_descriptor(uint32_t base, uint32_t limit, uint16_t flag)
 #define GDT_size 16
 uint64_t GDT[GDT_size];
 
-tss_entry_t tss_entry;
+struct tss_entry_t tss_entry;
 
 void load_gdt_main()
 {
@@ -78,5 +75,3 @@ void initialize_GDT()
 
 	activate_tss(0x2B);  // 5th position in GDT, times 8 = 0x28. Plus 3 for RPL 3
 }
-
-} // namespace kernel

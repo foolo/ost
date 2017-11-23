@@ -3,9 +3,6 @@
 #include "keyboard/keyboard.h"
 #include "ia32/ia32-io.h"
 
-namespace kernel {
-namespace keyboard {
-
 // Data and command ports
 static const uint8_t DATA_PORT = 0x60;
 static const uint8_t STATUS_PORT_READ = 0x64;
@@ -98,15 +95,13 @@ bool initialize_keyboard_controller()
 	return true;
 }
 
-bool read_scancode(uint8_t &scancode_out)
+bool read_scancode(uint8_t *scancode_out)
 {
-	uint8_t status = kernel::inb(STATUS_PORT_READ);
+	uint8_t status = inb(STATUS_PORT_READ);
 	if (status & 0x01)
 	{
-		scancode_out = kernel::inb(DATA_PORT);
+		*scancode_out = inb(DATA_PORT);
 		return true;
 	}
 	return false;
 }
-
-}} // namespace

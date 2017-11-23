@@ -1,11 +1,10 @@
 #include <stdio.h>
 #include <unistd.h>
+#include <stdbool.h>
 #include "ide_controller.h"
 #include "ia32/ia32-io.h"
 
 // Source: http://wiki.osdev.org/PCI_IDE_Controller
-
-namespace kernel {
 
 enum AtaStatus {
 	ATA_STATUS_OK,
@@ -28,7 +27,7 @@ struct ide_device {
 	uint8_t Reserved;    // 0 (Empty) or 1 (This Drive really exists).
 	uint8_t Channel;     // 0 (Primary Channel) or 1 (Secondary Channel).
 	uint8_t Drive;       // 0 (Master Drive) or 1 (Slave Drive).
-	AtaDeviceType DeviceType;
+	enum AtaDeviceType DeviceType;
 	uint16_t Signature;   // Drive Signature
 	uint16_t Capabilities;   // Features.
 	uint32_t CommandSets; // Command Sets Supported.
@@ -80,7 +79,7 @@ uint8_t ide_read(uint8_t channel, uint8_t reg) {
 	return result;
 }
 
-AtaStatus ide_polling(uint8_t channel, bool advanced_check) {
+enum AtaStatus ide_polling(uint8_t channel, bool advanced_check) {
 	// (I) Delay 400 nanosecond for BSY to be set:
 	for (int i = 0; i < 4; i++) {
 		ide_read(channel, ATA_REG_ALTSTATUS); // Reading the Alternate Status port wastes 100ns; loop four times.
@@ -104,7 +103,7 @@ AtaStatus ide_polling(uint8_t channel, bool advanced_check) {
 	return ATA_STATUS_OK;
 }
 
-AtaResult ide_get_result(uint8_t drive, AtaStatus status) {
+enum AtaResult ide_get_result(uint8_t drive, enum AtaStatus status) {
 	if (status == ATA_STATUS_OK) {
 		return ATA_RESULT_OK;
 	}
@@ -203,7 +202,7 @@ void ide_initialize(uint16_t BAR0, uint16_t BAR1, uint16_t BAR2, uint16_t BAR3, 
 			}
 
 			// (IV) Probe for ATAPI Devices:
-			AtaDeviceType deviceType = ATA_DEVICE;
+			enum AtaDeviceType deviceType = ATA_DEVICE;
 			if (err != 0) {
 				uint8_t cl = ide_read(i, ATA_REG_LBA1);
 				uint8_t ch = ide_read(i, ATA_REG_LBA2);
@@ -270,7 +269,7 @@ void ide_initialize_parallel_ata() {
 }
 
 
-AtaStatus ide_ata_access(AtaDirection direction, uint8_t drive, uint32_t lba, uint8_t numsects, unsigned short selector, uint32_t edi) {
+enum AtaStatus ide_ata_access(enum AtaDirection direction, uint8_t drive, uint32_t lba, uint8_t numsects, unsigned short selector, uint32_t edi) {
 	uint8_t lba_mode; // 0: CHS, 1:LBA28, 2: LBA48
 	uint8_t lba_io[6];
 	uint8_t channel = ide_devices[drive].Channel; // Read the Channel.
@@ -358,7 +357,7 @@ AtaStatus ide_ata_access(AtaDirection direction, uint8_t drive, uint32_t lba, ui
 
 	if (direction == ATA_READ) {
 		for (int i = 0; i < numsects; i++) {
-			AtaStatus result = ide_polling(channel, true);
+			enum AtaStatus result = ide_polling(channel, true);
 			if (result != ATA_STATUS_OK) {
 				return result;
 			}
@@ -400,7 +399,7 @@ void ide_irq() {
 	ide_irq_invoked = 1;
 }
 
-AtaResult ide_read_sectors(uint8_t drive, uint8_t numsects, uint32_t lba, unsigned short es, uint32_t edi) {
+enum AtaResult ide_read_sectors(uint8_t drive, uint8_t numsects, uint32_t lba, unsigned short es, uint32_t edi) {
 
 	if (drive > 3 || ide_devices[drive].Reserved == 0) {
 		return ATA_RESULT_DRIVE_NOT_FOUND;
@@ -410,7 +409,7 @@ AtaResult ide_read_sectors(uint8_t drive, uint8_t numsects, uint32_t lba, unsign
 	}
 	// 3: Read in PIO Mode through Polling & IRQs:
 	if (ide_devices[drive].DeviceType == ATA_DEVICE) {
-		AtaStatus status = ide_ata_access(ATA_READ, drive, lba, numsects, es, edi);
+		enum AtaStatus status = ide_ata_access(ATA_READ, drive, lba, numsects, es, edi);
 		return ide_get_result(drive, status);
 	}
 	else if (ide_devices[drive].DeviceType == ATAPI_DEVICE) {
@@ -422,5 +421,3 @@ AtaResult ide_read_sectors(uint8_t drive, uint8_t numsects, uint32_t lba, unsign
 	}
 	return ATA_RESULT_unknown;
 }
-
-} // namespace kernel

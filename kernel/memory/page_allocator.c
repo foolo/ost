@@ -6,17 +6,14 @@
 #include "multiboot_mmap.h"
 #include "memory/MemoryRange.h"
 
-namespace kernel
-{
-
 uint32_t frame_map[TABLE_LENGTH];
 unsigned table_start = 0;
 
 // page aligned memory ranges [first_usable_page_address, last_usable_page_address]
 // Example: A range of one megabyte starting at 0xC0000000 would end at 0xC00ff000
-const int MEM_RANGES_CNT_MAX = 5;
+#define MEM_RANGES_CNT_MAX 5
 int mem_ranges_counter = 0;
-MemoryRange mem_ranges[MEM_RANGES_CNT_MAX];
+struct MemoryRange mem_ranges[MEM_RANGES_CNT_MAX];
 
 void reset_page_allocator()
 {
@@ -26,40 +23,65 @@ void reset_page_allocator()
 	}
 	for (int i = 0; i < MEM_RANGES_CNT_MAX; i++)
 	{
-		mem_ranges[i] = MemoryRange();
+		struct MemoryRange mr = {0, 0, 0};
+		mem_ranges[i] = mr;
 	}
 	mem_ranges_counter = 0;
 }
 
-MemoryRange page_align_mem_range(const MemoryRange& mem_range)
+bool is_page_aligned(addr_t addr)
 {
-	if (mem_range.GetEnd() < (PAGE_SIZE - 1))
-	{
-		return MemoryRange();
+	return (addr & 0x0fff) == 0;
+}
+
+// Used for start of range
+addr_t round_up_to_page(addr_t addr)
+{
+	if (!is_page_aligned(addr)) {
+		return (addr & 0xfffff000) + 0x1000; // next whole page
 	}
-	if (mem_range.GetStart() > 0xfffff000)
+	return addr;
+}
+
+// Used for end of range
+addr_t round_down_to_page(addr_t addr)
+{
+	return (addr & 0xfffff000);
+}
+
+struct MemoryRange page_align_mem_range(const struct MemoryRange *mem_range)
+{
+	if (mem_range->m_end < (PAGE_SIZE - 1))
 	{
-		return MemoryRange();
+		struct MemoryRange mr = {0, 0, 0};
+		return mr;
+	}
+	if (mem_range->m_start > 0xfffff000)
+	{
+		struct MemoryRange mr = {0, 0, 0};
+		return mr;
 	}
 
-	addr_t start = round_up_to_page(mem_range.GetStart());
-	addr_t end = round_down_to_page(mem_range.GetEnd() - (PAGE_SIZE - 1));
+	addr_t start = round_up_to_page(mem_range->m_start);
+	addr_t end = round_down_to_page(mem_range->m_end - (PAGE_SIZE - 1));
 
 	if (start > end)
 	{
-		return MemoryRange();
+		struct MemoryRange mr = {0, 0, 0};
+		return mr;
 	}
-	return MemoryRange(start, end);
+	struct MemoryRange mr = {start, end, 1};
+	return mr;
 }
 
-bool register_memory_range(const MemoryRange& mem_range)
+bool register_memory_range(const struct MemoryRange *mem_range)
 {
 	if (mem_ranges_counter >= 5)
 	{
 		return false;
 	}
-	MemoryRange range(page_align_mem_range(mem_range));
-	if (range.IsValid())
+	struct MemoryRange range = page_align_mem_range(mem_range);
+	if (range.m_valid)
 	{
 		mem_ranges[mem_ranges_counter++] = range;
 	}
@@ -69,8 +91,8 @@ bool register_memory_range(const MemoryRange& mem_range)
 void init_map()
 {
 	for (int i = 0; i < mem_ranges_counter; i++) {
-		addr_t first = mem_ranges[i].GetStart();
-		addr_t last = mem_ranges[i].GetEnd();
+		addr_t first = mem_ranges[i].m_start;
+		addr_t last = mem_ranges[i].m_end;
 		for(addr_t addr = first; addr <= last; addr += PAGE_SIZE) {
 			unsigned table_index = address_to_table_index(addr);
 			unsigned bit_index = address_to_bit_index(addr);
@@ -128,25 +150,25 @@ pageframe_t allocate_frame()
 {
 	for (int i = 0; i < mem_ranges_counter; i++)
 	{
-		addr_t first = mem_ranges[i].GetStart();
-		addr_t last = mem_ranges[i].GetEnd();
+		addr_t first = mem_ranges[i].m_start;
+		addr_t last = mem_ranges[i].m_end;
 
 		addr_t addr = first;
 		while (addr <= last)
 		{
 			unsigned table_index = address_to_table_index(addr);
-			uint32_t &map = frame_map[table_index];
-			if (map == 0x00000000)
+			uint32_t *map = &frame_map[table_index];
+			if (*map == 0x00000000)
 			{
 				addr = jump_to_next_map(addr);
 			}
 			else
 			{
 				unsigned bit_index = address_to_bit_index(addr);
-				bool isfree = (map & (1 << bit_index)) != 0;
+				bool isfree = (*map & (1 << bit_index)) != 0;
 				if (isfree)
 				{
-					map &= ~(1 << bit_index);
+					*map &= ~(1 << bit_index);
 					return (pageframe_t)addr;
 				}
 				addr += PAGE_SIZE;
@@ -156,7 +178,7 @@ pageframe_t allocate_frame()
 	return 0;
 }
 
-inline addr_t frame_address_to_frame_number(addr_t pf)
+addr_t frame_address_to_frame_number(addr_t pf)
 {
 	// pf / PAGE_SIZE
 	return pf >> 12;
@@ -174,9 +196,9 @@ void print_map()
 {
 	for(int i = 0; i < MEM_RANGES_CNT_MAX; i++)
 	{
-		if (mem_ranges[i].IsValid())
+		if (mem_ranges[i].m_valid)
 		{
-			printf("range: %lx .. %lx\n", (long unsigned)mem_ranges[i].GetStart(), (long unsigned)mem_ranges[i].GetEnd());
+			printf("range: %lx .. %lx\n", (long unsigned)mem_ranges[i].m_start, (long unsigned)mem_ranges[i].m_end);
 		}
 	}
 	bool isfree_state = false;
@@ -198,5 +220,3 @@ void print_map()
 		}
 	}
 }
-
-} // namespace kernel

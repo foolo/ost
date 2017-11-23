@@ -5,9 +5,6 @@
 #include "page_allocator.h"
 #include "memory/MemoryRange.h"
 
-namespace kernel
-{
-
 void multiboot_mmap(unsigned long magic, multiboot_info_t *mbi)
 {
 	/* Am I booted by a Multiboot-compliant boot loader? */
@@ -108,8 +105,8 @@ void multiboot_mmap(unsigned long magic, multiboot_info_t *mbi)
 		{
 			addr_t start = mmap->addr;
 			addr_t end = mmap->addr + mmap->len - 1;
-			MemoryRange memoryRange(start, end);
-			if (!register_memory_range(memoryRange))
+			struct MemoryRange memoryRange = {start, end, 1};
+			if (!register_memory_range(&memoryRange))
 			{
 				break;
 			}
@@ -117,5 +114,3 @@ void multiboot_mmap(unsigned long magic, multiboot_info_t *mbi)
 		mmap = (multiboot_memory_map_t *) ((unsigned long) mmap + mmap->size + sizeof(mmap->size));
 	}
 }
-
-} // namespace kernel

@@ -3,20 +3,19 @@ include ../toolchain/toochain_env.sh
 export PATH := $(PATH):$(ELFCC)/bin:$(OSTCC)/bin
 export CPLUS_INCLUDE_PATH := /usr/local/ost/include/c++/4.9.2
 HOSTARCH=ia32
-CC=i686-elf-gcc
-AR=i686-elf-ar
+CC=i686-ost-gcc
+AR=i686-ost-ar
 BUILDDIR=build-$(HOSTARCH)
 
 LIBDIR := $(OSTROOT)/usr/lib
 
 INCFLAGS :=
 INCFLAGS += -I$(OSTROOT)/usr/include
-INCFLAGS += -I$(OSTROOT)/usr/include/sys
 INCFLAGS += -I../toolchain  #for newlib/i686-ost/syscalls.h
 INCFLAGS += -Iinclude
 INCFLAGS += -I.
 
-COMMONFLAGS := $(INCFLAGS) -ffreestanding -O0 -g -Wall -Wextra -Werror=return-type
+COMMONFLAGS := $(INCFLAGS) -ffreestanding -O0 -g -Wall -Wextra -Werror=return-type -Wno-unused-parameter
 
 CPPFLAGS := $(COMMONFLAGS) -fno-exceptions -fno-rtti
 
@@ -24,7 +23,7 @@ CFLAGS := $(COMMONFLAGS) -std=gnu99
 
 ASMFLAGS := $(COMMONFLAGS)
 
-LDFLAGS := -ffreestanding -O2 -nostdlib
+LDFLAGS := -ffreestanding -O2 -nostdlib -Wl,-m,elf_i386
 
 LDPATH :=
 LDPATH += -L$(LIBDIR)
@@ -40,26 +39,24 @@ ISOOUT=$(BUILDDIR)/myos.iso
 # Source files
 
 CPPFILES=\
-	terminal/$(HOSTARCH)/terminal.cpp \
-	kernel.cpp \
-	cpp/heap.cpp \
-	interrupts/$(HOSTARCH)/pic.cpp \
-	interrupts/$(HOSTARCH)/idt.cpp \
-	keyboard/keyboard.cpp \
-	keyboard/ia32/keyboard_controller.cpp \
-	syscalls/syscall-handler.cpp \
-	syscalls/syscalls_bypass.cpp \
-	memory/page_allocator.cpp \
-	memory/multiboot_mmap.cpp \
-	memory/MemoryRange.cpp \
-	memory/ia32/gdt.cpp \
-	memory/ia32/paging.cpp \
-	process/elf_loader.cpp \
-	storage/ata/ia32/ide_controller.cpp \
-	util/md5/md5.c \
-	util/md5/md5digest.cpp \
 
-CFILES=
+CFILES=\
+	terminal/$(HOSTARCH)/terminal.c \
+	kernel.c \
+	interrupts/$(HOSTARCH)/pic.c \
+	interrupts/$(HOSTARCH)/idt.c \
+	keyboard/keyboard.c \
+	keyboard/ia32/keyboard_controller.c \
+	syscalls/syscall-handler.c \
+	syscalls/syscalls_bypass.c \
+	memory/page_allocator.c \
+	memory/multiboot_mmap.c \
+	memory/ia32/gdt.c \
+	memory/ia32/paging.c \
+	process/elf_loader.c \
+	storage/ata/ia32/ide_controller.c \
+	util/md5/md5.c \
+	util/md5/md5digest.c \
 
 ASMFILES=\
 	boot.S \

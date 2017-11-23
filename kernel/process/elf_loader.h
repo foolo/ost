@@ -1,4 +1,4 @@
-namespace kernel {
+#include <stdbool.h>
 
 struct elf32_file_header {
 	uint8_t e_ident[16];
@@ -19,6 +19,4 @@ struct elf32_file_header {
 	uint16_t e_shstrndx;
 };
 
-bool load_elf(int fd, uint32_t *userspace_pagedir, elf32_file_header &fh);
-
-} // namespace kernel
+bool load_elf(int fd, uint32_t *userspace_pagedir, struct elf32_file_header *fh);

@@ -5,7 +5,7 @@
 #include "newlib/i686-ost/syscalls.h"
 #include "syscalls/syscall-handler.h"
 
-static const int IDT_SIZE = 256;
+#define IDT_SIZE 256
 
 struct IDT_entry {
 	uint16_t offset_lowerbits;
@@ -17,10 +17,7 @@ struct IDT_entry {
 
 struct IDT_entry IDT[IDT_SIZE] = {{0, 0, 0, 0, 0}};
 
-extern "C" void load_idt(uint32_t *idt_ptr);
-
-namespace kernel
-{
+void load_idt(uint32_t *idt_ptr);
 
 void create_idt_entry(uint32_t callback_function_pointer, uint8_t vector_index, int dpl)
 {
@@ -30,7 +27,7 @@ void create_idt_entry(uint32_t callback_function_pointer, uint8_t vector_index, 
 
 	uint8_t DPL = (dpl & 3) << 5;
 
-	IDT_entry *entry = IDT + vector_index;
+	struct IDT_entry *entry = IDT + vector_index;
 
 	/* populate IDT entry of keyboard's interrupt */
 	entry->offset_lowerbits = callback_function_pointer & 0xffff;
@@ -61,16 +58,16 @@ void enable_irq(uint8_t irq)
 	outb(pic_addr, mask);
 }
 
-extern "C" void div0_handler_wrapper(void);
-extern "C" void div0_handler(void)
+void div0_handler_wrapper(void);
+void div0_handler(void)
 {
 	printf("division by zero\n");
 	while(1){
 	}
 }
 
-extern "C" void gpf_handler_wrapper(void);
-extern "C" void gpf_handler(uint32_t error_code)
+void gpf_handler_wrapper(void);
+void gpf_handler(uint32_t error_code)
 {
 	printf("general protection fault!\n");
 	printf("error code: %lx\n", error_code);
@@ -79,8 +76,8 @@ extern "C" void gpf_handler(uint32_t error_code)
 }
 
 
-extern "C" void page_fault_handler_wrapper(void);
-extern "C" void page_fault_handler(uint32_t error_code, uint32_t address, uint32_t *regs)
+void page_fault_handler_wrapper(void);
+void page_fault_handler(uint32_t error_code, uint32_t address, uint32_t *regs)
 {
 	printf("page fault\n");
 	printf("error code: %lx\n", error_code);
@@ -103,16 +100,27 @@ extern "C" void page_fault_handler(uint32_t error_code, uint32_t address, uint32
 	}
 }
 
-extern "C" void keyboard_handler_wrapper(void);
-extern "C" void keyboard_handler(void)
+void PIC_sendEOI(unsigned char irq)
 {
-	kernel::PIC_sendEOI(KEYBOARD_IRQ);
-	keyboard::handle_keyboard_scancode();
+	// End-of-interrupt command code
+	const uint8_t PIC_EOI = 0x20;
+	if (irq >= 8)
+	{
+		outb(PIC2_COMMAND, PIC_EOI);
+	}
+	outb(PIC1_COMMAND, PIC_EOI);
 }
 
-extern "C" void syscall_handler_wrapper(void);
+void keyboard_handler_wrapper(void);
+void keyboard_handler(void)
+{
+	PIC_sendEOI(KEYBOARD_IRQ);
+	handle_keyboard_scancode();
+}
 
-extern "C" void syscall_handler(uint32_t syscall_id, uint32_t param1, uint32_t param2, uint32_t param3)
+void syscall_handler_wrapper(void);
+
+void syscall_handler(uint32_t syscall_id, uint32_t param1, uint32_t param2, uint32_t param3)
 {
 	if (syscall_id == SYSCALL_EXIT)
 	{
@@ -233,5 +241,3 @@ void initialize_IDT()
 	create_idt_entry((uint32_t)syscall_handler_wrapper, SYSCALL_INTERRUPT_VECTOR, 3);
 	load_idt_main();
 }
-
-} // namespace

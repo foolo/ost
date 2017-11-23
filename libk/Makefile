@@ -2,9 +2,9 @@
 include ../toolchain/toochain_env.sh
 export PATH := $(PATH):$(ELFCC)/bin:$(OSTCC)/bin
 HOSTARCH=ia32
-CC=i686-elf-gcc
-AS=i686-elf-as
-AR=i686-elf-ar
+CC=i686-ost-gcc
+AS=i686-ost-as
+AR=i686-ost-ar
 BUILDDIR=build-$(HOSTARCH)
 
 
@@ -16,7 +16,7 @@ CPPFLAGS += -I$(OSTROOT)/usr/include
 all: $(BUILDDIR)/libk.a
 
 OBJS:=\
-	$(BUILDDIR)/libk.cpp.o \
+	$(BUILDDIR)/libk.c.o \
 
 #-include $(OBJS:.o=.d)
 
@@ -27,7 +27,7 @@ $(BUILDDIR)/libk.a: $(OBJS)
 	@mkdir -p $(dir $@)
 	$(AR) rcs $@ $(OBJS)
 
-$(BUILDDIR)/%.cpp.o: %.cpp
+$(BUILDDIR)/%.c.o: %.c
 	@mkdir -p $(dir $@)
 	$(CC) -c $< -o $@ $(CFLAGS) $(CPPFLAGS)
 	$(CC) -MM -MQ $@ $(CFLAGS) $(CPPFLAGS) $< > $(BUILDDIR)/$*.cpp.d

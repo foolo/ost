@@ -18,13 +18,10 @@ extern addr_t kernel_end_address;
 extern addr_t _initramfs_start;
 extern addr_t _initramfs_end;
 
-extern "C" void jump_usermode(addr_t entry_point);
+void jump_usermode(addr_t entry_point);
 
 uint8_t *binfile;
 uint32_t binfile_size;
-
-namespace kernel
-{
 
 void load_init_process(uint32_t *kernelspace_page_directory) {
 
@@ -38,8 +35,8 @@ void load_init_process(uint32_t *kernelspace_page_directory) {
 	// todo allocate heap
 	//uint32_t heap_size = 0x100000;
 	activate_page_directory((unsigned int*)pgdir);
-	elf32_file_header fh;
-	if (load_elf(-1, pgdir, fh)) {
+	struct elf32_file_header fh;
+	if (load_elf(-1, pgdir, &fh)) {
 		jump_usermode(fh.e_entry);
 	}
 	else {
@@ -47,7 +44,7 @@ void load_init_process(uint32_t *kernelspace_page_directory) {
 	}
 }
 
-extern "C" void kernel_main(unsigned long magic, unsigned long addr)
+void kernel_main(unsigned long magic, unsigned long addr)
 {
 	terminal_initialize();
 	initialize_PIC();
@@ -65,7 +62,7 @@ extern "C" void kernel_main(unsigned long magic, unsigned long addr)
 
 	print_map();
 
-	if (!keyboard::initialize_keyboard_controller())
+	if (!initialize_keyboard_controller())
 	{
 		printf("PS2 controller initialization failed\n");
 	}
@@ -76,5 +73,3 @@ extern "C" void kernel_main(unsigned long magic, unsigned long addr)
 
 	load_init_process(kernelspace_page_directory);
 }
-
-} /* namespace kernel */
