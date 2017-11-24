@@ -4,14 +4,20 @@
 
 	sudo apt-get install m4
 	wget http://ftp.gnu.org/gnu/autoconf/autoconf-2.64.tar.xz
-
-Extract, configure, make, make install
+	tar xf autoconf-2.64.tar.xz
+	cd autoconf-2.64/
+	./configure
+	make
+	sudo make install
 
 ## Install automake 1.11.1
 
 	wget http://ftp.gnu.org/gnu/automake/automake-1.11.1.tar.bz2
-
-Extract, configure, make, make install
+	tar xf automake-1.11.1.tar.bz2
+	cd automake-1.11.1/
+	./configure
+	make
+	sudo make install
 
 ## Install libtool
 
@@ -26,19 +32,10 @@ Extract, configure, make, make install
 	cd toolchain
 	./download_libs.sh
 
-## Build i686-elf cross compiler
-
-	cd i686-elf-cross-compiler
-	./build_cross_compiler.sh
-
-### Build Newlib 1
-
-Go to newlib directory and run
-
-	./configure-ost-newlib.sh
-	./build-ost-newlib.sh $ELFCC/ost-links
-
 ### Step 2: Build Binutils
+
+	sudo mkdir -p $OSTROOT/usr/include
+	sudo cp -rT newlib-2.2.0-1/newlib/libc/include $OSTROOT/usr/include
 
 Go to hosted_compiler directory and run
 
@@ -50,7 +47,6 @@ and then run make according to instructions in prepare_build_binutils.sh
 
 
 ### Build Newlib 2
-Remove --disable-newlib-supplied-syscalls from configure-ost-newlib.sh
 
 Create link to i686-ost-cc
 
