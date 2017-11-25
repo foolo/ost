@@ -1,6 +1,7 @@
 # todo arch by parameter
 include ../toolchain/toochain_env.sh
 export PATH := $(PATH):$(ELFCC)/bin:$(OSTCC)/bin
+SHELL := env PATH=$(PATH) /bin/bash
 export CPLUS_INCLUDE_PATH := /usr/local/ost/include/c++/4.9.2
 HOSTARCH=ia32
 CC=i686-ost-gcc
