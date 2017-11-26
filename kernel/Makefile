@@ -55,6 +55,7 @@ CFILES=\
 	memory/ia32/gdt.c \
 	memory/ia32/paging.c \
 	process/elf_loader.c \
+	process/process.c \
 	storage/ata/ia32/ide_controller.c \
 	util/md5/md5.c \
 	util/md5/md5digest.c \

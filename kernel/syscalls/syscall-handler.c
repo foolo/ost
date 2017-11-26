@@ -1,5 +1,7 @@
 #include "syscall-handler.h"
 #include "terminal.h"
+#include "process/process.h"
+#include "memory/ia32/paging.h"
 
 void handle_syscall_exit(int file)
 {
@@ -62,7 +64,11 @@ int handle_syscall_read(int file, char *ptr, int len)
 
 caddr_t handle_syscall_sbrk(int incr)
 {
-	return (caddr_t)-1;
+	struct process_info *pr = get_current_process_info();
+	void *previous_break = pr->current_break;
+	set_up_userspace_page_tables(pr->pgdir, (uint32_t)pr->current_break, incr);
+	pr->current_break += incr;
+	return previous_break;
 }
 
 int handle_syscall_stat(const char *file, struct stat *st)

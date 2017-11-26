@@ -120,8 +120,9 @@ void keyboard_handler(void)
 
 void syscall_handler_wrapper(void);
 
-void syscall_handler(uint32_t syscall_id, uint32_t param1, uint32_t param2, uint32_t param3)
+uint32_t syscall_handler(uint32_t syscall_id, uint32_t param1, uint32_t param2, uint32_t param3)
 {
+	uint32_t result = 0;
 	if (syscall_id == SYSCALL_EXIT)
 	{
 		int file = (int)param1;
@@ -194,7 +195,7 @@ void syscall_handler(uint32_t syscall_id, uint32_t param1, uint32_t param2, uint
 	else if (syscall_id == SYSCALL_SBRK)
 	{
 		int incr = (int)param1;
-		handle_syscall_sbrk(incr);
+		result = handle_syscall_sbrk(incr);
 	}
 	else if (syscall_id == SYSCALL_STAT)
 	{
@@ -229,6 +230,7 @@ void syscall_handler(uint32_t syscall_id, uint32_t param1, uint32_t param2, uint
 	{
 		handle_unknown_syscall(syscall_id, param1, param2, param3);
 	}
+	return result;
 }
 
 void initialize_IDT()

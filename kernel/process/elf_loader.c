@@ -84,7 +84,7 @@ bool load_program_header(int fd, struct elf32_program_header *ph, uint32_t *user
 	return true;
 }
 
-bool load_elf(int fd, uint32_t *userspace_pagedir, struct elf32_file_header *fh) {
+bool load_elf(int fd, uint32_t *userspace_pagedir, struct elf32_file_header *fh, struct process_info *p) {
 
 	if (read(fd, fh, sizeof(struct elf32_file_header)) != sizeof(struct elf32_file_header)) {
 		printf("read file header failed\n");
@@ -97,6 +97,7 @@ bool load_elf(int fd, uint32_t *userspace_pagedir, struct elf32_file_header *fh)
 		return false;
 	}
 
+	uint32_t brk = 0;
 	uint32_t offset = fh->e_phoff;
 	for (int i = 0; i < fh->e_phnum; i++) {
 
@@ -127,7 +128,12 @@ bool load_elf(int fd, uint32_t *userspace_pagedir, struct elf32_file_header *fh)
 				printf("load program header failed\n");
 				return false;
 			}
+			uint32_t segment_end_address = ph.p_vaddr + ph.p_memsz;
+			if (segment_end_address > brk) {
+				brk = segment_end_address;
+			}
 		}
 	}
+	p->current_break = (void*)brk;
 	return true;
 }

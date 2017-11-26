@@ -75,16 +75,24 @@ keyboard_handler_wrapper:
 
 .global syscall_handler_wrapper
 syscall_handler_wrapper:
-	pushal
 	cld
+	pushl %gs
+    pushl %fs
+    pushl %es
+    pushl %ds
+    pushl %ebp
 	pushl %edx
 	pushl %ecx
 	pushl %ebx
 	pushl %eax
 	call syscall_handler
-	popl %eax
-	popl %eax
-	popl %eax
-	popl %eax
-	popal
+	addl $4, %esp #do not overwrite eax which contains the return value
+	popl %ebx
+	popl %ecx
+	popl %edx
+	popl %ebp
+	popl %ds
+	popl %es
+	popl %fs
+	popl %gs
 	iret

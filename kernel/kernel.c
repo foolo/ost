@@ -10,6 +10,7 @@
 #include "memory/ia32/gdt.h"
 #include "memory/ia32/paging.h"
 #include "process/elf_loader.h"
+#include "process/process.h"
 #include "storage/ata/ia32/ide_controller.h"
 #include "util/md5/md5digest.h"
 
@@ -28,18 +29,20 @@ void load_init_process(uint32_t *kernelspace_page_directory) {
 	binfile = (uint8_t*)&_initramfs_start;
 	binfile_size = (uint32_t)&_initramfs_end - (uint32_t)&_initramfs_start;
 
-	uint32_t *pgdir = initialize_page_directory(PDFLAG_WRITABLE | PDFLAG_USER_PREVILEGES);
-	map_kernelspace_in_process(pgdir, kernelspace_page_directory);
+	unsigned pid = create_new_process_id();
+	struct process_info *pr = get_process_info(pid);
+	pr->pgdir = initialize_page_directory(PDFLAG_WRITABLE | PDFLAG_USER_PREVILEGES);
+	map_kernelspace_in_process(pr->pgdir, kernelspace_page_directory);
 	// allocate 1MB stack space
-	set_up_userspace_page_tables(pgdir, 0xFFF00000, 0x100000);
-	// todo allocate heap
-	//uint32_t heap_size = 0x100000;
-	activate_page_directory((unsigned int*)pgdir);
+	set_up_userspace_page_tables(pr->pgdir, 0xFFF00000, 0x100000);
+	activate_page_directory((unsigned int*)pr->pgdir);
 	struct elf32_file_header fh;
-	if (load_elf(-1, pgdir, &fh)) {
+	if (load_elf(-1, pr->pgdir, &fh, pr)) {
+		set_current_process(pid);
 		jump_usermode(fh.e_entry);
 	}
 	else {
+		// todo deallocate pages
 		printf("load elf failed\n");
 	}
 }

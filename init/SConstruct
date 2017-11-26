@@ -5,6 +5,7 @@ env = Environment()
 env.PrependENVPath('PATH', '/usr/local/ost/bin')
 env.Replace(CC = "i686-ost-gcc")
 env.Append(LINKFLAGS=['-Wl,-m,elf_i386'])  # TODO why is "-m elf_i386" needed?
+env.Append(CFLAGS=['-g'])
 
 appsrc = [
     'init.c',
