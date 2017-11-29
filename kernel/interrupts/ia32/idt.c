@@ -70,7 +70,7 @@ void gpf_handler_wrapper(void);
 void gpf_handler(uint32_t error_code)
 {
 	printf("general protection fault!\n");
-	printf("error code: %lx\n", error_code);
+	printf("error code: %x\n", error_code);
 	while(1){
 	}
 }
@@ -80,8 +80,8 @@ void page_fault_handler_wrapper(void);
 void page_fault_handler(uint32_t error_code, uint32_t address, uint32_t *regs)
 {
 	printf("page fault\n");
-	printf("error code: %lx\n", error_code);
-	printf("virtual address: %lx\n", address);
+	printf("error code: %x\n", error_code);
+	printf("virtual address: %x\n", address);
 
 	int eax = regs[7];
 	int ecx = regs[6];

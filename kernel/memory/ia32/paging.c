@@ -49,7 +49,7 @@ void set_up_userspace_page_tables(uint32_t *userspace_pagedir, uint32_t virtual_
 {
 	uint32_t tables_to_fill = ((size-1) / PAGE_SIZE / TABLE_SIZE) + 1;
 	uint32_t start_table = virtual_start_address >> 22;
-	printf("Initilaizing %lu page tables for process, start: %lx, end: %lx\n", tables_to_fill, start_table << 22, (start_table+tables_to_fill) << 22);
+	printf("Initilaizing %u page tables for process, start: %x, end: %x\n", tables_to_fill, start_table << 22, (start_table+tables_to_fill) << 22);
 	for (uint32_t table = start_table; table < start_table + tables_to_fill; table++)
 	{
 		if (userspace_pagedir[table] & PDFLAG_PRESENT) {

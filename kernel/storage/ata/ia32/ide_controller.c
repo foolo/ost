@@ -259,7 +259,7 @@ void ide_initialize(uint16_t BAR0, uint16_t BAR1, uint16_t BAR2, uint16_t BAR3, 
 		if (ide_devices[i].Reserved == 1) {
 			uint32_t size_mb = ide_devices[i].Size / 1024 / 2;
 			bool is_ata = (ide_devices[i].DeviceType == ATA_DEVICE);
-			printf("Found %s Drive %lu MiB (%lu bytes) - %s\n", (is_ata ? "ATA" : "ATAPI"), size_mb, ide_devices[i].Size/2,  ide_devices[i].Model);
+			printf("Found %s Drive %u MiB (%u bytes) - %s\n", (is_ata ? "ATA" : "ATAPI"), size_mb, ide_devices[i].Size/2,  ide_devices[i].Model);
 		}
 	}
 }
