@@ -195,7 +195,7 @@ uint32_t syscall_handler(uint32_t syscall_id, uint32_t param1, uint32_t param2, 
 	else if (syscall_id == SYSCALL_SBRK)
 	{
 		int incr = (int)param1;
-		result = handle_syscall_sbrk(incr);
+		result = (uint32_t)handle_syscall_sbrk(incr);
 	}
 	else if (syscall_id == SYSCALL_STAT)
 	{

@@ -73,7 +73,8 @@ bool load_program_header(int fd, struct elf32_program_header *ph, uint32_t *user
 
 	set_up_userspace_page_tables(userspace_pagedir, ph->p_vaddr, ph->p_memsz);
 
-	if (lseek(fd, ph->p_offset, SEEK_SET) != ph->p_offset) {
+	int res = lseek(fd, ph->p_offset, SEEK_SET);
+	if (res >= 0 && (uint32_t)res != ph->p_offset) {
 		return false;
 	}
 	if (read(fd, (void*)ph->p_vaddr, ph->p_filesz) != (int)ph->p_filesz) {

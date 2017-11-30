@@ -14,7 +14,7 @@ enum AtaStatus {
 };
 
 uint8_t ide_buf[2048] = { 0 };
-unsigned static char ide_irq_invoked = 0;
+static unsigned char ide_irq_invoked = 0;
 
 struct IDEChannelRegisters {
 	uint16_t base;  // I/O Base.
@@ -142,6 +142,7 @@ void ide_read_buffer(uint8_t channel, uint8_t reg, unsigned int buffer, unsigned
 	else if (reg < 0x0C) {
 		insl(channels[channel].base + reg - 0x06, buffer, quads);
 	}
+
 	else if (reg < 0x0E) {
 		insl(channels[channel].ctrl + reg - 0x0A, buffer, quads);
 	}
@@ -163,8 +164,8 @@ void ide_initialize(uint16_t BAR0, uint16_t BAR1, uint16_t BAR2, uint16_t BAR3, 
 	channels[ATA_PRIMARY].ctrl = BAR1 & 0xFFFC;
 	channels[ATA_SECONDARY].base = BAR2 & 0xFFFC;
 	channels[ATA_SECONDARY].ctrl = BAR3 & 0xFFFC;
-	channels[ATA_PRIMARY].bmide = BAR4 & 0xFFFC + 0; // Bus Master IDE
-	channels[ATA_SECONDARY].bmide = BAR4 & 0xFFFC + 8; // Bus Master IDE
+	channels[ATA_PRIMARY].bmide = (BAR4 & 0xFFFC) + 0; // Bus Master IDE
+	channels[ATA_SECONDARY].bmide = (BAR4 & 0xFFFC) + 8; // Bus Master IDE
 
 	// 2- Disable IRQs:
 	ide_write(ATA_PRIMARY, ATA_REG_CONTROL, 2);
