@@ -1,10 +1,7 @@
-#include <sys/stat.h>
-#include <sys/types.h>
-#include <sys/fcntl.h>
-#include <sys/times.h>
-#include <sys/errno.h>
-#include <sys/time.h>
 #include <stdio.h>
+#include <sys/stat.h>
+#include <sys/times.h>
+#include <sys/time.h>
 #include "syscall-handler.h"
 
 void _exit()

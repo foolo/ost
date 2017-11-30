@@ -1,5 +1,6 @@
 #include "interrupts/interrupts.h"
 #include "ia32-interrupts.h"
+#include "ia32/ia32-io.h"
 
 // ICW1 flags
 static const uint8_t ICW1_ICW4      = 0x01;		// ICW4 (not) needed

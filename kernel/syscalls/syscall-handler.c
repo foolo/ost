@@ -1,3 +1,4 @@
+#include <stdio.h>
 #include "syscall-handler.h"
 #include "terminal.h"
 #include "process/process.h"

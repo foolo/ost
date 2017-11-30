@@ -1,10 +1,10 @@
-#include <inttypes.h>
+#include <stdint.h>
 #include <unistd.h>
 #include <stdio.h>
+#include <string.h>
 #include "memory/ia32/paging.h"
 #include "elf_loader.h"
 
-#include <string.h>
 
 extern uint8_t *binfile;
 extern uint32_t binfile_size;

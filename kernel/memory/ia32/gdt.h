@@ -2,7 +2,6 @@
 
 // Used for creating GDT segment descriptors in 64-bit integer form.
 
-#include <stdio.h>
 #include <stdint.h>
 
 // Each define here is for a specific flag in the descriptor.

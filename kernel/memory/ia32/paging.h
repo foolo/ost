@@ -1,7 +1,6 @@
 #pragma once
 
 #include <stdint.h>
-#include "memory/types.h"
 
 void activate_page_directory(unsigned int*);
 

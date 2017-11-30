@@ -1,6 +1,5 @@
 #pragma once
-
-#include "ia32/ia32-io.h"
+#include <stdint.h>
 
 static const uint8_t PIC1_COMMAND  = 0x20;   // Master PIC IO base address
 static const uint8_t PIC1_DATA     = 0x21;

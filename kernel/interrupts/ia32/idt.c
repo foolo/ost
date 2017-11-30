@@ -1,3 +1,4 @@
+#include <stdio.h>
 #include "interrupts/interrupts.h"
 #include "ia32-interrupts.h"
 #include "keyboard/keyboard.h"

@@ -1,4 +1,3 @@
-#include <stdio.h>
 #include <stdint.h>
 #include "keyboard/keyboard.h"
 #include "ia32/ia32-io.h"

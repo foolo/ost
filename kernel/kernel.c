@@ -1,9 +1,7 @@
-#include <stddef.h>
 #include <stdint.h>
 #include <stdio.h>
 #include "terminal.h"
 #include "interrupts/interrupts.h"
-#include "interrupts/ia32/ia32-interrupts.h" // todo just for test_syscall
 #include "keyboard/keyboard.h"
 #include "memory/multiboot_mmap.h"
 #include "memory/page_allocator.h"
@@ -12,7 +10,6 @@
 #include "process/elf_loader.h"
 #include "process/process.h"
 #include "storage/ata/ia32/ide_controller.h"
-#include "util/md5/md5digest.h"
 
 extern addr_t kernel_start_address;
 extern addr_t kernel_end_address;
