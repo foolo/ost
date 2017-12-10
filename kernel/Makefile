@@ -44,6 +44,7 @@ CPPFILES=\
 CFILES=\
 	terminal/$(HOSTARCH)/terminal.c \
 	kernel.c \
+	fs/fs.c \
 	interrupts/$(HOSTARCH)/pic.c \
 	interrupts/$(HOSTARCH)/idt.c \
 	keyboard/keyboard.c \

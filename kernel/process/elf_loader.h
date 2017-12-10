@@ -1,5 +1,6 @@
 #include <stdbool.h>
 #include "process.h"
+#include "fs/fs.h"
 
 struct elf32_file_header {
 	uint8_t e_ident[16];
@@ -20,4 +21,4 @@ struct elf32_file_header {
 	uint16_t e_shstrndx;
 };
 
-bool load_elf(int fd, uint32_t *userspace_pagedir, struct elf32_file_header *fh, struct process_info *p);
+bool load_elf(struct file *f, uint32_t *userspace_pagedir, struct elf32_file_header *fh, struct process_info *p);

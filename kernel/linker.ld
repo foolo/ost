@@ -39,6 +39,14 @@ SECTIONS
 		*(.bss)
 		*(.bootstrap_stack)
 	}
+
+	.heap :
+	{
+		kernel_heap_start = .;
+		. += 0x100000;
+		kernel_heap_end = .;
+	}
+
 	kernel_end_address = .;
 
 	/* The compiler may produce other sections, by default it will put them in

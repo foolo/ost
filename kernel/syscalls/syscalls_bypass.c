@@ -48,18 +48,11 @@ int kill(int pid, int sig)
 
 int link(char *old, char *new)
 {
-
-
 	return 0;
 }
 
-int lseek_binfile(int ptr);
-
 int lseek(int file, int ptr, int dir)
 {
-	if (file < 0 && dir == SEEK_SET) {
-		return lseek_binfile(ptr);
-	}
 	return 0;
 }
 
@@ -68,18 +61,22 @@ int open(const char *name, int flags, ...)
 	return 0;
 }
 
-int read_binfile(char *dst, int len);
-
 int read(int file, char *dst, int len) {
-	if (file < 0) {
-		return read_binfile(dst, len);
-	}
 	return 0;
 }
 
+extern uint32_t kernel_heap_start;
+extern uint32_t kernel_heap_end;
+caddr_t current_break = (caddr_t)&kernel_heap_start;
 caddr_t sbrk(int incr)
 {
-	return 0;
+	caddr_t previous_break = current_break;
+	if (current_break + incr > (caddr_t)&kernel_heap_end) {
+		printf("kernel out of heap memory\n");
+		while (1) {}
+	}
+	current_break += incr;
+	return previous_break;
 }
 
 int stat(const char *file, struct stat *st)

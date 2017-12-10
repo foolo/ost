@@ -6,23 +6,6 @@
 #include "elf_loader.h"
 
 
-extern uint8_t *binfile;
-extern uint32_t binfile_size;
-size_t offset = 0;
-
-int lseek_binfile(int ptr) {
-	offset = ptr;
-	return offset;
-}
-
-int read_binfile(char *dst, int len) {
-	int bytes_left = binfile_size - offset;
-	int bytes_to_read = (len < bytes_left) ? len : bytes_left;
-	memcpy(dst, binfile + offset, bytes_to_read);
-	offset += bytes_to_read;
-	return bytes_to_read;
-}
-
 
 struct elf32_program_header {
 	uint32_t p_type;
@@ -51,7 +34,7 @@ enum program_header_flags {
 	PF_R = 4,
 };
 
-bool load_program_header(int fd, struct elf32_program_header *ph, uint32_t *userspace_pagedir) {
+bool load_program_header(struct file *f, struct elf32_program_header *ph, uint32_t *userspace_pagedir) {
 	if ((ph->p_offset & 0xfff) != (ph->p_vaddr & 0xfff)) {
 		return false;
 	}
@@ -73,11 +56,9 @@ bool load_program_header(int fd, struct elf32_program_header *ph, uint32_t *user
 
 	set_up_userspace_page_tables(userspace_pagedir, ph->p_vaddr, ph->p_memsz);
 
-	int res = lseek(fd, ph->p_offset, SEEK_SET);
-	if (res >= 0 && (uint32_t)res != ph->p_offset) {
-		return false;
-	}
-	if (read(fd, (void*)ph->p_vaddr, ph->p_filesz) != (int)ph->p_filesz) {
+	file_seek(f, ph->p_offset);
+
+	if (file_read(f, (void*)ph->p_vaddr, ph->p_filesz) != ph->p_filesz) {
 		return false;
 	}
 	uint32_t zero_bytes = ph->p_memsz - ph->p_filesz;
@@ -85,9 +66,9 @@ bool load_program_header(int fd, struct elf32_program_header *ph, uint32_t *user
 	return true;
 }
 
-bool load_elf(int fd, uint32_t *userspace_pagedir, struct elf32_file_header *fh, struct process_info *p) {
+bool load_elf(struct file *f, uint32_t *userspace_pagedir, struct elf32_file_header *fh, struct process_info *p) {
 
-	if (read(fd, fh, sizeof(struct elf32_file_header)) != sizeof(struct elf32_file_header)) {
+	if (file_read(f, fh, sizeof(struct elf32_file_header)) != sizeof(struct elf32_file_header)) {
 		printf("read file header failed\n");
 		return false;
 	}
@@ -101,13 +82,9 @@ bool load_elf(int fd, uint32_t *userspace_pagedir, struct elf32_file_header *fh,
 	uint32_t brk = 0;
 	uint32_t offset = fh->e_phoff;
 	for (int i = 0; i < fh->e_phnum; i++) {
-
-		if (lseek(fd, offset, SEEK_SET) < 0) {
-			return false;
-		}
-
+		file_seek(f, offset);
 		struct elf32_program_header ph;
-		if (read(fd, &ph, sizeof(ph)) != sizeof(ph)) {
+		if (file_read(f, &ph, sizeof(ph)) != sizeof(ph)) {
 			printf("read program header failed\n");
 			return false;
 		}
@@ -125,7 +102,7 @@ bool load_elf(int fd, uint32_t *userspace_pagedir, struct elf32_file_header *fh,
 			printf("invalid program header\n");
 			return false;
 		case PT_LOAD:
-			if (!load_program_header(fd, &ph, userspace_pagedir)) {
+			if (!load_program_header(f, &ph, userspace_pagedir)) {
 				printf("load program header failed\n");
 				return false;
 			}
