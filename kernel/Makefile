@@ -58,6 +58,7 @@ CFILES=\
 	process/elf_loader.c \
 	process/process.c \
 	storage/ata/ia32/ide_controller.c \
+	util/assert.c \
 	util/md5/md5.c \
 	util/md5/md5digest.c \
 

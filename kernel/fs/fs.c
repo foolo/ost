@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include "fs.h"
 #include "malloc.h"
+#include "util/assert.h"
 
 #define MAX_INODES 10
 
@@ -36,8 +37,7 @@ size_t inode_write(struct inode *i, void *src, size_t start, size_t length) {
 					i->cached_data.data = p;
 				}
 				else {
-					printf("realloc failed\n");
-					while(1);
+					halt("realloc failed");
 				}
 			}
 			i->cached_data.size = required_capacity;
@@ -70,14 +70,10 @@ void inode_close(size_t inode_number) {
 void inode_init(struct inode **i) {
 	*i = calloc(1, sizeof(struct inode));
 	if(*i == NULL) {
-		printf("calloc failed\n");
-		while(1);
+		halt("calloc failed");
 	}
 	(*i)->cached_data.data = malloc(4);
-	if((*i)->cached_data.data == NULL) {
-		printf("malloc failed\n");
-		while(1);
-	}
+	assert((*i)->cached_data.data != NULL)
 	(*i)->cached_data.capacity = 4;
 }
 

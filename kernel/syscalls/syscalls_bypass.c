@@ -3,6 +3,7 @@
 #include <sys/times.h>
 #include <sys/time.h>
 #include "syscall-handler.h"
+#include "util/assert.h"
 
 void _exit()
 {
@@ -72,8 +73,7 @@ caddr_t sbrk(int incr)
 {
 	caddr_t previous_break = current_break;
 	if (current_break + incr > (caddr_t)&kernel_heap_end) {
-		printf("kernel out of heap memory\n");
-		while (1) {}
+		halt("kernel out of heap memory");
 	}
 	current_break += incr;
 	return previous_break;

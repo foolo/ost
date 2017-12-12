@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include "process.h"
+#include "util/assert.h"
 
 unsigned current_process_id;
 
@@ -13,9 +14,7 @@ unsigned create_new_process_id() {
 			return i;
 		}
 	}
-	printf("process_info_table full\n");
-	while(1){};
-	return 0;
+	halt("process_info_table full\n");
 }
 
 void set_current_process(unsigned pid) {
