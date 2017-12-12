@@ -19,3 +19,11 @@ binfile = Command(
     action = "objcopy -O binary init init.bin" )
 
 Depends(binfile, init)
+
+
+cpio = Command(
+    target = "initramfs.cpio",
+    source = "init",
+    action = "find init -print0 | cpio --null --create --verbose --format=crc > initramfs.cpio" )
+
+Depends(cpio, init)

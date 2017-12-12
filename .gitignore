@@ -7,3 +7,4 @@ build*/
 external/
 .sconsign.dblite
 init/init
+init/initramfs.cpio

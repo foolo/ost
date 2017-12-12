@@ -11,6 +11,8 @@
 #include "process/process.h"
 #include "storage/ata/ia32/ide_controller.h"
 #include "fs/fs.h"
+#include "util/cpio_loader.h"
+#include "util/assert.h"
 
 extern addr_t kernel_start_address;
 extern addr_t kernel_end_address;
@@ -19,27 +21,7 @@ extern addr_t _initramfs_end;
 
 void jump_usermode(addr_t entry_point);
 
-bool write_binfile(struct file *dir) {
-	uint8_t *binfile = (uint8_t*)&_initramfs_start;
-	uint32_t binfile_size = (uint32_t)&_initramfs_end - (uint32_t)&_initramfs_start;
-	if (!file_create("init", dir)) {
-		return false;
-	}
-	struct file f;
-	if (!file_open("init", &f, dir)) {
-		return false;
-	}
-	return file_write(&f, binfile, binfile_size) == binfile_size;
-}
-
 void load_init_process(uint32_t *kernelspace_page_directory) {
-
-	create_root_inode();
-	struct file root_dir = dir_open_root();
-	if (!write_binfile(&root_dir)) {
-		printf("write_binfile failed\n");
-		return;
-	}
 
 	unsigned pid = create_new_process_id();
 	struct process_info *pr = get_process_info(pid);
@@ -50,6 +32,7 @@ void load_init_process(uint32_t *kernelspace_page_directory) {
 	activate_page_directory((unsigned int*)pr->pgdir);
 	struct elf32_file_header fh;
 	struct file f;
+	struct file root_dir = dir_open_root();
 	if (!file_open("init", &f, &root_dir)) {
 		printf("file open failed\n");
 		return;
@@ -63,6 +46,16 @@ void load_init_process(uint32_t *kernelspace_page_directory) {
 		printf("load elf failed\n");
 	}
 }
+
+void load_initramfs() {
+	create_root_inode();
+	void *binfile = (void*)&_initramfs_start;
+	uint32_t binfile_size = (uint32_t)&_initramfs_end - (uint32_t)&_initramfs_start;
+	if (!load_cpio(binfile, binfile_size)) {
+		halt("load_cpio failed");
+	}
+}
+
 
 void kernel_main(unsigned long magic, unsigned long addr)
 {
@@ -90,6 +83,8 @@ void kernel_main(unsigned long magic, unsigned long addr)
 	uint32_t *kernelspace_page_directory = create_kernel_pgdir();
 
 	ide_initialize_parallel_ata();
+
+	load_initramfs();
 
 	load_init_process(kernelspace_page_directory);
 }

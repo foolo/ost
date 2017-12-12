@@ -59,6 +59,7 @@ CFILES=\
 	process/process.c \
 	storage/ata/ia32/ide_controller.c \
 	util/assert.c \
+	util/cpio_loader.c \
 	util/md5/md5.c \
 	util/md5/md5digest.c \
 
@@ -78,7 +79,7 @@ default: $(ISOOUT)
 -include $(C_OBJFILES:.o=.d)
 
 # Dependencies
-$(BUILDDIR)/boot.S.o: ../init/init.bin
+$(BUILDDIR)/boot.S.o: ../init/initramfs.cpio
 
 # Compile
 $(BUILDDIR)/%.S.o: %.S
