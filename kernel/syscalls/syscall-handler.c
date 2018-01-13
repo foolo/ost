@@ -3,6 +3,7 @@
 #include "terminal.h"
 #include "process/process.h"
 #include "memory/ia32/paging.h"
+#include "keyboard/input_queue.h"
 
 void handle_syscall_exit(int file)
 {
@@ -60,6 +61,11 @@ int handle_syscall_open(const char *name, int flags, ...)
 
 int handle_syscall_read(int file, char *ptr, int len)
 {
+	//printf("handle_syscall_read\n");
+	if (file == 0) {
+		ptr[0] = input_queue_pop();
+		return 1;
+	}
 	return -1;
 }
 

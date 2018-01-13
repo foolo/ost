@@ -66,7 +66,15 @@ int open(const char *name, int flags, ...)
 
 int read(int file, char *ptr, int len)
 {
-	return 0;
+	int ret;
+	asm volatile
+    (
+        "int $0x80"
+        : "=a" (ret)
+        : "0"(SYSCALL_READ), "b"(file), "c"(ptr), "d"(len)
+        : "cc", "edi", "esi", "memory"
+    );
+	return ret;
 }
 
 caddr_t sbrk(int incr)

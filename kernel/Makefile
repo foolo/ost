@@ -48,6 +48,8 @@ CFILES=\
 	interrupts/$(HOSTARCH)/pic.c \
 	interrupts/$(HOSTARCH)/idt.c \
 	keyboard/keyboard.c \
+	keyboard/input_queue.c \
+	keyboard/layout.c \
 	keyboard/ia32/keyboard_controller.c \
 	syscalls/syscall-handler.c \
 	syscalls/syscalls_bypass.c \

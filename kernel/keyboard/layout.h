@@ -1,0 +1,73 @@
+#include <stdint.h>
+
+enum key_symbol {
+	KEY_APPS,
+	KEY_ARROW_D,
+	KEY_ARROW_L,
+	KEY_ARROW_R,
+	KEY_ARROW_U,
+	KEY_CAPS_LOCK,
+	KEY_DELETE,
+	KEY_END,
+	KEY_ENTER,
+	KEY_F1,
+	KEY_F10,
+	KEY_F11,
+	KEY_F12,
+	KEY_F2,
+	KEY_F3,
+	KEY_F4,
+	KEY_F5,
+	KEY_F6,
+	KEY_F7,
+	KEY_F8,
+	KEY_F9,
+	KEY_HOME,
+	KEY_INSERT,
+	KEY_KP_0,
+	KEY_KP_1,
+	KEY_KP_2,
+	KEY_KP_3,
+	KEY_KP_4,
+	KEY_KP_5,
+	KEY_KP_6,
+	KEY_KP_7,
+	KEY_KP_8,
+	KEY_KP_9,
+	KEY_KP_DELIM,
+	KEY_KP_DIVIDE,
+	KEY_KP_ENTER,
+	KEY_KP_MINUS,
+	KEY_KP_MULTIPLY,
+	KEY_KP_PLUS,
+	KEY_L_ALT,
+	KEY_L_CTRL,
+	KEY_L_GUI,
+	KEY_L_SHIFT,
+	KEY_NUM_LOCK,
+	KEY_PAGE_DOWN,
+	KEY_PAGE_UP,
+	KEY_R_ALT,
+	KEY_R_CTRL,
+	KEY_R_GUI,
+	KEY_R_SHIFT,
+	KEY_SCROLL_LOCK,
+};
+
+#define MODIFIER_NUM_LOCK 1
+#define MODIFIER_CAPS_LOCK 2
+#define MODIFIER_LEFT_CTRL 4
+#define MODIFIER_RIGHT_CTRL 8
+#define MODIFIER_LEFT_SHIFT 16
+#define MODIFIER_RIGHT_SHIFT 32
+#define MODIFIER_LEFT_ALT 64
+#define MODIFIER_RIGHT_ALT 128
+
+struct key_event {
+	enum key_symbol symbol;
+	bool state;
+	uint8_t modifiers;
+	uint32_t unicode;
+};
+
+void layout_handle_keycode(uint8_t keycode);

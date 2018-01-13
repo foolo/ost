@@ -115,8 +115,8 @@ void PIC_sendEOI(unsigned char irq)
 void keyboard_handler_wrapper(void);
 void keyboard_handler(void)
 {
-	PIC_sendEOI(KEYBOARD_IRQ);
 	handle_keyboard_scancode();
+	PIC_sendEOI(KEYBOARD_IRQ);
 }
 
 void syscall_handler_wrapper(void);
@@ -191,7 +191,7 @@ uint32_t syscall_handler(uint32_t syscall_id, uint32_t param1, uint32_t param2, 
 		int file = (int)param1;
 		char * ptr = (char *)param2;
 		int len = (int)param3;
-		handle_syscall_read(file, ptr, len);
+		result = (uint32_t)handle_syscall_read(file, ptr, len);
 	}
 	else if (syscall_id == SYSCALL_SBRK)
 	{
